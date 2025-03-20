@@ -1,0 +1,442 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    CADENA
+    DIFERENTE
+    DIVISION
+    MAS
+    MAYOR_IGUAL
+    MENOR_IGUAL
+    MENOS
+    MIENTRAS
+    MULTIPLICACION
+    REPETIR
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER
+Rule 2     sentencias -> sentencia
+Rule 3     sentencias -> sentencia sentencias
+Rule 4     sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+Rule 5     sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+Rule 6     sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+Rule 7     sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+Rule 8     sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA
+Rule 9     condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR
+Rule 10    condicion -> IDENTIFICADOR MENOR IDENTIFICADOR
+Rule 11    condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR
+
+Terminals, with rules where they appear
+
+CADENA               : 
+DECIMAL              : 5 5
+DIFERENTE            : 
+DIVISION             : 
+IDENTIFICADOR        : 4 5 8 9 9 10 10 11 11
+IGUAL                : 4 5
+IGUAL_IGUAL          : 11
+INICIO               : 1
+LLAVEDER             : 1 6 7 7
+LLAVEIZQ             : 1 6 7 7
+MAS                  : 
+MAYOR                : 9
+MAYOR_IGUAL          : 
+MENOR                : 10
+MENOR_IGUAL          : 
+MENOS                : 
+MIENTRAS             : 
+MULTIPLICACION       : 
+NUMERO               : 4 4
+PARENDER             : 1 6 7
+PARENIZQ             : 1 6 7
+PUNTOYCOMA           : 4 5 8
+REGRESA              : 8
+REPETIR              : 
+SI                   : 6 7
+SINO                 : 7
+error                : 
+
+Nonterminals, with rules where they appear
+
+condicion            : 6 7
+programa             : 0
+sentencia            : 2 3
+sentencias           : 1 3 6 7 7
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER
+
+    INICIO          shift and go to state 2
+
+    programa                       shift and go to state 1
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> INICIO . PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER
+
+    PARENIZQ        shift and go to state 3
+
+
+state 3
+
+    (1) programa -> INICIO PARENIZQ . PARENDER LLAVEIZQ sentencias LLAVEDER
+
+    PARENDER        shift and go to state 4
+
+
+state 4
+
+    (1) programa -> INICIO PARENIZQ PARENDER . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 5
+
+
+state 5
+
+    (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ . sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+    (6) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (8) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+
+    NUMERO          shift and go to state 8
+    DECIMAL         shift and go to state 9
+    SI              shift and go to state 10
+    REGRESA         shift and go to state 11
+
+    sentencias                     shift and go to state 6
+    sentencia                      shift and go to state 7
+
+state 6
+
+    (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias . LLAVEDER
+
+    LLAVEDER        shift and go to state 12
+
+
+state 7
+
+    (2) sentencias -> sentencia .
+    (3) sentencias -> sentencia . sentencias
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+    (6) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (8) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+
+    LLAVEDER        reduce using rule 2 (sentencias -> sentencia .)
+    NUMERO          shift and go to state 8
+    DECIMAL         shift and go to state 9
+    SI              shift and go to state 10
+    REGRESA         shift and go to state 11
+
+    sentencia                      shift and go to state 7
+    sentencias                     shift and go to state 13
+
+state 8
+
+    (4) sentencia -> NUMERO . IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 14
+
+
+state 9
+
+    (5) sentencia -> DECIMAL . IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 15
+
+
+state 10
+
+    (6) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    PARENIZQ        shift and go to state 16
+
+
+state 11
+
+    (8) sentencia -> REGRESA . IDENTIFICADOR PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 17
+
+
+state 12
+
+    (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER .
+
+    $end            reduce using rule 1 (programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER .)
+
+
+state 13
+
+    (3) sentencias -> sentencia sentencias .
+
+    LLAVEDER        reduce using rule 3 (sentencias -> sentencia sentencias .)
+
+
+state 14
+
+    (4) sentencia -> NUMERO IDENTIFICADOR . IGUAL NUMERO PUNTOYCOMA
+
+    IGUAL           shift and go to state 18
+
+
+state 15
+
+    (5) sentencia -> DECIMAL IDENTIFICADOR . IGUAL DECIMAL PUNTOYCOMA
+
+    IGUAL           shift and go to state 19
+
+
+state 16
+
+    (6) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (9) condicion -> . IDENTIFICADOR MAYOR IDENTIFICADOR
+    (10) condicion -> . IDENTIFICADOR MENOR IDENTIFICADOR
+    (11) condicion -> . IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 21
+
+    condicion                      shift and go to state 20
+
+state 17
+
+    (8) sentencia -> REGRESA IDENTIFICADOR . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 22
+
+
+state 18
+
+    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL . NUMERO PUNTOYCOMA
+
+    NUMERO          shift and go to state 23
+
+
+state 19
+
+    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL . DECIMAL PUNTOYCOMA
+
+    DECIMAL         shift and go to state 24
+
+
+state 20
+
+    (6) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    PARENDER        shift and go to state 25
+
+
+state 21
+
+    (9) condicion -> IDENTIFICADOR . MAYOR IDENTIFICADOR
+    (10) condicion -> IDENTIFICADOR . MENOR IDENTIFICADOR
+    (11) condicion -> IDENTIFICADOR . IGUAL_IGUAL IDENTIFICADOR
+
+    MAYOR           shift and go to state 26
+    MENOR           shift and go to state 27
+    IGUAL_IGUAL     shift and go to state 28
+
+
+state 22
+
+    (8) sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .
+
+    NUMERO          reduce using rule 8 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+    DECIMAL         reduce using rule 8 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+    SI              reduce using rule 8 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+    REGRESA         reduce using rule 8 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 8 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+
+
+state 23
+
+    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 29
+
+
+state 24
+
+    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 30
+
+
+state 25
+
+    (6) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 31
+
+
+state 26
+
+    (9) condicion -> IDENTIFICADOR MAYOR . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 32
+
+
+state 27
+
+    (10) condicion -> IDENTIFICADOR MENOR . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 33
+
+
+state 28
+
+    (11) condicion -> IDENTIFICADOR IGUAL_IGUAL . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 34
+
+
+state 29
+
+    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .
+
+    NUMERO          reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .)
+    DECIMAL         reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .)
+    SI              reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .)
+    REGRESA         reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA .)
+
+
+state 30
+
+    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .
+
+    NUMERO          reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .)
+    DECIMAL         reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .)
+    SI              reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .)
+    REGRESA         reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA .)
+
+
+state 31
+
+    (6) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+    (6) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (8) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+
+    NUMERO          shift and go to state 8
+    DECIMAL         shift and go to state 9
+    SI              shift and go to state 10
+    REGRESA         shift and go to state 11
+
+    sentencias                     shift and go to state 35
+    sentencia                      shift and go to state 7
+
+state 32
+
+    (9) condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR .
+
+    PARENDER        reduce using rule 9 (condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR .)
+
+
+state 33
+
+    (10) condicion -> IDENTIFICADOR MENOR IDENTIFICADOR .
+
+    PARENDER        reduce using rule 10 (condicion -> IDENTIFICADOR MENOR IDENTIFICADOR .)
+
+
+state 34
+
+    (11) condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR .
+
+    PARENDER        reduce using rule 11 (condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR .)
+
+
+state 35
+
+    (6) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEDER        shift and go to state 36
+
+
+state 36
+
+    (6) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER . SINO LLAVEIZQ sentencias LLAVEDER
+
+    NUMERO          reduce using rule 6 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 6 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 6 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 6 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 6 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    SINO            shift and go to state 37
+
+
+state 37
+
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 38
+
+
+state 38
+
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ . sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
+    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA
+    (6) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (7) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (8) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+
+    NUMERO          shift and go to state 8
+    DECIMAL         shift and go to state 9
+    SI              shift and go to state 10
+    REGRESA         shift and go to state 11
+
+    sentencias                     shift and go to state 39
+    sentencia                      shift and go to state 7
+
+state 39
+
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias . LLAVEDER
+
+    LLAVEDER        shift and go to state 40
+
+
+state 40
+
+    (7) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .
+
+    NUMERO          reduce using rule 7 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 7 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 7 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 7 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 7 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+
