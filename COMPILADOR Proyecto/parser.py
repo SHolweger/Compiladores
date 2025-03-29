@@ -3,7 +3,7 @@ from lexer import tokens, lexer
 
 def p_programa(p):
     '''programa : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER'''
-    print("✅ Código válido: Estructura 'inicio() {}' reconocida.")
+    print("Codigo valido: Estructura 'inicio() {}' reconocida.")
 
 def p_sentencias(p):
     '''sentencias : sentencia
@@ -33,9 +33,9 @@ def p_condicion(p):
 # ERRORES SINTACTICOS
 def p_error(p):
     if p:
-        print(f"❌ Error de sintaxis en la línea {p.lineno}: Token inesperado '{p.value}'")
+        print(f"Error de sintaxis en la linea {p.lineno}: Token inesperado '{p.value}'")
     else:
-        print("❌ Error de sintaxis: Fin de archivo inesperado")
+        print("Error de sintaxis: Fin de archivo inesperado")
 
 # PARSER
 parser = yacc.yacc()
@@ -45,18 +45,18 @@ def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
             contenido = archivo.read()
-        print("✅ Archivo leído correctamente.\n")
+        print("Archivo leido correctamente.\n")
         return contenido
     except FileNotFoundError:
-        print("❌ Error: No se encontró el archivo.")
+        print("Error: No se encontro el archivo.")
         return None
 
 def analizar_sintaxis(archivo):
     data = leer_archivo(archivo)
     if data:
-        print("\n📌 Analizando sintaxis del código...\n")
-        result = parser.parse(data, lexer=lexer)  # 📌 Pasamos el lexer al parser
-        print("✅ Análisis sintáctico finalizado.")
+        print("\nAnalizando sintaxis del codigo...\n")
+        result = parser.parse(data, lexer=lexer)  # Pasamos el lexer al parser
+        print("Analisis sintactico finalizado.")
 
 # TXT PRUEBA
 if __name__ == "__main__":

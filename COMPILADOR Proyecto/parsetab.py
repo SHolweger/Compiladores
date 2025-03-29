@@ -6,7 +6,7 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CADENA DECIMAL DIFERENTE DIVISION IDENTIFICADOR IGUAL IGUAL_IGUAL INICIO LLAVEDER LLAVEIZQ MAS MAYOR MAYOR_IGUAL MENOR MENOR_IGUAL MENOS MIENTRAS MULTIPLICACION NUMERO PARENDER PARENIZQ PUNTOYCOMA REGRESA REPETIR SI SINOprograma : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDERsentencias : sentencia\n                  | sentencia sentenciassentencia : NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA\n                 | DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMAsentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER\n                 | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDERsentencia : REGRESA IDENTIFICADOR PUNTOYCOMAcondicion : IDENTIFICADOR MAYOR IDENTIFICADOR\n                 | IDENTIFICADOR MENOR IDENTIFICADOR\n                 | IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR'
+_lr_signature = 'CADENA DECIMAL DIFERENTE DIVISION IDENTIFICADOR IGUAL IGUAL_IGUAL INICIO LLAVEDER LLAVEIZQ MAS MAYOR MAYOR_IGUAL MENOR MENOR_IGUAL MENOS MIENTRAS MULTIPLICACION NUMERO PARENDER PARENIZQ PUNTOYCOMA REGRESA REPETIR SI SINOprograma : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDERsentencias : sentencia\n| sentencia sentenciassentencia : NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA\n| DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMAsentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER\n| SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDERsentencia : REGRESA IDENTIFICADOR PUNTOYCOMAcondicion : IDENTIFICADOR MAYOR IDENTIFICADOR\n| IDENTIFICADOR MENOR IDENTIFICADOR\n| IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR'
     
 _lr_action_items = {'INICIO':([0,],[2,]),'$end':([1,12,],[0,-1,]),'PARENIZQ':([2,10,],[3,16,]),'PARENDER':([3,20,32,33,34,],[4,25,-9,-10,-11,]),'LLAVEIZQ':([4,25,37,],[5,31,38,]),'NUMERO':([5,7,18,22,29,30,31,36,38,40,],[8,8,23,-8,-4,-5,8,-6,8,-7,]),'DECIMAL':([5,7,19,22,29,30,31,36,38,40,],[9,9,24,-8,-4,-5,9,-6,9,-7,]),'SI':([5,7,22,29,30,31,36,38,40,],[10,10,-8,-4,-5,10,-6,10,-7,]),'REGRESA':([5,7,22,29,30,31,36,38,40,],[11,11,-8,-4,-5,11,-6,11,-7,]),'LLAVEDER':([6,7,13,22,29,30,35,36,39,40,],[12,-2,-3,-8,-4,-5,36,-6,40,-7,]),'IDENTIFICADOR':([8,9,11,16,26,27,28,],[14,15,17,21,32,33,34,]),'IGUAL':([14,15,],[18,19,]),'PUNTOYCOMA':([17,23,24,],[22,29,30,]),'MAYOR':([21,],[26,]),'MENOR':([21,],[27,]),'IGUAL_IGUAL':([21,],[28,]),'SINO':([36,],[37,]),}
 
@@ -27,15 +27,15 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> programa","S'",1,None,None,None),
-  ('programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER','programa',6,'p_programa','parser.py',6),
-  ('sentencias -> sentencia','sentencias',1,'p_sentencias','parser.py',11),
-  ('sentencias -> sentencia sentencias','sentencias',2,'p_sentencias','parser.py',12),
-  ('sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',17),
-  ('sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',18),
-  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER','sentencia',7,'p_sentencia_si','parser.py',23),
-  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER','sentencia',11,'p_sentencia_si','parser.py',24),
-  ('sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA','sentencia',3,'p_sentencia_regresa','parser.py',28),
-  ('condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',33),
-  ('condicion -> IDENTIFICADOR MENOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',34),
-  ('condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR','condicion',3,'p_condicion','parser.py',35),
+  ('programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER','programa',6,'p_programa','parser.py',5),
+  ('sentencias -> sentencia','sentencias',1,'p_sentencias','parser.py',9),
+  ('sentencias -> sentencia sentencias','sentencias',2,'p_sentencias','parser.py',10),
+  ('sentencia -> NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',14),
+  ('sentencia -> DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',15),
+  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER','sentencia',7,'p_sentencia_si','parser.py',19),
+  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER','sentencia',11,'p_sentencia_si','parser.py',20),
+  ('sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA','sentencia',3,'p_sentencia_regresa','parser.py',24),
+  ('condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',28),
+  ('condicion -> IDENTIFICADOR MENOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',29),
+  ('condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR','condicion',3,'p_condicion','parser.py',30),
 ]

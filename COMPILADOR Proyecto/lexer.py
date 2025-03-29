@@ -65,7 +65,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    print(f"❌ Error léxico: Carácter inesperado '{t.value[0]}' en la línea {t.lineno}")
+    print(f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}")
     t.lexer.skip(1)
 
 # el lexer esta aqui para que el parser pueda importarlo
@@ -75,19 +75,19 @@ def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
             contenido = archivo.readlines()
-        print("✅ Archivo leído correctamente.\n")
+        print("Archivo leido correctamente.\n")
         
         # MOSTRAR EL CODIGO QUE SE LEE EN LA TERMINAL
-        print("\n----- Código leído desde el archivo -----\n")
+        print("\n----- Codigo leido desde el archivo -----\n")
         for i, linea in enumerate(contenido, start=1):
-            print(f"{i}: {linea.strip()}")  # 📌 Imprimir con número de línea
+            print(f"{i}: {linea.strip()}")  # Imprimir con número de línea
         
         return contenido
     except FileNotFoundError:
-        print("❌ Error: No se encontró el archivo.")
+        print("Error: No se encontro el archivo.")
         return []
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f"Error inesperado: {e}")
         return []
 
 # ARCHIVO DONDE ESTA EL CODIGO DE EJEMPLO
