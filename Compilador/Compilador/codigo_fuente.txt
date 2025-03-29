@@ -1,9 +1,0 @@
-inicio() {
-    numero x = 10;
-    decimal y = 5.5;
-    si (x > y) {
-        regresa x;
-    } sino {
-        regresa y;
-    }
-}
