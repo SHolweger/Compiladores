@@ -2,10 +2,10 @@ import ply.lex as lex
 
 # LISTA DE TOKENS
 tokens = (
-    'INICIO', 'NUMERO', 'DECIMAL', 'SI', 'SINO', 'MIENTRAS', 'REPETIR', 'REGRESA',
-    'IDENTIFICADOR', 'CADENA', 'IGUAL', 'MAS', 'MENOS', 'MULTIPLICACION', 'DIVISION',
+    'INICIO', 'NUMERO', 'DECIMAL', 'BOOLEANO', 'SI', 'SINO', 'MIENTRAS', 'REPETIR', 'REGRESA',
+    'IDENTIFICADOR', 'CADENA', 'IGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV',
     'MAYOR', 'MENOR', 'MAYOR_IGUAL', 'MENOR_IGUAL', 'IGUAL_IGUAL', 'DIFERENTE',
-    'PARENIZQ', 'PARENDER', 'LLAVEIZQ', 'LLAVEDER', 'PUNTOYCOMA'
+    'PARENIZQ', 'PARENDER', 'LLAVEIZQ', 'LLAVEDER', 'PUNTOYCOMA', 'VERDADERO', 'FALSO'
 )
 
 # PALABRAS CLAVE RESERVADAS
@@ -13,18 +13,21 @@ reserved = {
     'inicio': 'INICIO',
     'numero': 'NUMERO',
     'decimal': 'DECIMAL',
+    'booleano': 'BOOLEANO',
     'si': 'SI',
     'sino': 'SINO',
     'mientras': 'MIENTRAS',
     'repetir': 'REPETIR',
-    'regresa': 'REGRESA'
+    'regresa': 'REGRESA',
+    'verdadero': 'VERDADERO',
+    'falso': 'FALSO'
 }
 
 # EXPRESIONES REGULARES PARA TOKENS SIMPLES
-t_MAS = r'\+'
-t_MENOS = r'-'
-t_MULTIPLICACION = r'\*'
-t_DIVISION = r'/'
+t_SUMA = r'\+'
+t_RESTA = r'-'
+t_MULT = r'\*'
+t_DIV = r'/'
 t_IGUAL = r'='
 t_IGUAL_IGUAL = r'=='
 t_DIFERENTE = r'!='
@@ -68,7 +71,7 @@ def t_error(t):
     print(f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}")
     t.lexer.skip(1)
 
-# el lexer esta aqui para que el parser pueda importarlo
+# Crear el lexer
 lexer = lex.lex()
 
 def leer_archivo(ruta):
@@ -77,7 +80,7 @@ def leer_archivo(ruta):
             contenido = archivo.readlines()
         print("Archivo leido correctamente.\n")
         
-        # MOSTRAR EL CODIGO QUE SE LEE EN LA TERMINAL
+        # Mostrar el código que se lee en la terminal
         print("\n----- Codigo leido desde el archivo -----\n")
         for i, linea in enumerate(contenido, start=1):
             print(f"{i}: {linea.strip()}")  # Imprimir con número de línea
@@ -90,6 +93,6 @@ def leer_archivo(ruta):
         print(f"Error inesperado: {e}")
         return []
 
-# ARCHIVO DONDE ESTA EL CODIGO DE EJEMPLO
+# Archivo donde está el código de ejemplo
 ruta_archivo = "codigo_fuente.txt"
 lineas = leer_archivo(ruta_archivo)

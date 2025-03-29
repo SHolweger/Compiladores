@@ -10,6 +10,20 @@ def agregar_simbolo(nombre, tipo, valor):
     else:
         tabla_simbolos[nombre] = {'tipo': tipo, 'valor': valor}
 
+def actualizar_simbolo(nombre, valor):
+    if nombre in tabla_simbolos:
+        tipo = tabla_simbolos[nombre]['tipo']
+        if tipo == 'NUMERO' and isinstance(valor, int):
+            tabla_simbolos[nombre]['valor'] = valor
+        elif tipo == 'DECIMAL' and isinstance(valor, float):
+            tabla_simbolos[nombre]['valor'] = valor
+        elif tipo == 'BOOLEANO' and isinstance(valor, bool):
+            tabla_simbolos[nombre]['valor'] = valor
+        else:
+            print(f"Error: Tipo de dato incorrecto para la variable '{nombre}'")
+    else:
+        print(f"Error: La variable '{nombre}' no ha sido declarada.")
+
 def verificar_simbolo(nombre):
     if nombre not in tabla_simbolos:
         print(f"Error: La variable '{nombre}' no ha sido declarada.")
@@ -26,9 +40,15 @@ def p_sentencias(p):
     pass
 
 def p_sentencia_declaracion(p):
-    '''sentencia : NUMERO IDENTIFICADOR IGUAL NUMERO PUNTOYCOMA
-                 | DECIMAL IDENTIFICADOR IGUAL DECIMAL PUNTOYCOMA'''
+    '''sentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+                 | DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+                 | BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA'''
     agregar_simbolo(p[2], p[1], p[4])
+
+def p_sentencia_asignacion(p):
+    '''sentencia : IDENTIFICADOR IGUAL expresion PUNTOYCOMA'''
+    if verificar_simbolo(p[1]):
+        actualizar_simbolo(p[1], p[3])
 
 def p_sentencia_si(p):
     '''sentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
@@ -39,6 +59,30 @@ def p_sentencia_regresa(p):
     '''sentencia : REGRESA IDENTIFICADOR PUNTOYCOMA'''
     if verificar_simbolo(p[2]):
         print(f"Regresando valor de '{p[2]}': {tabla_simbolos[p[2]]['valor']}")
+
+def p_expresion(p):
+    '''expresion : expresion SUMA expresion
+                 | expresion RESTA expresion
+                 | expresion MULT expresion
+                 | expresion DIV expresion
+                 | NUMERO
+                 | DECIMAL
+                 | IDENTIFICADOR'''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        if isinstance(p[1], (int, float)) and isinstance(p[3], (int, float)):
+            if p[2] == '+': p[0] = p[1] + p[3]
+            elif p[2] == '-': p[0] = p[1] - p[3]
+            elif p[2] == '*': p[0] = p[1] * p[3]
+            elif p[2] == '/': p[0] = p[1] / p[3]
+        else:
+            print("Error: Operación no válida entre tipos de datos diferentes.")
+
+def p_booleano(p):
+    '''booleano : VERDADERO
+                | FALSO'''
+    p[0] = True if p[1] == 'verdadero' else False
 
 def p_condicion(p):
     '''condicion : IDENTIFICADOR MAYOR IDENTIFICADOR
