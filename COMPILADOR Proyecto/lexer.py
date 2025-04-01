@@ -1,3 +1,4 @@
+#Lexer para el compilador de lenguaje de programación Proyecto Final
 import ply.lex as lex
 import html_gen
 
@@ -44,7 +45,7 @@ t_PUNTOYCOMA = r';'
 
 t_ignore = ' \t'
 
-# Lista para almacenar errores léxicos
+tokens_extraidos = []
 errores_lexicos = []
 
 def t_IDENTIFICADOR(t):
@@ -72,9 +73,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    error_msg = f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}"
-    print(error_msg)
-    errores_lexicos.append(error_msg)
+    errores_lexicos.append(f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}")
     t.lexer.skip(1)
 
 # Crear el lexer
@@ -82,11 +81,10 @@ lexer = lex.lex()
 
 def analizar_codigo(codigo):
     lexer.input(codigo)
+    global tokens_extraidos
     tokens_extraidos = []
     while tok := lexer.token():
         tokens_extraidos.append(tok)
-    
-    # Generar los reportes en HTML
     html_gen.generar_html_tokens(tokens_extraidos)
     html_gen.generar_html_errores(errores_lexicos)
     return tokens_extraidos
@@ -94,23 +92,16 @@ def analizar_codigo(codigo):
 def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
-            codigo = archivo.read()
+            contenido = archivo.read()
         print("Archivo leido correctamente.\n")
-        
-        # Mostrar el código leído
+        analizar_codigo(contenido)
         print("\n----- Codigo leido desde el archivo -----\n")
-        for i, linea in enumerate(codigo.split('\n'), start=1):
-            print(f"{i}: {linea.strip()}")
-        
-        analizar_codigo(codigo)  # Analizar el código
-        return codigo
+        print(contenido)
     except FileNotFoundError:
         print("Error: No se encontro el archivo.")
-        return ""
     except Exception as e:
         print(f"Error inesperado: {e}")
-        return ""
 
 # Archivo donde está el código de ejemplo
 ruta_archivo = "codigo_fuente.txt"
-codigo_leido = leer_archivo(ruta_archivo)
+leer_archivo(ruta_archivo)

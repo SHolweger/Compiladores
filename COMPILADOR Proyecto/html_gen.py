@@ -1,3 +1,4 @@
+#Generador de reportes HTML
 import os
 
 def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
@@ -81,6 +82,41 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
     
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
+
+def generar_html_tabla_simbolos(tabla_simbolos):
+    html = """<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Símbolos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Tabla de Símbolos</h2>
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+        </tr>"""
+    
+    for nombre, datos in tabla_simbolos.items():
+        html += f"""
+        <tr>
+            <td>{nombre}</td>
+            <td>{datos['tipo']}</td>
+            <td>{datos['valor']}</td>
+        </tr>"""
+    
+    html += """
+    </table>
+</body>
+</html>"""
+    
+    with open("tabla_simbolos.html", "w", encoding="utf-8") as file:
+        file.write(html)
+    print("Tabla de símbolos generada: tabla_simbolos.html")
 
 if __name__ == "__main__":
     print("Este módulo genera reportes HTML de tokens y errores.")

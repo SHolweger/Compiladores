@@ -1,13 +1,14 @@
-
 import ply.yacc as yacc
-from lexer import tokens, lexer 
+from lexer import tokens, lexer, errores_lexicos
+import html_gen
 
 # Tabla de simbolos
 tabla_simbolos = {}
+errores_sintacticos = []
 
 def agregar_simbolo(nombre, tipo, valor):
     if nombre in tabla_simbolos:
-        print(f"Error: La variable '{nombre}' ya ha sido declarada.")
+        errores_sintacticos.append(f"Error: La variable '{nombre}' ya ha sido declarada.")
     else:
         tabla_simbolos[nombre] = {'tipo': tipo, 'valor': valor}
 
@@ -21,13 +22,13 @@ def actualizar_simbolo(nombre, valor):
         elif tipo == 'BOOLEANO' and isinstance(valor, bool):
             tabla_simbolos[nombre]['valor'] = valor
         else:
-            print(f"Error: Tipo de dato incorrecto para la variable '{nombre}'")
+            errores_sintacticos.append(f"Error: Tipo de dato incorrecto para la variable '{nombre}'")
     else:
-        print(f"Error: La variable '{nombre}' no ha sido declarada.")
+        errores_sintacticos.append(f"Error: La variable '{nombre}' no ha sido declarada.")
 
 def verificar_simbolo(nombre):
     if nombre not in tabla_simbolos:
-        print(f"Error: La variable '{nombre}' no ha sido declarada.")
+        errores_sintacticos.append(f"Error: La variable '{nombre}' no ha sido declarada.")
         return False
     return True
 
@@ -78,7 +79,7 @@ def p_expresion(p):
             elif p[2] == '*': p[0] = p[1] * p[3]
             elif p[2] == '/': p[0] = p[1] / p[3]
         else:
-            print("Error: Operación no válida entre tipos de datos diferentes.")
+            errores_sintacticos.append("Error: Operación no válida entre tipos de datos diferentes.")
 
 def p_booleano(p):
     '''booleano : VERDADERO
@@ -94,9 +95,9 @@ def p_condicion(p):
 
 def p_error(p):
     if p:
-        print(f"Error de sintaxis en la linea {p.lineno}: Token inesperado '{p.value}'")
+        errores_sintacticos.append(f"Error de sintaxis en la linea {p.lineno}: Token inesperado '{p.value}'")
     else:
-        print("Error de sintaxis: Fin de archivo inesperado")
+        errores_sintacticos.append("Error de sintaxis: Fin de archivo inesperado")
 
 parser = yacc.yacc()
 
@@ -116,6 +117,11 @@ def analizar_sintaxis(archivo):
         print("\nAnalizando sintaxis del codigo...\n")
         result = parser.parse(data, lexer=lexer)
         print("Analisis sintactico finalizado.")
+        
+        # Generar reportes
+        html_gen.generar_html_tokens(lexer.tokens_extraidos)
+        html_gen.generar_html_errores(errores_lexicos + errores_sintacticos)
+        html_gen.generar_html_tabla_simbolos(tabla_simbolos)
 
 if __name__ == "__main__":
     analizar_sintaxis("codigo_fuente.txt")
