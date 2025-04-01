@@ -44,6 +44,9 @@ t_PUNTOYCOMA = r';'
 
 t_ignore = ' \t'
 
+# Lista para almacenar errores léxicos
+errores_lexicos = []
+
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFICADOR')
@@ -69,7 +72,9 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    print(f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}")
+    error_msg = f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}"
+    print(error_msg)
+    errores_lexicos.append(error_msg)
     t.lexer.skip(1)
 
 # Crear el lexer
@@ -80,29 +85,32 @@ def analizar_codigo(codigo):
     tokens_extraidos = []
     while tok := lexer.token():
         tokens_extraidos.append(tok)
-    html_gen(tokens_extraidos)  # Llamamos a la función de generación de HTML 
+    
+    # Generar los reportes en HTML
+    html_gen.generar_html_tokens(tokens_extraidos)
+    html_gen.generar_html_errores(errores_lexicos)
     return tokens_extraidos
 
 def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
-            contenido = archivo.readlines()
-            codigo = archivo.red()
+            codigo = archivo.read()
         print("Archivo leido correctamente.\n")
-        analizar_codigo(codigo) # Analizar el código
-        # Mostrar el código que se lee en la terminal
-        print("\n----- Codigo leido desde el archivo -----\n")
-        for i, linea in enumerate(contenido, start=1):
-            print(f"{i}: {linea.strip()}")  # Imprimir con número de línea
         
-        return contenido
+        # Mostrar el código leído
+        print("\n----- Codigo leido desde el archivo -----\n")
+        for i, linea in enumerate(codigo.split('\n'), start=1):
+            print(f"{i}: {linea.strip()}")
+        
+        analizar_codigo(codigo)  # Analizar el código
+        return codigo
     except FileNotFoundError:
         print("Error: No se encontro el archivo.")
-        return []
+        return ""
     except Exception as e:
         print(f"Error inesperado: {e}")
-        return []
+        return ""
 
 # Archivo donde está el código de ejemplo
 ruta_archivo = "codigo_fuente.txt"
-lineas = leer_archivo(ruta_archivo)
+codigo_leido = leer_archivo(ruta_archivo)
