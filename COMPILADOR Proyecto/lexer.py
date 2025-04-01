@@ -1,4 +1,5 @@
 import ply.lex as lex
+import html_gen
 
 # LISTA DE TOKENS
 tokens = (
@@ -74,12 +75,21 @@ def t_error(t):
 # Crear el lexer
 lexer = lex.lex()
 
+def analizar_codigo(codigo):
+    lexer.input(codigo)
+    tokens_extraidos = []
+    while tok := lexer.token():
+        tokens_extraidos.append(tok)
+    html_gen(tokens_extraidos)  # Llamamos a la función de generación de HTML 
+    return tokens_extraidos
+
 def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
             contenido = archivo.readlines()
+            codigo = archivo.red()
         print("Archivo leido correctamente.\n")
-        
+        analizar_codigo(codigo) # Analizar el código
         # Mostrar el código que se lee en la terminal
         print("\n----- Codigo leido desde el archivo -----\n")
         for i, linea in enumerate(contenido, start=1):
