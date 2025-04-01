@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from lexer import tokens, lexer, errores_lexicos
+from lexer import tokens, lexer, errores_lexicos, tokens_extraidos
 import html_gen
 
 # Tabla de simbolos
@@ -119,7 +119,7 @@ def analizar_sintaxis(archivo):
         print("Analisis sintactico finalizado.")
         
         # Generar reportes
-        html_gen.generar_html_tokens(lexer.tokens_extraidos)
+        html_gen.generar_html_tokens(tokens_extraidos)
         html_gen.generar_html_errores(errores_lexicos + errores_sintacticos)
         html_gen.generar_html_tabla_simbolos(tabla_simbolos)
 
