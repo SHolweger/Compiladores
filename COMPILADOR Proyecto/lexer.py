@@ -1,4 +1,3 @@
-#Lexer para el compilador de lenguaje de programación Proyecto Final
 import ply.lex as lex
 import html_gen
 
@@ -25,7 +24,7 @@ reserved = {
     'falso': 'FALSO'
 }
 
-# EXPRESIONES REGULARES PARA TOKENS SIMPLES
+# EXPRESIONES REGULARES
 t_SUMA = r'\+'
 t_RESTA = r'-'
 t_MULT = r'\*'
@@ -53,7 +52,6 @@ def t_IDENTIFICADOR(t):
     t.type = reserved.get(t.value, 'IDENTIFICADOR')
     return t
 
-# NUMEROS DECIMALES ANTES DE ENTEROS
 def t_DECIMAL(t):
     r'\d+\.\d+'
     t.value = float(t.value)
@@ -73,18 +71,20 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    errores_lexicos.append(f"Error lexico: Caracter inesperado '{t.value[0]}' en la linea {t.lineno}")
+    errores_lexicos.append((f"Error léxico: Carácter inesperado '{t.value[0]}'", t.lineno))
     t.lexer.skip(1)
 
-# Crear el lexer
 lexer = lex.lex()
 
 def analizar_codigo(codigo):
     lexer.input(codigo)
-    global tokens_extraidos
+    global tokens_extraidos, errores_lexicos
     tokens_extraidos = []
+    errores_lexicos = []
+
     while tok := lexer.token():
         tokens_extraidos.append(tok)
+
     html_gen.generar_html_tokens(tokens_extraidos)
     html_gen.generar_html_errores(errores_lexicos)
     return tokens_extraidos
@@ -93,15 +93,15 @@ def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
             contenido = archivo.read()
-        print("Archivo leido correctamente.\n")
-        analizar_codigo(contenido)
-        print("\n----- Codigo leido desde el archivo -----\n")
+        print("✅ Archivo leído correctamente.\n")
+        print("\n----- Código leído desde el archivo -----\n")
         print(contenido)
+        analizar_codigo(contenido)
     except FileNotFoundError:
-        print("Error: No se encontro el archivo.")
+        print("❌ Error: No se encontró el archivo.")
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"❌ Error inesperado: {e}")
 
-# Archivo donde está el código de ejemplo
+# Ruta del código fuente
 ruta_archivo = "codigo_fuente.txt"
 leer_archivo(ruta_archivo)
