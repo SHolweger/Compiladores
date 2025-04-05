@@ -71,7 +71,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    errores_lexicos.append((f"Error léxico: Carácter inesperado '{t.value[0]}'", t.lineno))
+    errores_lexicos.append((f"Error lexico: Caracter inesperado '{t.value[0]}'", t.lineno))
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -93,15 +93,15 @@ def leer_archivo(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
             contenido = archivo.read()
-        print("✅ Archivo leído correctamente.\n")
-        print("\n----- Código leído desde el archivo -----\n")
+        print("Archivo leido correctamente.\n")
+        print("\n----- Codigo leido desde el archivo -----\n")
         print(contenido)
         analizar_codigo(contenido)
     except FileNotFoundError:
-        print("❌ Error: No se encontró el archivo.")
+        print("Error: No se encontro el archivo.")
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f"Error inesperado: {e}")
 
 # Ruta del código fuente
-ruta_archivo = "codigo_fuente.txt"
+ruta_archivo = "COMPILADOR Proyecto\codigo_fuente.txt"
 leer_archivo(ruta_archivo)
