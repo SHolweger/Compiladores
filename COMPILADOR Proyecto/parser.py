@@ -122,8 +122,7 @@ def analizar_sintaxis(archivo):
         # Reportes HTML
         html_gen.generar_html_tokens(tokens_extraidos)
         html_gen.generar_html_errores(errores_lexicos + errores_sintacticos)
-        html_gen.generar_html_tabla_simbolos(tabla_simbolos)
-        abrir_todos_los_html()
-
+        html_gen.generar_html_tabla_simbolos(tabla_simbolos)        
+        
 if __name__ == "__main__":
     analizar_sintaxis("COMPILADOR Proyecto\\codigo_fuente.txt")

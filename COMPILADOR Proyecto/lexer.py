@@ -84,9 +84,6 @@ def analizar_codigo(codigo):
 
     while tok := lexer.token():
         tokens_extraidos.append(tok)
-
-    html_gen.generar_html_tokens(tokens_extraidos)
-    html_gen.generar_html_errores(errores_lexicos)
     return tokens_extraidos
 
 def leer_archivo(ruta):

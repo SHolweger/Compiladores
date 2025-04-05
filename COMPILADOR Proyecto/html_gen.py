@@ -1,9 +1,11 @@
 import os
 import webbrowser
+import time
 
 def abrir_html(nombre_archivo):
     path = os.path.abspath(nombre_archivo)
     webbrowser.open(f'file://{path}')
+    time.sleep(1)
 
 def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
     html = """
@@ -20,6 +22,10 @@ def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
         html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td></tr>"
     html += "</table></body></html>"
 
+    with open(nombre_archivo, "w", encoding="utf-8") as file:
+        file.write(html)
+    abrir_html(nombre_archivo)
+
 def generar_html_errores(errores, nombre_archivo="errores.html"):
     html = """
     <html><head><title>Bitácora de Errores</title>
@@ -35,6 +41,10 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
         html += f"<tr><td>{error}</td><td>{linea}</td></tr>"
     html += "</table></body></html>"
 
+    with open(nombre_archivo, "w", encoding="utf-8") as file:
+        file.write(html)
+    abrir_html(nombre_archivo)
+
 def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.html"):
     html = """
     <html><head><title>Tabla de Simbolos</title>
@@ -49,6 +59,11 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
     for nombre, datos in tabla_simbolos.items():
         html += f"<tr><td>{nombre}</td><td>{datos['tipo']}</td><td>{datos['valor']}</td></tr>"
     html += "</table></body></html>"
+
+    with open(nombre_archivo, "w", encoding="utf-8") as file:
+        file.write(html)
+    abrir_html(nombre_archivo)
+
 
 def abrir_todos_los_html():
     abrir_html("tokens.html")

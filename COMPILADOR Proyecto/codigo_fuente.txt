@@ -7,4 +7,3 @@ inicio() {
         regresa y;
     }
 }
-
