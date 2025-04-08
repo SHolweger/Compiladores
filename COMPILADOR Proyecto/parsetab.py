@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'BOOLEANO CADENA DECIMAL DIFERENTE DIV FALSO IDENTIFICADOR IGUAL IGUAL_IGUAL INICIO LLAVEDER LLAVEIZQ MAYOR MAYOR_IGUAL MENOR MENOR_IGUAL MIENTRAS MULT NUMERO PARENDER PARENIZQ PUNTOYCOMA REGRESA REPETIR RESTA SI SINO SUMA VERDADEROprograma : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDERsentencias : sentencia\n| sentencia sentenciassentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA\n| DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA\n| BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMAsentencia : IDENTIFICADOR IGUAL expresion PUNTOYCOMAsentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER\n| SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDERsentencia : REGRESA IDENTIFICADOR PUNTOYCOMAexpresion : expresion SUMA expresion\n| expresion RESTA expresion\n| expresion MULT expresion\n| expresion DIV expresion\n| NUMERO\n| DECIMAL\n| IDENTIFICADORbooleano : VERDADERO\n| FALSOcondicion : IDENTIFICADOR MAYOR IDENTIFICADOR\n| IDENTIFICADOR MENOR IDENTIFICADOR\n| IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR'
+_lr_signature = 'BOOLEANO CADENA DECIMAL DIFERENTE DIV FALSO IDENTIFICADOR IGUAL IGUAL_IGUAL INICIO LLAVEDER LLAVEIZQ MAYOR MAYOR_IGUAL MENOR MENOR_IGUAL MIENTRAS MULT NUMERO PARENDER PARENIZQ PUNTOYCOMA REGRESA REPETIR RESTA SI SINO SUMA VERDADEROprograma : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDERsentencias : sentencia\n                  | sentencia sentencias\n                  | emptyempty : sentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA\n                 | DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA\n                 | BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA\n                 | CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMAsentencia : IDENTIFICADOR IGUAL expresion PUNTOYCOMAsentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER\n                 | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDERsentencia : MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDERsentencia : REGRESA valor PUNTOYCOMAexpresion : expresion SUMA expresion\n                 | expresion RESTA expresion\n                 | expresion MULT expresion\n                 | expresion DIV expresion\n                 | NUMERO\n                 | DECIMAL\n                 | CADENA\n                 | IDENTIFICADORbooleano : VERDADERO\n                | FALSOcondicion : IDENTIFICADOR MAYOR valor\n                 | IDENTIFICADOR MENOR valor\n                 | IDENTIFICADOR IGUAL_IGUAL valor\n                 | valor MAYOR IDENTIFICADOR\n                 | valor MENOR IDENTIFICADOR\n                 | valor IGUAL_IGUAL IDENTIFICADORvalor : NUMERO\n             | DECIMAL\n             | CADENA\n             | VERDADERO\n             | FALSO\n             | IDENTIFICADOR'
     
-_lr_action_items = {'INICIO':([0,],[2,]),'$end':([1,14,],[0,-1,]),'PARENIZQ':([2,12,],[3,20,]),'PARENDER':([3,29,54,55,56,],[4,42,-20,-21,-22,]),'LLAVEIZQ':([4,42,59,],[5,53,60,]),'NUMERO':([5,7,17,22,27,31,33,34,35,36,37,46,51,52,53,58,60,62,],[8,8,25,25,25,-10,-7,25,25,25,25,-4,-5,-6,8,-8,8,-9,]),'DECIMAL':([5,7,17,22,27,31,33,34,35,36,37,46,51,52,53,58,60,62,],[10,10,26,26,26,-10,-7,26,26,26,26,-4,-5,-6,10,-8,10,-9,]),'BOOLEANO':([5,7,31,33,46,51,52,53,58,60,62,],[11,11,-10,-7,-4,-5,-6,11,-8,11,-9,]),'IDENTIFICADOR':([5,7,8,10,11,13,17,20,22,27,31,33,34,35,36,37,43,44,45,46,51,52,53,58,60,62,],[9,9,16,18,19,21,23,30,23,23,-10,-7,23,23,23,23,54,55,56,-4,-5,-6,9,-8,9,-9,]),'SI':([5,7,31,33,46,51,52,53,58,60,62,],[12,12,-10,-7,-4,-5,-6,12,-8,12,-9,]),'REGRESA':([5,7,31,33,46,51,52,53,58,60,62,],[13,13,-10,-7,-4,-5,-6,13,-8,13,-9,]),'LLAVEDER':([6,7,15,31,33,46,51,52,57,58,61,62,],[14,-2,-3,-10,-7,-4,-5,-6,58,-8,62,-9,]),'IGUAL':([9,16,18,19,],[17,22,27,28,]),'PUNTOYCOMA':([21,23,24,25,26,32,38,39,40,41,47,48,49,50,],[31,-17,33,-15,-16,46,51,52,-18,-19,-11,-12,-13,-14,]),'SUMA':([23,24,25,26,32,38,47,48,49,50,],[-17,34,-15,-16,34,34,34,34,34,34,]),'RESTA':([23,24,25,26,32,38,47,48,49,50,],[-17,35,-15,-16,35,35,35,35,35,35,]),'MULT':([23,24,25,26,32,38,47,48,49,50,],[-17,36,-15,-16,36,36,36,36,36,36,]),'DIV':([23,24,25,26,32,38,47,48,49,50,],[-17,37,-15,-16,37,37,37,37,37,37,]),'VERDADERO':([28,],[40,]),'FALSO':([28,],[41,]),'MAYOR':([30,],[43,]),'MENOR':([30,],[44,]),'IGUAL_IGUAL':([30,],[45,]),'SINO':([58,],[59,]),}
+_lr_action_items = {'INICIO':([0,],[2,]),'$end':([1,17,],[0,-1,]),'PARENIZQ':([2,14,15,],[3,24,25,]),'PARENDER':([3,27,28,29,30,31,32,42,45,75,76,77,78,79,80,],[4,-31,-32,-33,-34,-35,-36,58,65,-25,-26,-27,-28,-29,-30,]),'LLAVEIZQ':([4,58,65,86,],[5,74,81,87,]),'NUMERO':([5,7,16,20,24,25,33,39,41,46,48,49,50,51,52,59,60,61,66,71,72,73,74,81,84,85,87,89,],[9,9,27,36,27,27,36,36,36,-14,-10,36,36,36,36,27,27,27,-6,-7,-8,-9,9,9,-11,-13,9,-12,]),'DECIMAL':([5,7,16,20,24,25,33,39,41,46,48,49,50,51,52,59,60,61,66,71,72,73,74,81,84,85,87,89,],[11,11,28,37,28,28,37,37,37,-14,-10,37,37,37,37,28,28,28,-6,-7,-8,-9,11,11,-11,-13,11,-12,]),'BOOLEANO':([5,7,46,48,66,71,72,73,74,81,84,85,87,89,],[12,12,-14,-10,-6,-7,-8,-9,12,12,-11,-13,12,-12,]),'CADENA':([5,7,16,20,24,25,33,39,41,46,48,49,50,51,52,59,60,61,66,71,72,73,74,81,84,85,87,89,],[13,13,29,38,29,29,38,38,38,-14,-10,38,38,38,38,29,29,29,-6,-7,-8,-9,13,13,-11,-13,13,-12,]),'IDENTIFICADOR':([5,7,9,11,12,13,16,20,24,25,33,39,41,46,48,49,50,51,52,59,60,61,62,63,64,66,71,72,73,74,81,84,85,87,89,],[10,10,19,21,22,23,32,34,43,43,34,34,34,-14,-10,34,34,34,34,32,32,32,78,79,80,-6,-7,-8,-9,10,10,-11,-13,10,-12,]),'SI':([5,7,46,48,66,71,72,73,74,81,84,85,87,89,],[14,14,-14,-10,-6,-7,-8,-9,14,14,-11,-13,14,-12,]),'MIENTRAS':([5,7,46,48,66,71,72,73,74,81,84,85,87,89,],[15,15,-14,-10,-6,-7,-8,-9,15,15,-11,-13,15,-12,]),'REGRESA':([5,7,46,48,66,71,72,73,74,81,84,85,87,89,],[16,16,-14,-10,-6,-7,-8,-9,16,16,-11,-13,16,-12,]),'LLAVEDER':([5,6,7,8,18,46,48,66,71,72,73,74,81,82,83,84,85,87,88,89,],[-5,17,-2,-4,-3,-14,-10,-6,-7,-8,-9,-5,-5,84,85,-11,-13,-5,89,-12,]),'IGUAL':([10,19,21,22,23,],[20,33,39,40,41,]),'VERDADERO':([16,24,25,40,59,60,61,],[30,30,30,55,30,30,30,]),'FALSO':([16,24,25,40,59,60,61,],[31,31,31,56,31,31,31,]),'PUNTOYCOMA':([26,27,28,29,30,31,32,34,35,36,37,38,47,53,54,55,56,57,67,68,69,70,],[46,-31,-32,-33,-34,-35,-36,-22,48,-19,-20,-21,66,71,72,-23,-24,73,-15,-16,-17,-18,]),'MAYOR':([27,28,29,30,31,43,44,],[-31,-32,-33,-34,-35,59,62,]),'MENOR':([27,28,29,30,31,43,44,],[-31,-32,-33,-34,-35,60,63,]),'IGUAL_IGUAL':([27,28,29,30,31,43,44,],[-31,-32,-33,-34,-35,61,64,]),'SUMA':([34,35,36,37,38,47,53,57,67,68,69,70,],[-22,49,-19,-20,-21,49,49,49,49,49,49,49,]),'RESTA':([34,35,36,37,38,47,53,57,67,68,69,70,],[-22,50,-19,-20,-21,50,50,50,50,50,50,50,]),'MULT':([34,35,36,37,38,47,53,57,67,68,69,70,],[-22,51,-19,-20,-21,51,51,51,51,51,51,51,]),'DIV':([34,35,36,37,38,47,53,57,67,68,69,70,],[-22,52,-19,-20,-21,52,52,52,52,52,52,52,]),'SINO':([84,],[86,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programa':([0,],[1,]),'sentencias':([5,7,53,60,],[6,15,57,61,]),'sentencia':([5,7,53,60,],[7,7,7,7,]),'expresion':([17,22,27,34,35,36,37,],[24,32,38,47,48,49,50,]),'condicion':([20,],[29,]),'booleano':([28,],[39,]),}
+_lr_goto_items = {'programa':([0,],[1,]),'sentencias':([5,7,74,81,87,],[6,18,82,83,88,]),'sentencia':([5,7,74,81,87,],[7,7,7,7,7,]),'empty':([5,7,74,81,87,],[8,8,8,8,8,]),'valor':([16,24,25,59,60,61,],[26,44,44,75,76,77,]),'expresion':([20,33,39,41,49,50,51,52,],[35,47,53,57,67,68,69,70,]),'condicion':([24,25,],[42,45,]),'booleano':([40,],[54,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,26 +27,40 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> programa","S'",1,None,None,None),
-  ('programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER','programa',6,'p_programa','tempCodeRunnerFile.py',36),
-  ('sentencias -> sentencia','sentencias',1,'p_sentencias','tempCodeRunnerFile.py',40),
-  ('sentencias -> sentencia sentencias','sentencias',2,'p_sentencias','tempCodeRunnerFile.py',41),
-  ('sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','tempCodeRunnerFile.py',45),
-  ('sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','tempCodeRunnerFile.py',46),
-  ('sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','tempCodeRunnerFile.py',47),
-  ('sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',4,'p_sentencia_asignacion','tempCodeRunnerFile.py',51),
-  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER','sentencia',7,'p_sentencia_si','tempCodeRunnerFile.py',56),
-  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER','sentencia',11,'p_sentencia_si','tempCodeRunnerFile.py',57),
-  ('sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA','sentencia',3,'p_sentencia_regresa','tempCodeRunnerFile.py',61),
-  ('expresion -> expresion SUMA expresion','expresion',3,'p_expresion','tempCodeRunnerFile.py',66),
-  ('expresion -> expresion RESTA expresion','expresion',3,'p_expresion','tempCodeRunnerFile.py',67),
-  ('expresion -> expresion MULT expresion','expresion',3,'p_expresion','tempCodeRunnerFile.py',68),
-  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion','tempCodeRunnerFile.py',69),
-  ('expresion -> NUMERO','expresion',1,'p_expresion','tempCodeRunnerFile.py',70),
-  ('expresion -> DECIMAL','expresion',1,'p_expresion','tempCodeRunnerFile.py',71),
-  ('expresion -> IDENTIFICADOR','expresion',1,'p_expresion','tempCodeRunnerFile.py',72),
-  ('booleano -> VERDADERO','booleano',1,'p_booleano','tempCodeRunnerFile.py',85),
-  ('booleano -> FALSO','booleano',1,'p_booleano','tempCodeRunnerFile.py',86),
-  ('condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR','condicion',3,'p_condicion','tempCodeRunnerFile.py',90),
-  ('condicion -> IDENTIFICADOR MENOR IDENTIFICADOR','condicion',3,'p_condicion','tempCodeRunnerFile.py',91),
-  ('condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR','condicion',3,'p_condicion','tempCodeRunnerFile.py',92),
+  ('programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER','programa',6,'p_programa','parser.py',40),
+  ('sentencias -> sentencia','sentencias',1,'p_sentencias','parser.py',44),
+  ('sentencias -> sentencia sentencias','sentencias',2,'p_sentencias','parser.py',45),
+  ('sentencias -> empty','sentencias',1,'p_sentencias','parser.py',46),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',50),
+  ('sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',54),
+  ('sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',55),
+  ('sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',56),
+  ('sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',5,'p_sentencia_declaracion','parser.py',57),
+  ('sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA','sentencia',4,'p_sentencia_asignacion','parser.py',61),
+  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER','sentencia',7,'p_sentencia_si','parser.py',66),
+  ('sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER','sentencia',11,'p_sentencia_si','parser.py',67),
+  ('sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER','sentencia',7,'p_sentencia_mientras','parser.py',71),
+  ('sentencia -> REGRESA valor PUNTOYCOMA','sentencia',3,'p_sentencia_regresa','parser.py',75),
+  ('expresion -> expresion SUMA expresion','expresion',3,'p_expresion','parser.py',80),
+  ('expresion -> expresion RESTA expresion','expresion',3,'p_expresion','parser.py',81),
+  ('expresion -> expresion MULT expresion','expresion',3,'p_expresion','parser.py',82),
+  ('expresion -> expresion DIV expresion','expresion',3,'p_expresion','parser.py',83),
+  ('expresion -> NUMERO','expresion',1,'p_expresion','parser.py',84),
+  ('expresion -> DECIMAL','expresion',1,'p_expresion','parser.py',85),
+  ('expresion -> CADENA','expresion',1,'p_expresion','parser.py',86),
+  ('expresion -> IDENTIFICADOR','expresion',1,'p_expresion','parser.py',87),
+  ('booleano -> VERDADERO','booleano',1,'p_booleano','parser.py',111),
+  ('booleano -> FALSO','booleano',1,'p_booleano','parser.py',112),
+  ('condicion -> IDENTIFICADOR MAYOR valor','condicion',3,'p_condicion','parser.py',116),
+  ('condicion -> IDENTIFICADOR MENOR valor','condicion',3,'p_condicion','parser.py',117),
+  ('condicion -> IDENTIFICADOR IGUAL_IGUAL valor','condicion',3,'p_condicion','parser.py',118),
+  ('condicion -> valor MAYOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',119),
+  ('condicion -> valor MENOR IDENTIFICADOR','condicion',3,'p_condicion','parser.py',120),
+  ('condicion -> valor IGUAL_IGUAL IDENTIFICADOR','condicion',3,'p_condicion','parser.py',121),
+  ('valor -> NUMERO','valor',1,'p_valor','parser.py',128),
+  ('valor -> DECIMAL','valor',1,'p_valor','parser.py',129),
+  ('valor -> CADENA','valor',1,'p_valor','parser.py',130),
+  ('valor -> VERDADERO','valor',1,'p_valor','parser.py',131),
+  ('valor -> FALSO','valor',1,'p_valor','parser.py',132),
+  ('valor -> IDENTIFICADOR','valor',1,'p_valor','parser.py',133),
 ]

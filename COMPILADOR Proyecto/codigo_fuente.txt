@@ -1,9 +1,31 @@
 inicio() {
-    numero x = 10;
-    decimal y = 5.5;
-    si (x > y) {
-        regresa x;
+    // Declaraciones
+    numero edad = 20;
+    decimal promedio = 8.75;
+    booleano aprobado = verdadero;
+    cadena mensaje = "Bienvenido";
+    cadena usuario = "Carlos";
+
+    // Operaciones
+    edad = edad + 5;
+    promedio = promedio / 2;
+    cadena resultado = "Final";
+
+    // Condicional con retorno
+    si (edad > 18) {
+        regresa mensaje;
     } sino {
-        regresa y;
+        regresa "Acceso denegado";
     }
+
+    // Bucle (simulado)
+    mientras (edad > 0) {
+        edad = edad - 1;
+    }
+
+    // Sentencias adicionales
+    decimal doble = promedio * 2;
+    cadena despedida = "Gracias por usar el sistema";
+
+    regresa despedida;
 }

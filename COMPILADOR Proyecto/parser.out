@@ -2,11 +2,9 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    CADENA
     DIFERENTE
     MAYOR_IGUAL
     MENOR_IGUAL
-    MIENTRAS
     REPETIR
 
 Grammar
@@ -15,67 +13,83 @@ Rule 0     S' -> programa
 Rule 1     programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER
 Rule 2     sentencias -> sentencia
 Rule 3     sentencias -> sentencia sentencias
-Rule 4     sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-Rule 5     sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-Rule 6     sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-Rule 7     sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-Rule 8     sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-Rule 9     sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-Rule 10    sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA
-Rule 11    expresion -> expresion SUMA expresion
-Rule 12    expresion -> expresion RESTA expresion
-Rule 13    expresion -> expresion MULT expresion
-Rule 14    expresion -> expresion DIV expresion
-Rule 15    expresion -> NUMERO
-Rule 16    expresion -> DECIMAL
-Rule 17    expresion -> IDENTIFICADOR
-Rule 18    booleano -> VERDADERO
-Rule 19    booleano -> FALSO
-Rule 20    condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR
-Rule 21    condicion -> IDENTIFICADOR MENOR IDENTIFICADOR
-Rule 22    condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR
+Rule 4     sentencias -> empty
+Rule 5     empty -> <empty>
+Rule 6     sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+Rule 7     sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+Rule 8     sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+Rule 9     sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+Rule 10    sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+Rule 11    sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+Rule 12    sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+Rule 13    sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+Rule 14    sentencia -> REGRESA valor PUNTOYCOMA
+Rule 15    expresion -> expresion SUMA expresion
+Rule 16    expresion -> expresion RESTA expresion
+Rule 17    expresion -> expresion MULT expresion
+Rule 18    expresion -> expresion DIV expresion
+Rule 19    expresion -> NUMERO
+Rule 20    expresion -> DECIMAL
+Rule 21    expresion -> CADENA
+Rule 22    expresion -> IDENTIFICADOR
+Rule 23    booleano -> VERDADERO
+Rule 24    booleano -> FALSO
+Rule 25    condicion -> IDENTIFICADOR MAYOR valor
+Rule 26    condicion -> IDENTIFICADOR MENOR valor
+Rule 27    condicion -> IDENTIFICADOR IGUAL_IGUAL valor
+Rule 28    condicion -> valor MAYOR IDENTIFICADOR
+Rule 29    condicion -> valor MENOR IDENTIFICADOR
+Rule 30    condicion -> valor IGUAL_IGUAL IDENTIFICADOR
+Rule 31    valor -> NUMERO
+Rule 32    valor -> DECIMAL
+Rule 33    valor -> CADENA
+Rule 34    valor -> VERDADERO
+Rule 35    valor -> FALSO
+Rule 36    valor -> IDENTIFICADOR
 
 Terminals, with rules where they appear
 
-BOOLEANO             : 6
-CADENA               : 
-DECIMAL              : 5 16
+BOOLEANO             : 8
+CADENA               : 9 21 33
+DECIMAL              : 7 20 32
 DIFERENTE            : 
-DIV                  : 14
-FALSO                : 19
-IDENTIFICADOR        : 4 5 6 7 10 17 20 20 21 21 22 22
-IGUAL                : 4 5 6 7
-IGUAL_IGUAL          : 22
+DIV                  : 18
+FALSO                : 24 35
+IDENTIFICADOR        : 6 7 8 9 10 22 25 26 27 28 29 30 36
+IGUAL                : 6 7 8 9 10
+IGUAL_IGUAL          : 27 30
 INICIO               : 1
-LLAVEDER             : 1 8 9 9
-LLAVEIZQ             : 1 8 9 9
-MAYOR                : 20
+LLAVEDER             : 1 11 12 12 13
+LLAVEIZQ             : 1 11 12 12 13
+MAYOR                : 25 28
 MAYOR_IGUAL          : 
-MENOR                : 21
+MENOR                : 26 29
 MENOR_IGUAL          : 
-MIENTRAS             : 
-MULT                 : 13
-NUMERO               : 4 15
-PARENDER             : 1 8 9
-PARENIZQ             : 1 8 9
-PUNTOYCOMA           : 4 5 6 7 10
-REGRESA              : 10
+MIENTRAS             : 13
+MULT                 : 17
+NUMERO               : 6 19 31
+PARENDER             : 1 11 12 13
+PARENIZQ             : 1 11 12 13
+PUNTOYCOMA           : 6 7 8 9 10 14
+REGRESA              : 14
 REPETIR              : 
-RESTA                : 12
-SI                   : 8 9
-SINO                 : 9
-SUMA                 : 11
-VERDADERO            : 18
+RESTA                : 16
+SI                   : 11 12
+SINO                 : 12
+SUMA                 : 15
+VERDADERO            : 23 34
 error                : 
 
 Nonterminals, with rules where they appear
 
-booleano             : 6
-condicion            : 8 9
-expresion            : 4 5 7 11 11 12 12 13 13 14 14
+booleano             : 8
+condicion            : 11 12 13
+empty                : 4
+expresion            : 6 7 9 10 15 15 16 16 17 17 18 18
 programa             : 0
 sentencia            : 2 3
-sentencias           : 1 3 8 9 9
+sentencias           : 1 3 11 12 12 13
+valor                : 14 25 26 27 28 29 30
 
 Parsing method: LALR
 
@@ -120,29 +134,37 @@ state 5
     (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ . sentencias LLAVEDER
     (2) sentencias -> . sentencia
     (3) sentencias -> . sentencia sentencias
-    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (6) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-    (7) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (8) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (10) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+    (4) sentencias -> . empty
+    (6) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (7) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (8) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (9) sentencia -> . CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (13) sentencia -> . MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (14) sentencia -> . REGRESA valor PUNTOYCOMA
+    (5) empty -> .
 
-    NUMERO          shift and go to state 8
-    DECIMAL         shift and go to state 10
-    BOOLEANO        shift and go to state 11
-    IDENTIFICADOR   shift and go to state 9
-    SI              shift and go to state 12
-    REGRESA         shift and go to state 13
+    NUMERO          shift and go to state 9
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    IDENTIFICADOR   shift and go to state 10
+    SI              shift and go to state 14
+    MIENTRAS        shift and go to state 15
+    REGRESA         shift and go to state 16
+    LLAVEDER        reduce using rule 5 (empty -> .)
 
     sentencias                     shift and go to state 6
     sentencia                      shift and go to state 7
+    empty                          shift and go to state 8
 
 state 6
 
     (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias . LLAVEDER
 
-    LLAVEDER        shift and go to state 14
+    LLAVEDER        shift and go to state 17
 
 
 state 7
@@ -151,693 +173,1120 @@ state 7
     (3) sentencias -> sentencia . sentencias
     (2) sentencias -> . sentencia
     (3) sentencias -> . sentencia sentencias
-    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (6) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-    (7) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (8) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (10) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+    (4) sentencias -> . empty
+    (6) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (7) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (8) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (9) sentencia -> . CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (13) sentencia -> . MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (14) sentencia -> . REGRESA valor PUNTOYCOMA
+    (5) empty -> .
 
+  ! reduce/reduce conflict for LLAVEDER resolved using rule 2 (sentencias -> sentencia .)
     LLAVEDER        reduce using rule 2 (sentencias -> sentencia .)
-    NUMERO          shift and go to state 8
-    DECIMAL         shift and go to state 10
-    BOOLEANO        shift and go to state 11
-    IDENTIFICADOR   shift and go to state 9
-    SI              shift and go to state 12
-    REGRESA         shift and go to state 13
+    NUMERO          shift and go to state 9
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    IDENTIFICADOR   shift and go to state 10
+    SI              shift and go to state 14
+    MIENTRAS        shift and go to state 15
+    REGRESA         shift and go to state 16
+
+  ! LLAVEDER        [ reduce using rule 5 (empty -> .) ]
 
     sentencia                      shift and go to state 7
-    sentencias                     shift and go to state 15
+    sentencias                     shift and go to state 18
+    empty                          shift and go to state 8
 
 state 8
 
-    (4) sentencia -> NUMERO . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (4) sentencias -> empty .
 
-    IDENTIFICADOR   shift and go to state 16
+    LLAVEDER        reduce using rule 4 (sentencias -> empty .)
 
 
 state 9
 
-    (7) sentencia -> IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
-
-    IGUAL           shift and go to state 17
-
-
-state 10
-
-    (5) sentencia -> DECIMAL . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-
-    IDENTIFICADOR   shift and go to state 18
-
-
-state 11
-
-    (6) sentencia -> BOOLEANO . IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (6) sentencia -> NUMERO . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
 
     IDENTIFICADOR   shift and go to state 19
 
 
-state 12
+state 10
 
-    (8) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (10) sentencia -> IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
-    PARENIZQ        shift and go to state 20
+    IGUAL           shift and go to state 20
 
 
-state 13
+state 11
 
-    (10) sentencia -> REGRESA . IDENTIFICADOR PUNTOYCOMA
+    (7) sentencia -> DECIMAL . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
 
     IDENTIFICADOR   shift and go to state 21
 
 
+state 12
+
+    (8) sentencia -> BOOLEANO . IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 22
+
+
+state 13
+
+    (9) sentencia -> CADENA . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 23
+
+
 state 14
+
+    (11) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> SI . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    PARENIZQ        shift and go to state 24
+
+
+state 15
+
+    (13) sentencia -> MIENTRAS . PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+
+    PARENIZQ        shift and go to state 25
+
+
+state 16
+
+    (14) sentencia -> REGRESA . valor PUNTOYCOMA
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
+
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
+    IDENTIFICADOR   shift and go to state 32
+
+    valor                          shift and go to state 26
+
+state 17
 
     (1) programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER .
 
     $end            reduce using rule 1 (programa -> INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER .)
 
 
-state 15
+state 18
 
     (3) sentencias -> sentencia sentencias .
 
     LLAVEDER        reduce using rule 3 (sentencias -> sentencia sentencias .)
 
 
-state 16
-
-    (4) sentencia -> NUMERO IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
-
-    IGUAL           shift and go to state 22
-
-
-state 17
-
-    (7) sentencia -> IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
-
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
-
-    expresion                      shift and go to state 24
-
-state 18
-
-    (5) sentencia -> DECIMAL IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
-
-    IGUAL           shift and go to state 27
-
-
 state 19
 
-    (6) sentencia -> BOOLEANO IDENTIFICADOR . IGUAL booleano PUNTOYCOMA
+    (6) sentencia -> NUMERO IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
-    IGUAL           shift and go to state 28
+    IGUAL           shift and go to state 33
 
 
 state 20
 
-    (8) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (20) condicion -> . IDENTIFICADOR MAYOR IDENTIFICADOR
-    (21) condicion -> . IDENTIFICADOR MENOR IDENTIFICADOR
-    (22) condicion -> . IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR
+    (10) sentencia -> IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    IDENTIFICADOR   shift and go to state 30
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
-    condicion                      shift and go to state 29
+    expresion                      shift and go to state 35
 
 state 21
 
-    (10) sentencia -> REGRESA IDENTIFICADOR . PUNTOYCOMA
+    (7) sentencia -> DECIMAL IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
-    PUNTOYCOMA      shift and go to state 31
+    IGUAL           shift and go to state 39
 
 
 state 22
 
-    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
+    (8) sentencia -> BOOLEANO IDENTIFICADOR . IGUAL booleano PUNTOYCOMA
 
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    IGUAL           shift and go to state 40
 
-    expresion                      shift and go to state 32
 
 state 23
 
-    (17) expresion -> IDENTIFICADOR .
+    (9) sentencia -> CADENA IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
-    PUNTOYCOMA      reduce using rule 17 (expresion -> IDENTIFICADOR .)
-    SUMA            reduce using rule 17 (expresion -> IDENTIFICADOR .)
-    RESTA           reduce using rule 17 (expresion -> IDENTIFICADOR .)
-    MULT            reduce using rule 17 (expresion -> IDENTIFICADOR .)
-    DIV             reduce using rule 17 (expresion -> IDENTIFICADOR .)
+    IGUAL           shift and go to state 41
 
 
 state 24
 
-    (7) sentencia -> IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (11) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> SI PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (25) condicion -> . IDENTIFICADOR MAYOR valor
+    (26) condicion -> . IDENTIFICADOR MENOR valor
+    (27) condicion -> . IDENTIFICADOR IGUAL_IGUAL valor
+    (28) condicion -> . valor MAYOR IDENTIFICADOR
+    (29) condicion -> . valor MENOR IDENTIFICADOR
+    (30) condicion -> . valor IGUAL_IGUAL IDENTIFICADOR
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
 
-    PUNTOYCOMA      shift and go to state 33
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
+    IDENTIFICADOR   shift and go to state 43
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
 
+    condicion                      shift and go to state 42
+    valor                          shift and go to state 44
 
 state 25
 
-    (15) expresion -> NUMERO .
+    (13) sentencia -> MIENTRAS PARENIZQ . condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (25) condicion -> . IDENTIFICADOR MAYOR valor
+    (26) condicion -> . IDENTIFICADOR MENOR valor
+    (27) condicion -> . IDENTIFICADOR IGUAL_IGUAL valor
+    (28) condicion -> . valor MAYOR IDENTIFICADOR
+    (29) condicion -> . valor MENOR IDENTIFICADOR
+    (30) condicion -> . valor IGUAL_IGUAL IDENTIFICADOR
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
 
-    PUNTOYCOMA      reduce using rule 15 (expresion -> NUMERO .)
-    SUMA            reduce using rule 15 (expresion -> NUMERO .)
-    RESTA           reduce using rule 15 (expresion -> NUMERO .)
-    MULT            reduce using rule 15 (expresion -> NUMERO .)
-    DIV             reduce using rule 15 (expresion -> NUMERO .)
+    IDENTIFICADOR   shift and go to state 43
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
 
+    condicion                      shift and go to state 45
+    valor                          shift and go to state 44
 
 state 26
 
-    (16) expresion -> DECIMAL .
+    (14) sentencia -> REGRESA valor . PUNTOYCOMA
 
-    PUNTOYCOMA      reduce using rule 16 (expresion -> DECIMAL .)
-    SUMA            reduce using rule 16 (expresion -> DECIMAL .)
-    RESTA           reduce using rule 16 (expresion -> DECIMAL .)
-    MULT            reduce using rule 16 (expresion -> DECIMAL .)
-    DIV             reduce using rule 16 (expresion -> DECIMAL .)
+    PUNTOYCOMA      shift and go to state 46
 
 
 state 27
 
-    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
+    (31) valor -> NUMERO .
 
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    PUNTOYCOMA      reduce using rule 31 (valor -> NUMERO .)
+    MAYOR           reduce using rule 31 (valor -> NUMERO .)
+    MENOR           reduce using rule 31 (valor -> NUMERO .)
+    IGUAL_IGUAL     reduce using rule 31 (valor -> NUMERO .)
+    PARENDER        reduce using rule 31 (valor -> NUMERO .)
 
-    expresion                      shift and go to state 38
 
 state 28
 
-    (6) sentencia -> BOOLEANO IDENTIFICADOR IGUAL . booleano PUNTOYCOMA
-    (18) booleano -> . VERDADERO
-    (19) booleano -> . FALSO
+    (32) valor -> DECIMAL .
 
-    VERDADERO       shift and go to state 40
-    FALSO           shift and go to state 41
+    PUNTOYCOMA      reduce using rule 32 (valor -> DECIMAL .)
+    MAYOR           reduce using rule 32 (valor -> DECIMAL .)
+    MENOR           reduce using rule 32 (valor -> DECIMAL .)
+    IGUAL_IGUAL     reduce using rule 32 (valor -> DECIMAL .)
+    PARENDER        reduce using rule 32 (valor -> DECIMAL .)
 
-    booleano                       shift and go to state 39
 
 state 29
 
-    (8) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (33) valor -> CADENA .
 
-    PARENDER        shift and go to state 42
+    PUNTOYCOMA      reduce using rule 33 (valor -> CADENA .)
+    MAYOR           reduce using rule 33 (valor -> CADENA .)
+    MENOR           reduce using rule 33 (valor -> CADENA .)
+    IGUAL_IGUAL     reduce using rule 33 (valor -> CADENA .)
+    PARENDER        reduce using rule 33 (valor -> CADENA .)
 
 
 state 30
 
-    (20) condicion -> IDENTIFICADOR . MAYOR IDENTIFICADOR
-    (21) condicion -> IDENTIFICADOR . MENOR IDENTIFICADOR
-    (22) condicion -> IDENTIFICADOR . IGUAL_IGUAL IDENTIFICADOR
+    (34) valor -> VERDADERO .
 
-    MAYOR           shift and go to state 43
-    MENOR           shift and go to state 44
-    IGUAL_IGUAL     shift and go to state 45
+    PUNTOYCOMA      reduce using rule 34 (valor -> VERDADERO .)
+    MAYOR           reduce using rule 34 (valor -> VERDADERO .)
+    MENOR           reduce using rule 34 (valor -> VERDADERO .)
+    IGUAL_IGUAL     reduce using rule 34 (valor -> VERDADERO .)
+    PARENDER        reduce using rule 34 (valor -> VERDADERO .)
 
 
 state 31
 
-    (10) sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .
+    (35) valor -> FALSO .
 
-    NUMERO          reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    DECIMAL         reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    BOOLEANO        reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    IDENTIFICADOR   reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    SI              reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    REGRESA         reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
-    LLAVEDER        reduce using rule 10 (sentencia -> REGRESA IDENTIFICADOR PUNTOYCOMA .)
+    PUNTOYCOMA      reduce using rule 35 (valor -> FALSO .)
+    MAYOR           reduce using rule 35 (valor -> FALSO .)
+    MENOR           reduce using rule 35 (valor -> FALSO .)
+    IGUAL_IGUAL     reduce using rule 35 (valor -> FALSO .)
+    PARENDER        reduce using rule 35 (valor -> FALSO .)
 
 
 state 32
 
-    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (36) valor -> IDENTIFICADOR .
 
-    PUNTOYCOMA      shift and go to state 46
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
+    PUNTOYCOMA      reduce using rule 36 (valor -> IDENTIFICADOR .)
+    PARENDER        reduce using rule 36 (valor -> IDENTIFICADOR .)
 
 
 state 33
 
-    (7) sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+    (6) sentencia -> NUMERO IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    NUMERO          reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    DECIMAL         reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    BOOLEANO        reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    IDENTIFICADOR   reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    SI              reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    REGRESA         reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    LLAVEDER        reduce using rule 7 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-
-
-state 34
-
-    (11) expresion -> expresion SUMA . expresion
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
-
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
     expresion                      shift and go to state 47
 
+state 34
+
+    (22) expresion -> IDENTIFICADOR .
+
+    PUNTOYCOMA      reduce using rule 22 (expresion -> IDENTIFICADOR .)
+    SUMA            reduce using rule 22 (expresion -> IDENTIFICADOR .)
+    RESTA           reduce using rule 22 (expresion -> IDENTIFICADOR .)
+    MULT            reduce using rule 22 (expresion -> IDENTIFICADOR .)
+    DIV             reduce using rule 22 (expresion -> IDENTIFICADOR .)
+
+
 state 35
 
-    (12) expresion -> expresion RESTA . expresion
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
+    (10) sentencia -> IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
 
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    PUNTOYCOMA      shift and go to state 48
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
 
-    expresion                      shift and go to state 48
 
 state 36
 
-    (13) expresion -> expresion MULT . expresion
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
+    (19) expresion -> NUMERO .
 
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    PUNTOYCOMA      reduce using rule 19 (expresion -> NUMERO .)
+    SUMA            reduce using rule 19 (expresion -> NUMERO .)
+    RESTA           reduce using rule 19 (expresion -> NUMERO .)
+    MULT            reduce using rule 19 (expresion -> NUMERO .)
+    DIV             reduce using rule 19 (expresion -> NUMERO .)
 
-    expresion                      shift and go to state 49
 
 state 37
 
-    (14) expresion -> expresion DIV . expresion
-    (11) expresion -> . expresion SUMA expresion
-    (12) expresion -> . expresion RESTA expresion
-    (13) expresion -> . expresion MULT expresion
-    (14) expresion -> . expresion DIV expresion
-    (15) expresion -> . NUMERO
-    (16) expresion -> . DECIMAL
-    (17) expresion -> . IDENTIFICADOR
+    (20) expresion -> DECIMAL .
 
-    NUMERO          shift and go to state 25
-    DECIMAL         shift and go to state 26
-    IDENTIFICADOR   shift and go to state 23
+    PUNTOYCOMA      reduce using rule 20 (expresion -> DECIMAL .)
+    SUMA            reduce using rule 20 (expresion -> DECIMAL .)
+    RESTA           reduce using rule 20 (expresion -> DECIMAL .)
+    MULT            reduce using rule 20 (expresion -> DECIMAL .)
+    DIV             reduce using rule 20 (expresion -> DECIMAL .)
 
-    expresion                      shift and go to state 50
 
 state 38
 
-    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (21) expresion -> CADENA .
 
-    PUNTOYCOMA      shift and go to state 51
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
+    PUNTOYCOMA      reduce using rule 21 (expresion -> CADENA .)
+    SUMA            reduce using rule 21 (expresion -> CADENA .)
+    RESTA           reduce using rule 21 (expresion -> CADENA .)
+    MULT            reduce using rule 21 (expresion -> CADENA .)
+    DIV             reduce using rule 21 (expresion -> CADENA .)
 
 
 state 39
 
-    (6) sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano . PUNTOYCOMA
+    (7) sentencia -> DECIMAL IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    PUNTOYCOMA      shift and go to state 52
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
+    expresion                      shift and go to state 53
 
 state 40
 
-    (18) booleano -> VERDADERO .
+    (8) sentencia -> BOOLEANO IDENTIFICADOR IGUAL . booleano PUNTOYCOMA
+    (23) booleano -> . VERDADERO
+    (24) booleano -> . FALSO
 
-    PUNTOYCOMA      reduce using rule 18 (booleano -> VERDADERO .)
+    VERDADERO       shift and go to state 55
+    FALSO           shift and go to state 56
 
+    booleano                       shift and go to state 54
 
 state 41
 
-    (19) booleano -> FALSO .
+    (9) sentencia -> CADENA IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    PUNTOYCOMA      reduce using rule 19 (booleano -> FALSO .)
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
+    expresion                      shift and go to state 57
 
 state 42
 
-    (8) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (11) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> SI PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
 
-    LLAVEIZQ        shift and go to state 53
+    PARENDER        shift and go to state 58
 
 
 state 43
 
-    (20) condicion -> IDENTIFICADOR MAYOR . IDENTIFICADOR
+    (25) condicion -> IDENTIFICADOR . MAYOR valor
+    (26) condicion -> IDENTIFICADOR . MENOR valor
+    (27) condicion -> IDENTIFICADOR . IGUAL_IGUAL valor
+    (36) valor -> IDENTIFICADOR .
 
-    IDENTIFICADOR   shift and go to state 54
+  ! shift/reduce conflict for MAYOR resolved as shift
+  ! shift/reduce conflict for MENOR resolved as shift
+  ! shift/reduce conflict for IGUAL_IGUAL resolved as shift
+    MAYOR           shift and go to state 59
+    MENOR           shift and go to state 60
+    IGUAL_IGUAL     shift and go to state 61
+
+  ! MAYOR           [ reduce using rule 36 (valor -> IDENTIFICADOR .) ]
+  ! MENOR           [ reduce using rule 36 (valor -> IDENTIFICADOR .) ]
+  ! IGUAL_IGUAL     [ reduce using rule 36 (valor -> IDENTIFICADOR .) ]
 
 
 state 44
 
-    (21) condicion -> IDENTIFICADOR MENOR . IDENTIFICADOR
+    (28) condicion -> valor . MAYOR IDENTIFICADOR
+    (29) condicion -> valor . MENOR IDENTIFICADOR
+    (30) condicion -> valor . IGUAL_IGUAL IDENTIFICADOR
 
-    IDENTIFICADOR   shift and go to state 55
+    MAYOR           shift and go to state 62
+    MENOR           shift and go to state 63
+    IGUAL_IGUAL     shift and go to state 64
 
 
 state 45
 
-    (22) condicion -> IDENTIFICADOR IGUAL_IGUAL . IDENTIFICADOR
+    (13) sentencia -> MIENTRAS PARENIZQ condicion . PARENDER LLAVEIZQ sentencias LLAVEDER
 
-    IDENTIFICADOR   shift and go to state 56
+    PARENDER        shift and go to state 65
 
 
 state 46
 
-    (4) sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+    (14) sentencia -> REGRESA valor PUNTOYCOMA .
 
-    NUMERO          reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    DECIMAL         reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    BOOLEANO        reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    IDENTIFICADOR   reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    SI              reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    REGRESA         reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    LLAVEDER        reduce using rule 4 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    NUMERO          reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    DECIMAL         reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    CADENA          reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    SI              reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    REGRESA         reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 14 (sentencia -> REGRESA valor PUNTOYCOMA .)
 
 
 state 47
 
-    (11) expresion -> expresion SUMA expresion .
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (6) sentencia -> NUMERO IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
 
-  ! shift/reduce conflict for SUMA resolved as shift
-  ! shift/reduce conflict for RESTA resolved as shift
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    PUNTOYCOMA      reduce using rule 11 (expresion -> expresion SUMA expresion .)
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
-
-  ! SUMA            [ reduce using rule 11 (expresion -> expresion SUMA expresion .) ]
-  ! RESTA           [ reduce using rule 11 (expresion -> expresion SUMA expresion .) ]
-  ! MULT            [ reduce using rule 11 (expresion -> expresion SUMA expresion .) ]
-  ! DIV             [ reduce using rule 11 (expresion -> expresion SUMA expresion .) ]
+    PUNTOYCOMA      shift and go to state 66
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
 
 
 state 48
 
-    (12) expresion -> expresion RESTA expresion .
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (10) sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
 
-  ! shift/reduce conflict for SUMA resolved as shift
-  ! shift/reduce conflict for RESTA resolved as shift
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    PUNTOYCOMA      reduce using rule 12 (expresion -> expresion RESTA expresion .)
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
-
-  ! SUMA            [ reduce using rule 12 (expresion -> expresion RESTA expresion .) ]
-  ! RESTA           [ reduce using rule 12 (expresion -> expresion RESTA expresion .) ]
-  ! MULT            [ reduce using rule 12 (expresion -> expresion RESTA expresion .) ]
-  ! DIV             [ reduce using rule 12 (expresion -> expresion RESTA expresion .) ]
+    NUMERO          reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    SI              reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 10 (sentencia -> IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
 
 
 state 49
 
-    (13) expresion -> expresion MULT expresion .
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (15) expresion -> expresion SUMA . expresion
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-  ! shift/reduce conflict for SUMA resolved as shift
-  ! shift/reduce conflict for RESTA resolved as shift
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    PUNTOYCOMA      reduce using rule 13 (expresion -> expresion MULT expresion .)
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
-  ! SUMA            [ reduce using rule 13 (expresion -> expresion MULT expresion .) ]
-  ! RESTA           [ reduce using rule 13 (expresion -> expresion MULT expresion .) ]
-  ! MULT            [ reduce using rule 13 (expresion -> expresion MULT expresion .) ]
-  ! DIV             [ reduce using rule 13 (expresion -> expresion MULT expresion .) ]
-
+    expresion                      shift and go to state 67
 
 state 50
 
-    (14) expresion -> expresion DIV expresion .
-    (11) expresion -> expresion . SUMA expresion
-    (12) expresion -> expresion . RESTA expresion
-    (13) expresion -> expresion . MULT expresion
-    (14) expresion -> expresion . DIV expresion
+    (16) expresion -> expresion RESTA . expresion
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-  ! shift/reduce conflict for SUMA resolved as shift
-  ! shift/reduce conflict for RESTA resolved as shift
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    PUNTOYCOMA      reduce using rule 14 (expresion -> expresion DIV expresion .)
-    SUMA            shift and go to state 34
-    RESTA           shift and go to state 35
-    MULT            shift and go to state 36
-    DIV             shift and go to state 37
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
-  ! SUMA            [ reduce using rule 14 (expresion -> expresion DIV expresion .) ]
-  ! RESTA           [ reduce using rule 14 (expresion -> expresion DIV expresion .) ]
-  ! MULT            [ reduce using rule 14 (expresion -> expresion DIV expresion .) ]
-  ! DIV             [ reduce using rule 14 (expresion -> expresion DIV expresion .) ]
-
+    expresion                      shift and go to state 68
 
 state 51
 
-    (5) sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+    (17) expresion -> expresion MULT . expresion
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    NUMERO          reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    DECIMAL         reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    BOOLEANO        reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    IDENTIFICADOR   reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    SI              reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    REGRESA         reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
-    LLAVEDER        reduce using rule 5 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
+    expresion                      shift and go to state 69
 
 state 52
 
-    (6) sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .
+    (18) expresion -> expresion DIV . expresion
+    (15) expresion -> . expresion SUMA expresion
+    (16) expresion -> . expresion RESTA expresion
+    (17) expresion -> . expresion MULT expresion
+    (18) expresion -> . expresion DIV expresion
+    (19) expresion -> . NUMERO
+    (20) expresion -> . DECIMAL
+    (21) expresion -> . CADENA
+    (22) expresion -> . IDENTIFICADOR
 
-    NUMERO          reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    DECIMAL         reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    BOOLEANO        reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    IDENTIFICADOR   reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    SI              reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    REGRESA         reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
-    LLAVEDER        reduce using rule 6 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    NUMERO          shift and go to state 36
+    DECIMAL         shift and go to state 37
+    CADENA          shift and go to state 38
+    IDENTIFICADOR   shift and go to state 34
 
+    expresion                      shift and go to state 70
 
 state 53
 
-    (8) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (2) sentencias -> . sentencia
-    (3) sentencias -> . sentencia sentencias
-    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (6) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-    (7) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (8) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (10) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+    (7) sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
 
-    NUMERO          shift and go to state 8
-    DECIMAL         shift and go to state 10
-    BOOLEANO        shift and go to state 11
-    IDENTIFICADOR   shift and go to state 9
-    SI              shift and go to state 12
-    REGRESA         shift and go to state 13
+    PUNTOYCOMA      shift and go to state 71
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
 
-    sentencias                     shift and go to state 57
-    sentencia                      shift and go to state 7
 
 state 54
 
-    (20) condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR .
+    (8) sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano . PUNTOYCOMA
 
-    PARENDER        reduce using rule 20 (condicion -> IDENTIFICADOR MAYOR IDENTIFICADOR .)
+    PUNTOYCOMA      shift and go to state 72
 
 
 state 55
 
-    (21) condicion -> IDENTIFICADOR MENOR IDENTIFICADOR .
+    (23) booleano -> VERDADERO .
 
-    PARENDER        reduce using rule 21 (condicion -> IDENTIFICADOR MENOR IDENTIFICADOR .)
+    PUNTOYCOMA      reduce using rule 23 (booleano -> VERDADERO .)
 
 
 state 56
 
-    (22) condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR .
+    (24) booleano -> FALSO .
 
-    PARENDER        reduce using rule 22 (condicion -> IDENTIFICADOR IGUAL_IGUAL IDENTIFICADOR .)
+    PUNTOYCOMA      reduce using rule 24 (booleano -> FALSO .)
 
 
 state 57
 
-    (8) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (9) sentencia -> CADENA IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
 
-    LLAVEDER        shift and go to state 58
+    PUNTOYCOMA      shift and go to state 73
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
 
 
 state 58
 
-    (8) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER . SINO LLAVEIZQ sentencias LLAVEDER
+    (11) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> SI PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
 
-    NUMERO          reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    DECIMAL         reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    BOOLEANO        reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    IDENTIFICADOR   reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    SI              reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    REGRESA         reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    LLAVEDER        reduce using rule 8 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
-    SINO            shift and go to state 59
+    LLAVEIZQ        shift and go to state 74
 
 
 state 59
 
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO . LLAVEIZQ sentencias LLAVEDER
+    (25) condicion -> IDENTIFICADOR MAYOR . valor
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
 
-    LLAVEIZQ        shift and go to state 60
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
+    IDENTIFICADOR   shift and go to state 32
 
+    valor                          shift and go to state 75
 
 state 60
 
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ . sentencias LLAVEDER
-    (2) sentencias -> . sentencia
-    (3) sentencias -> . sentencia sentencias
-    (4) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (5) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (6) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-    (7) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-    (8) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-    (9) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-    (10) sentencia -> . REGRESA IDENTIFICADOR PUNTOYCOMA
+    (26) condicion -> IDENTIFICADOR MENOR . valor
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
 
-    NUMERO          shift and go to state 8
-    DECIMAL         shift and go to state 10
-    BOOLEANO        shift and go to state 11
-    IDENTIFICADOR   shift and go to state 9
-    SI              shift and go to state 12
-    REGRESA         shift and go to state 13
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
+    IDENTIFICADOR   shift and go to state 32
 
-    sentencias                     shift and go to state 61
-    sentencia                      shift and go to state 7
+    valor                          shift and go to state 76
 
 state 61
 
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias . LLAVEDER
+    (27) condicion -> IDENTIFICADOR IGUAL_IGUAL . valor
+    (31) valor -> . NUMERO
+    (32) valor -> . DECIMAL
+    (33) valor -> . CADENA
+    (34) valor -> . VERDADERO
+    (35) valor -> . FALSO
+    (36) valor -> . IDENTIFICADOR
 
-    LLAVEDER        shift and go to state 62
+    NUMERO          shift and go to state 27
+    DECIMAL         shift and go to state 28
+    CADENA          shift and go to state 29
+    VERDADERO       shift and go to state 30
+    FALSO           shift and go to state 31
+    IDENTIFICADOR   shift and go to state 32
 
+    valor                          shift and go to state 77
 
 state 62
 
-    (9) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .
+    (28) condicion -> valor MAYOR . IDENTIFICADOR
 
-    NUMERO          reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    DECIMAL         reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    BOOLEANO        reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    IDENTIFICADOR   reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    SI              reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    REGRESA         reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
-    LLAVEDER        reduce using rule 9 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    IDENTIFICADOR   shift and go to state 78
+
+
+state 63
+
+    (29) condicion -> valor MENOR . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 79
+
+
+state 64
+
+    (30) condicion -> valor IGUAL_IGUAL . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 80
+
+
+state 65
+
+    (13) sentencia -> MIENTRAS PARENIZQ condicion PARENDER . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 81
+
+
+state 66
+
+    (6) sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+
+    NUMERO          reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    SI              reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 6 (sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+
+
+state 67
+
+    (15) expresion -> expresion SUMA expresion .
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
+
+  ! shift/reduce conflict for SUMA resolved as shift
+  ! shift/reduce conflict for RESTA resolved as shift
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    PUNTOYCOMA      reduce using rule 15 (expresion -> expresion SUMA expresion .)
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
+
+  ! SUMA            [ reduce using rule 15 (expresion -> expresion SUMA expresion .) ]
+  ! RESTA           [ reduce using rule 15 (expresion -> expresion SUMA expresion .) ]
+  ! MULT            [ reduce using rule 15 (expresion -> expresion SUMA expresion .) ]
+  ! DIV             [ reduce using rule 15 (expresion -> expresion SUMA expresion .) ]
+
+
+state 68
+
+    (16) expresion -> expresion RESTA expresion .
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
+
+  ! shift/reduce conflict for SUMA resolved as shift
+  ! shift/reduce conflict for RESTA resolved as shift
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    PUNTOYCOMA      reduce using rule 16 (expresion -> expresion RESTA expresion .)
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
+
+  ! SUMA            [ reduce using rule 16 (expresion -> expresion RESTA expresion .) ]
+  ! RESTA           [ reduce using rule 16 (expresion -> expresion RESTA expresion .) ]
+  ! MULT            [ reduce using rule 16 (expresion -> expresion RESTA expresion .) ]
+  ! DIV             [ reduce using rule 16 (expresion -> expresion RESTA expresion .) ]
+
+
+state 69
+
+    (17) expresion -> expresion MULT expresion .
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
+
+  ! shift/reduce conflict for SUMA resolved as shift
+  ! shift/reduce conflict for RESTA resolved as shift
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    PUNTOYCOMA      reduce using rule 17 (expresion -> expresion MULT expresion .)
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
+
+  ! SUMA            [ reduce using rule 17 (expresion -> expresion MULT expresion .) ]
+  ! RESTA           [ reduce using rule 17 (expresion -> expresion MULT expresion .) ]
+  ! MULT            [ reduce using rule 17 (expresion -> expresion MULT expresion .) ]
+  ! DIV             [ reduce using rule 17 (expresion -> expresion MULT expresion .) ]
+
+
+state 70
+
+    (18) expresion -> expresion DIV expresion .
+    (15) expresion -> expresion . SUMA expresion
+    (16) expresion -> expresion . RESTA expresion
+    (17) expresion -> expresion . MULT expresion
+    (18) expresion -> expresion . DIV expresion
+
+  ! shift/reduce conflict for SUMA resolved as shift
+  ! shift/reduce conflict for RESTA resolved as shift
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    PUNTOYCOMA      reduce using rule 18 (expresion -> expresion DIV expresion .)
+    SUMA            shift and go to state 49
+    RESTA           shift and go to state 50
+    MULT            shift and go to state 51
+    DIV             shift and go to state 52
+
+  ! SUMA            [ reduce using rule 18 (expresion -> expresion DIV expresion .) ]
+  ! RESTA           [ reduce using rule 18 (expresion -> expresion DIV expresion .) ]
+  ! MULT            [ reduce using rule 18 (expresion -> expresion DIV expresion .) ]
+  ! DIV             [ reduce using rule 18 (expresion -> expresion DIV expresion .) ]
+
+
+state 71
+
+    (7) sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+
+    NUMERO          reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    SI              reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 7 (sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+
+
+state 72
+
+    (8) sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .
+
+    NUMERO          reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    DECIMAL         reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    CADENA          reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    SI              reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    REGRESA         reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 8 (sentencia -> BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA .)
+
+
+state 73
+
+    (9) sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+
+    NUMERO          reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    IDENTIFICADOR   reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    SI              reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 9 (sentencia -> CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+
+
+state 74
+
+    (11) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencias -> . empty
+    (6) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (7) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (8) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (9) sentencia -> . CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (13) sentencia -> . MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (14) sentencia -> . REGRESA valor PUNTOYCOMA
+    (5) empty -> .
+
+    NUMERO          shift and go to state 9
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    IDENTIFICADOR   shift and go to state 10
+    SI              shift and go to state 14
+    MIENTRAS        shift and go to state 15
+    REGRESA         shift and go to state 16
+    LLAVEDER        reduce using rule 5 (empty -> .)
+
+    sentencias                     shift and go to state 82
+    sentencia                      shift and go to state 7
+    empty                          shift and go to state 8
+
+state 75
+
+    (25) condicion -> IDENTIFICADOR MAYOR valor .
+
+    PARENDER        reduce using rule 25 (condicion -> IDENTIFICADOR MAYOR valor .)
+
+
+state 76
+
+    (26) condicion -> IDENTIFICADOR MENOR valor .
+
+    PARENDER        reduce using rule 26 (condicion -> IDENTIFICADOR MENOR valor .)
+
+
+state 77
+
+    (27) condicion -> IDENTIFICADOR IGUAL_IGUAL valor .
+
+    PARENDER        reduce using rule 27 (condicion -> IDENTIFICADOR IGUAL_IGUAL valor .)
+
+
+state 78
+
+    (28) condicion -> valor MAYOR IDENTIFICADOR .
+
+    PARENDER        reduce using rule 28 (condicion -> valor MAYOR IDENTIFICADOR .)
+
+
+state 79
+
+    (29) condicion -> valor MENOR IDENTIFICADOR .
+
+    PARENDER        reduce using rule 29 (condicion -> valor MENOR IDENTIFICADOR .)
+
+
+state 80
+
+    (30) condicion -> valor IGUAL_IGUAL IDENTIFICADOR .
+
+    PARENDER        reduce using rule 30 (condicion -> valor IGUAL_IGUAL IDENTIFICADOR .)
+
+
+state 81
+
+    (13) sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ . sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencias -> . empty
+    (6) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (7) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (8) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (9) sentencia -> . CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (13) sentencia -> . MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (14) sentencia -> . REGRESA valor PUNTOYCOMA
+    (5) empty -> .
+
+    NUMERO          shift and go to state 9
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    IDENTIFICADOR   shift and go to state 10
+    SI              shift and go to state 14
+    MIENTRAS        shift and go to state 15
+    REGRESA         shift and go to state 16
+    LLAVEDER        reduce using rule 5 (empty -> .)
+
+    sentencias                     shift and go to state 83
+    sentencia                      shift and go to state 7
+    empty                          shift and go to state 8
+
+state 82
+
+    (11) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEDER        shift and go to state 84
+
+
+state 83
+
+    (13) sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias . LLAVEDER
+
+    LLAVEDER        shift and go to state 85
+
+
+state 84
+
+    (11) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER . SINO LLAVEIZQ sentencias LLAVEDER
+
+    NUMERO          reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    BOOLEANO        reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    CADENA          reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    IDENTIFICADOR   reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    MIENTRAS        reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 11 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    SINO            shift and go to state 86
+
+
+state 85
+
+    (13) sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .
+
+    NUMERO          reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    BOOLEANO        reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    CADENA          reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    IDENTIFICADOR   reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    MIENTRAS        reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 13 (sentencia -> MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER .)
+
+
+state 86
+
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 87
+
+
+state 87
+
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ . sentencias LLAVEDER
+    (2) sentencias -> . sentencia
+    (3) sentencias -> . sentencia sentencias
+    (4) sentencias -> . empty
+    (6) sentencia -> . NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (7) sentencia -> . DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (8) sentencia -> . BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
+    (9) sentencia -> . CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (12) sentencia -> . SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
+    (13) sentencia -> . MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+    (14) sentencia -> . REGRESA valor PUNTOYCOMA
+    (5) empty -> .
+
+    NUMERO          shift and go to state 9
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    IDENTIFICADOR   shift and go to state 10
+    SI              shift and go to state 14
+    MIENTRAS        shift and go to state 15
+    REGRESA         shift and go to state 16
+    LLAVEDER        reduce using rule 5 (empty -> .)
+
+    sentencias                     shift and go to state 88
+    sentencia                      shift and go to state 7
+    empty                          shift and go to state 8
+
+state 88
+
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias . LLAVEDER
+
+    LLAVEDER        shift and go to state 89
+
+
+state 89
+
+    (12) sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .
+
+    NUMERO          reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    BOOLEANO        reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    CADENA          reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    IDENTIFICADOR   reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    MIENTRAS        reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 12 (sentencia -> SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for SUMA in state 47 resolved as shift
-WARNING: shift/reduce conflict for RESTA in state 47 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 47 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 47 resolved as shift
-WARNING: shift/reduce conflict for SUMA in state 48 resolved as shift
-WARNING: shift/reduce conflict for RESTA in state 48 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 48 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 48 resolved as shift
-WARNING: shift/reduce conflict for SUMA in state 49 resolved as shift
-WARNING: shift/reduce conflict for RESTA in state 49 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 49 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 49 resolved as shift
-WARNING: shift/reduce conflict for SUMA in state 50 resolved as shift
-WARNING: shift/reduce conflict for RESTA in state 50 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 50 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 50 resolved as shift
+WARNING: shift/reduce conflict for MAYOR in state 43 resolved as shift
+WARNING: shift/reduce conflict for MENOR in state 43 resolved as shift
+WARNING: shift/reduce conflict for IGUAL_IGUAL in state 43 resolved as shift
+WARNING: shift/reduce conflict for SUMA in state 67 resolved as shift
+WARNING: shift/reduce conflict for RESTA in state 67 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 67 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 67 resolved as shift
+WARNING: shift/reduce conflict for SUMA in state 68 resolved as shift
+WARNING: shift/reduce conflict for RESTA in state 68 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 68 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 68 resolved as shift
+WARNING: shift/reduce conflict for SUMA in state 69 resolved as shift
+WARNING: shift/reduce conflict for RESTA in state 69 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 69 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 69 resolved as shift
+WARNING: shift/reduce conflict for SUMA in state 70 resolved as shift
+WARNING: shift/reduce conflict for RESTA in state 70 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 70 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 70 resolved as shift
+WARNING: reduce/reduce conflict in state 7 resolved using rule (sentencias -> sentencia)
+WARNING: rejected rule (empty -> <empty>) in state 7

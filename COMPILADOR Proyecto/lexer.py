@@ -9,12 +9,12 @@ tokens = (
     'PARENIZQ', 'PARENDER', 'LLAVEIZQ', 'LLAVEDER', 'PUNTOYCOMA', 'VERDADERO', 'FALSO'
 )
 
-# PALABRAS CLAVE RESERVADAS
 reserved = {
     'inicio': 'INICIO',
     'numero': 'NUMERO',
     'decimal': 'DECIMAL',
     'booleano': 'BOOLEANO',
+    'cadena': 'CADENA',        
     'si': 'SI',
     'sino': 'SINO',
     'mientras': 'MIENTRAS',
@@ -49,8 +49,10 @@ errores_lexicos = []
 
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
+    # print(f"💡 IDENTIFICADOR detectado: {t.value}")
     t.type = reserved.get(t.value, 'IDENTIFICADOR')
     return t
+
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -66,6 +68,15 @@ def t_CADENA(t):
     r'\".*?\"'
     return t
 
+def t_COMENTARIO_LINEA(t):
+    r'\/\/.*'
+    pass 
+
+def t_COMENTARIO_BLOQUE(t):
+    r'/\*[\s\S]*?\*/'
+    t.lexer.lineno += t.value.count('\n')
+    pass 
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -77,6 +88,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def analizar_codigo(codigo):
+    lexer.lineno = 1
     lexer.input(codigo)
     global tokens_extraidos, errores_lexicos
     tokens_extraidos = []
@@ -100,5 +112,5 @@ def leer_archivo(ruta):
         print(f"Error inesperado: {e}")
 
 # Ruta del código fuente
-ruta_archivo = "COMPILADOR Proyecto\codigo_fuente.txt"
+ruta_archivo = "codigo_fuente.txt"
 leer_archivo(ruta_archivo)
