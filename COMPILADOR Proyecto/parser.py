@@ -1,11 +1,13 @@
 import ply.yacc as yacc
 from lexer import tokens, lexer, errores_lexicos, tokens_extraidos
 import html_gen
+from html_gen import abrir_todos_los_html
 
 # Tabla de símbolos y errores
 tabla_simbolos = {}
 errores_sintacticos = []
 
+#TABLA DE SIMBOLOS
 def agregar_simbolo(nombre, tipo, valor, linea):
     tipo = tipo.lower()
     if nombre in tabla_simbolos:
@@ -38,7 +40,7 @@ def verificar_simbolo(nombre, linea):
 # Reglas de gramática
 def p_programa(p):
     '''programa : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER'''
-    print("✅ Código válido: Estructura 'inicio() {}' reconocida.")
+    print("Código válido: Estructura 'inicio() {}' reconocida.")
 
 def p_sentencias(p):
     '''sentencias : sentencia
@@ -148,16 +150,17 @@ def leer_archivo(ruta):
         print(" Archivo leído correctamente.\n")
         return contenido
     except FileNotFoundError:
-        print(" Error: No se encontró el archivo.")
+        print(" Error: No se encontro el archivo.")
         return None
 
+#PARSER
 def analizar_sintaxis(archivo):
     data = leer_archivo(archivo)
     if data:
         lexer.lineno = 1
         print("\n🔍 Analizando sintaxis del código...\n")
         parser.parse(data, lexer=lexer)
-        print("Análisis sintáctico finalizado.\n")
+        print("Analisis sintactico finalizado.\n")
 
         html_gen.generar_html_tokens(tokens_extraidos)
         html_gen.generar_html_errores(errores_lexicos + errores_sintacticos)
@@ -166,5 +169,4 @@ def analizar_sintaxis(archivo):
 # Punto de entrada
 if __name__ == "__main__":
     analizar_sintaxis("codigo_fuente.txt")
-
  # type: ignore
