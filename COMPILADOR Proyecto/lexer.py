@@ -112,9 +112,8 @@ def leer_archivo(ruta):
         print(f"Error inesperado: {e}")
 
 # Ruta del código fuente
-#ruta_archivo = "codigo_fuente.txt"
-#leer_archivo(ruta_archivo)
-
+# ruta_archivo = "codigo_fuente.txt"
+ruta_archivo = "COMPILADOR Proyecto\codigo_fuente.txt"
 # ESTO ES PARA SEBAS EN MAC XD
-ruta_archivo = "COMPILADOR Proyecto/codigo_fuente.txt"
+#ruta_archivo = "COMPILADOR Proyecto/codigo_fuente.txt"
 leer_archivo(ruta_archivo)

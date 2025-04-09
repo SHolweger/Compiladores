@@ -158,7 +158,7 @@ def analizar_sintaxis(archivo):
     data = leer_archivo(archivo)
     if data:
         lexer.lineno = 1
-        print("\n🔍 Analizando sintaxis del código...\n")
+        print("\n Analizando sintaxis del codigo...\n")
         parser.parse(data, lexer=lexer)
         print("Analisis sintactico finalizado.\n")
         html_gen.generar_pagina_inicio()
@@ -168,7 +168,7 @@ def analizar_sintaxis(archivo):
 
 # Punto de entrada
 if __name__ == "__main__":
-    #analizar_sintaxis("codigo_fuente.txt")
-    # ESTO ES PARA SEBAS EN MAC XD
     analizar_sintaxis("COMPILADOR Proyecto/codigo_fuente.txt")
+    # ESTO ES PARA SEBAS EN MAC XD
+    # analizar_sintaxis("COMPILADOR Proyecto/codigo_fuente.txt")
  # type: ignore
