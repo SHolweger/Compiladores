@@ -10,12 +10,11 @@ def abrir_html(nombre_archivo):
 def generar_menu():
     return """
     <div class='menu'>
-        <a href='index.html'>Inicio</a>
-        <a href='tokens.html'>Tokens</a>
-        <a href='errores.html'>Errores</a>
-        <a href='tabla_simbolos.html'>Tabla de Símbolos</a>
-        <button onclick='window.scrollTo(0,0)'>⬆ Inicio</button>
-        <button onclick='window.print()'>📄 Exportar PDF</button>
+        <a href='index.html'>🏠 Inicio</a>
+        <a href='tokens.html'>📄 Tokens</a>
+        <a href='errores.html'>❌ Errores</a>
+        <a href='tabla_simbolos.html'>📘 Tabla de Símbolos</a>
+        <button onclick='window.print()'>🖨️ Exportar PDF</button>
     </div>
     <style>
         .menu {
@@ -33,17 +32,38 @@ def generar_menu():
             text-decoration: none;
             font-weight: bold;
             transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 15px;
         }
         .menu a:hover, .menu button:hover {
             background: #ffffff66;
             cursor: pointer;
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(-1deg);
         }
         @keyframes slide-in {
             from { transform: translateY(-30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 18px;
+            background-color: #ffffff44;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .scroll-top:hover {
+            background-color: #ffffff88;
+            transform: scale(1.2);
+        }
     </style>
+    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: "smooth"})'>⬆</button>
     """
 
 def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
