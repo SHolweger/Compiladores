@@ -57,13 +57,20 @@ def generar_menu():
             cursor: pointer;
             z-index: 1000;
             transition: background 0.3s ease, transform 0.3s ease;
+            animation: bounce-in 1s ease forwards;
         }
         .scroll-top:hover {
             background-color: #ffffff88;
             transform: scale(1.2);
         }
+        @keyframes bounce-in {
+            0%   { transform: translateY(100px); opacity: 0; }
+            60%  { transform: translateY(-10px); opacity: 1; }
+            80%  { transform: translateY(5px); }
+            100% { transform: translateY(0); }
+        }
     </style>
-    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: "smooth"})'>⬆</button>
+    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: \"smooth\"})'>⬆</button>
     """
 
 def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
