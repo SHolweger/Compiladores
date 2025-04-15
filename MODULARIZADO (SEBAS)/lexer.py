@@ -1,4 +1,3 @@
-#lexer.py
 import ply.lex as lex
 from tabla_simbolos import verificar_simbolo, verificar_variable_no_inicializada, errores_semanticos, establecer_alcance
 
@@ -48,20 +47,16 @@ t_LLAVEIZQ = r'\{'
 t_LLAVEDER = r'\}'
 t_PUNTOYCOMA = r';'
 t_COMA = r','
+
 t_ignore = ' \t'
 
+# LISTA DE TOKENS ADICIONALES
 tokens_extraidos = []
 errores_lexicos = []
 
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFICADOR')
-    '''
-    if t.type == 'IDENTIFICADOR':
-        if not verificar_simbolo(t.value, t.lineno, encontrar_columna(t)):
-            errores_lexicos.append((f"Error lexico: Variable '{t.value}' no ha sido declarada", t.lineno, encontrar_columna(t)))
-
-        verificar_variable_no_inicializada(t.value, t.lineno, encontrar_columna(t))'''
     return t
 
 def t_DECIMAL(t):
@@ -94,7 +89,7 @@ def t_newline(t):
 # Función que maneja errores en el lexer
 def t_error(t):
     try:
-        columna = encontrar_columna(t)
+        columna = encontrar_columna(t.lexer.lexdata, t)
         errores_lexicos.append((f"Error léxico: carácter inesperado '{t.value[0]}'", t.lineno, columna))
         t.lexer.skip(1)
     except AttributeError:
@@ -102,14 +97,13 @@ def t_error(t):
         errores_lexicos.append((f"Error léxico sin contexto: '{t.value[0]}'", t.lineno, 0))
 
 def encontrar_columna(lexdata, token):
+    """Calcula la columna de un token basado en su posición."""
     linea_inicio = lexdata.rfind('\n', 0, token.lexpos)
     if linea_inicio < 0:
         linea_inicio = -1
     return token.lexpos - linea_inicio
 
-
-lexer = lex.lex()
-
+# Función para analizar el código
 def analizar_codigo(codigo, lexer):
     global tokens_extraidos, errores_lexicos
     tokens_extraidos = []
@@ -127,7 +121,6 @@ def analizar_codigo(codigo, lexer):
         tokens_extraidos.append(tok)
 
     return tokens_extraidos, errores_lexicos
-
 
 def construir_lexer():
     return lex.lex()
