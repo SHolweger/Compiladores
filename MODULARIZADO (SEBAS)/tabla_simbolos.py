@@ -19,12 +19,20 @@ def agregar_simbolo(nombre, tipo, valor, linea, columna=0):
                 "valor": valor,
                 "linea": linea,
                 "columna": columna,
-                "alcance": alcance_actual  # Guardamos si la variable es global o local
+                "alcance": alcance_actual
             }
         else:
-            errores_semanticos.append((f"Error semantico: El valor '{valor}' no es compatible con el tipo '{tipo}'", linea, columna))
+            errores_semanticos.append((
+                f"Error semántico: El valor '{valor}' no es compatible con el tipo '{tipo}'",
+                linea,
+                columna
+            ))
     else:
-        errores_semanticos.append((f"Error semantico: Variable '{nombre}' ya ha sido declarada", linea, columna))
+        errores_semanticos.append((
+            f"Error semántico: Variable '{nombre}' ya ha sido declarada",
+            linea,
+            columna
+        ))
 
 def actualizar_simbolo(nombre, nuevo_valor, linea, columna=0):
     if nombre in tabla_simbolos:
@@ -32,19 +40,35 @@ def actualizar_simbolo(nombre, nuevo_valor, linea, columna=0):
         if verificar_tipo_valor(tipo, nuevo_valor):
             tabla_simbolos[nombre]["valor"] = nuevo_valor
         else:
-            errores_semanticos.append((f"Error semantico: Tipo incompatible al asignar valor a '{nombre}'", linea, columna))
+            errores_semanticos.append((
+                f"Error semántico: Tipo incompatible al asignar valor a '{nombre}'",
+                linea,
+                columna
+            ))
     else:
-        errores_semanticos.append((f"Error semantico: Variable '{nombre}' no ha sido declarada", linea, columna))
+        errores_semanticos.append((
+            f"Error semántico: Variable '{nombre}' no ha sido declarada",
+            linea,
+            columna
+        ))
 
 def verificar_simbolo(nombre, linea, columna=0):
     if nombre not in tabla_simbolos:
-        errores_semanticos.append((f"Error semantico: Variable '{nombre}' no ha sido declarada", linea, columna))
+        errores_semanticos.append((
+            f"Error semántico: Variable '{nombre}' no ha sido declarada",
+            linea,
+            columna
+        ))
         return False
     return True
 
 def verificar_variable_no_inicializada(nombre, linea, columna=0):
     if nombre in tabla_simbolos and tabla_simbolos[nombre]["valor"] is None:
-        errores_semanticos.append((f"Error semantico: Variable '{nombre}' utilizada antes de ser inicializada", linea, columna))
+        errores_semanticos.append((
+            f"Error semántico: Variable '{nombre}' utilizada antes de ser inicializada",
+            linea,
+            columna
+        ))
 
 def verificar_tipo_valor(tipo, valor):
     if tipo == "NUMERO":

@@ -1,3 +1,4 @@
+#lexer.py
 import ply.lex as lex
 from tabla_simbolos import verificar_simbolo, verificar_variable_no_inicializada, errores_semanticos, establecer_alcance
 
@@ -55,13 +56,12 @@ errores_lexicos = []
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFICADOR')
-
+    '''
     if t.type == 'IDENTIFICADOR':
         if not verificar_simbolo(t.value, t.lineno, encontrar_columna(t)):
             errores_lexicos.append((f"Error lexico: Variable '{t.value}' no ha sido declarada", t.lineno, encontrar_columna(t)))
 
-        verificar_variable_no_inicializada(t.value, t.lineno, encontrar_columna(t))
-
+        verificar_variable_no_inicializada(t.value, t.lineno, encontrar_columna(t))'''
     return t
 
 def t_DECIMAL(t):
@@ -101,12 +101,12 @@ def t_error(t):
         print("Error léxico sin contexto de lexer.")
         errores_lexicos.append((f"Error léxico sin contexto: '{t.value[0]}'", t.lineno, 0))
 
-def encontrar_columna(token):
-    # Encontramos el último salto de línea antes de la posición del token
-    ultima_linea = token.lexer.lexdata.rfind('\n', 0, token.lexpos)
-    if ultima_linea < 0:
-        ultima_linea = -1  # Si no hay salto de línea anterior, la última línea es la 0
-    return token.lexpos - ultima_linea  # Columna es la diferencia de posición
+def encontrar_columna(lexdata, token):
+    linea_inicio = lexdata.rfind('\n', 0, token.lexpos)
+    if linea_inicio < 0:
+        linea_inicio = -1
+    return token.lexpos - linea_inicio
+
 
 lexer = lex.lex()
 
@@ -122,11 +122,12 @@ def analizar_codigo(codigo, lexer):
         tok = lexer.token()
         if not tok:
             break
-        columna = encontrar_columna(tok)
-        tok.columna = columna
+        columna = encontrar_columna(codigo, tok)
+        setattr(tok, "column", columna)  # Le agregamos la columna al token
         tokens_extraidos.append(tok)
 
     return tokens_extraidos, errores_lexicos
+
 
 def construir_lexer():
     return lex.lex()
