@@ -13,69 +13,50 @@ def generar_menu():
         <a href='index.html'>🏠 Inicio</a>
         <a href='tokens.html'>📄 Tokens</a>
         <a href='errores.html'>❌ Errores</a>
-        <a href='tabla_simbolos.html'>📘 Tabla de Símbolos</a>
+        <a href='tabla_simbolos.html'>📘 Tabla de Simbolos</a>
         <button onclick='window.print()'>🖨️ Exportar PDF</button>
     </div>
     <style>
         .menu {
+            background-color: #333;
+            overflow: hidden;
             text-align: center;
-            margin: 20px;
-            animation: slide-in 0.8s ease-in-out;
+            padding: 10px;
         }
         .menu a, .menu button {
-            margin: 0 10px;
-            padding: 8px 16px;
-            background: #ffffff33;
+            display: inline-block;
             color: white;
-            border: 1px solid white;
-            border-radius: 5px;
+            padding: 10px 20px;
             text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s ease, transform 0.3s ease;
-            font-size: 15px;
+            margin: 0 10px;
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         .menu a:hover, .menu button:hover {
-            background: #ffffff66;
-            cursor: pointer;
-            transform: scale(1.05) rotate(-1deg);
+            background-color: #666;
         }
-        @keyframes slide-in {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         .scroll-top {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 18px;
-            background-color: #ffffff44;
-            border: 2px solid white;
+            bottom: 20px;
+            right: 20px;
+            background: #00c853;
+            color: white;
+            border: none;
+            padding: 10px 15px;
             border-radius: 50%;
             font-size: 20px;
-            color: white;
             cursor: pointer;
-            z-index: 1000;
-            transition: background 0.3s ease, transform 0.3s ease;
-            animation: bounce-in 1s ease forwards;
-        }
-        .scroll-top:hover {
-            background-color: #ffffff88;
-            transform: scale(1.2);
-        }
-        @keyframes bounce-in {
-            0%   { transform: translateY(100px); opacity: 0; }
-            60%  { transform: translateY(-10px); opacity: 1; }
-            80%  { transform: translateY(5px); }
-            100% { transform: translateY(0); }
         }
     </style>
-    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: \"smooth\"})'>⬆</button>
+    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: "smooth"})'>⬆</button>
     """
 
 def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
     html = f"""
-    <html><head><title>Bitácora de Tokens</title>
+    <html><head><title>Bitacora de Tokens</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" type="image/png">
     <style>
         body {{ font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #00c853, #43cea2); color: white; }}
         h2 {{ color: white; text-align: center; animation: fadeIn 1s ease-in; }}
@@ -87,55 +68,60 @@ def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Bitácora de Tokens</h2><table><tr><th>Token</th><th>Valor</th><th>Línea</th></tr>
+    <h2>Bitacora de Tokens</h2><table><tr><th>Token</th><th>Valor</th><th>Linea</th><th>Columna</th></tr>
     """
+    
     for token in tokens:
-        html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td></tr>"
+        html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td><td>{token.columna}</td></tr>"
+    
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
 
-def generar_html_errores(errores, nombre_archivo="errores.html"):
+def generar_html_errores(errores, nombre_archivo="errores.html", tipo="lexico"):
     html = f"""
-    <html><head><title>Bitácora de Errores</title>
+    <html><head><title>Errores {tipo.capitalize()}</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" type="image/png">
     <style>
-        body {{ font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; }}
-        h2 {{ color: white; text-align: center; animation: fadeIn 1s ease-in; }}
-        table {{ width: 90%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
-        th, td {{ border: 1px solid #b71c1c; padding: 12px; text-align: center; }}
-        th {{ background-color: #b71c1c; color: white; }}
-        tr:nth-child(even) {{ background-color: #fce4ec; }}
-        tr:hover {{ background-color: #ffcdd2; }}
+        body {{ font-family: sans-serif; }}
+        h2 {{ text-align: center; animation: fadeIn 0.8s; }}
+        table {{ width: 80%; margin: auto; border-collapse: collapse; }}
+        th, td {{ border: 1px solid #ccc; padding: 8px; text-align: center; }}
+        th {{ background-color: #a00; color: #fff; }}
+        tr:nth-child(even) {{ background-color: #fdd; }}
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Bitácora de Errores</h2><table><tr><th>Mensaje</th><th>Línea</th></tr>
+    <h2>Bitacora de Errores {tipo.capitalize()}</h2>
+    <table>
+        <tr><th>Descripcion</th><th>Linea</th><th>Columna</th></tr>
     """
-    for error, linea in errores:
-        html += f"<tr><td>{error}</td><td>{linea}</td></tr>"
+    for descripcion, linea, columna in errores:
+        html += f"<tr><td>{descripcion}</td><td>{linea}</td><td>{columna}</td></tr>"
+
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
 
 def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.html"):
     html = f"""
-    <html><head><title>Tabla de Símbolos</title>
+    <html><head><title>Tabla de Simbolos</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2917/2917997.png" type="image/png">
     <style>
-        body {{ font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; }}
-        h2 {{ color: white; text-align: center; animation: fadeIn 1s ease-in; }}
-        table {{ width: 80%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
-        th, td {{ border: 1px solid #1565c0; padding: 12px; text-align: center; }}
-        th {{ background-color: #1565c0; color: white; }}
-        tr:nth-child(even) {{ background-color: #e3f2fd; }}
-        tr:hover {{ background-color: #bbdefb; }}
+        body {{ font-family: sans-serif; }}
+        h2 {{ text-align: center; animation: fadeIn 0.8s; }}
+        table {{ width: 80%; margin: auto; border-collapse: collapse; }}
+        th, td {{ border: 1px solid #ccc; padding: 8px; text-align: center; }}
+        th {{ background-color: #004488; color: #fff; }}
+        tr:nth-child(even) {{ background-color: #eef; }}
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Tabla de Símbolos</h2><table><tr><th>Nombre</th><th>Tipo</th><th>Valor</th></tr>
+    <h2>Tabla de Simbolos</h2>
+    <table>
+        <tr><th>Nombre</th><th>Tipo</th><th>Valor</th></tr>
     """
     for nombre, datos in tabla_simbolos.items():
         html += f"<tr><td>{nombre}</td><td>{datos['tipo']}</td><td>{datos['valor']}</td></tr>"
@@ -143,41 +129,33 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
 
 def generar_pagina_inicio(nombre_archivo="index.html"):
     html = """
     <html><head><title>Inicio - Reportes del Compilador</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/857/857681.png" type="image/png">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #6a11cb, #2575fc); text-align: center; color: white; animation: fadeIn 1s ease-in; }
-        h1 { color: #fdfdfd; margin-top: 50px; font-size: 40px; }
-        .btn-container { margin-top: 40px; animation: fadeInUp 1s ease-out; }
-        a.btn {
-            display: inline-block; margin: 10px; padding: 15px 30px;
-            background-color: #ffffff22; color: white; text-decoration: none;
-            border: 1px solid white;
-            border-radius: 6px; font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+        body { text-align: center; font-family: sans-serif; background-color: #f2f2f2; padding-top: 40px; }
+        .btn-container { margin-top: 30px; }
+        .btn {
+            display: inline-block; padding: 10px 20px; margin: 10px;
+            background-color: #333; color: #fff; text-decoration: none;
+            border-radius: 8px; font-size: 18px;
         }
-        a.btn:hover { background-color: #ffffff44; transform: scale(1.1); }
-        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .btn:hover { background-color: #555; }
     </style></head><body>
     <h1>Bienvenido al Reporte del Compilador</h1>
     <p>Selecciona una de las opciones para visualizar:</p>
     <div class='btn-container'>
         <a href='tokens.html' class='btn'>📄 Ver Tokens</a>
         <a href='errores.html' class='btn'>🚫 Ver Errores</a>
-        <a href='tabla_simbolos.html' class='btn'>📘 Ver Tabla de Símbolos</a>
+        <a href='tabla_simbolos.html' class='btn'>📘 Ver Tabla de Simbolos</a>
     </div>
     </body></html>
     """
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
 
 def abrir_todos_los_html():
-    generar_pagina_inicio()
-    abrir_html("tokens.html")
-    abrir_html("errores.html")
-    abrir_html("tabla_simbolos.html")
+    for archivo in ["index.html", "tokens.html", "errores.html", "tabla_simbolos.html"]:
+        abrir_html(archivo)
