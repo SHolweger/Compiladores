@@ -1,5 +1,6 @@
 import ply.lex as lex
 import html_gen
+#from parser import ruta_archivo
 
 # LISTA DE TOKENS
 tokens = (
@@ -42,6 +43,7 @@ t_LLAVEIZQ = r'\{'
 t_LLAVEDER = r'\}'
 t_PUNTOYCOMA = r';'
 
+
 t_ignore = ' \t'
 
 tokens_extraidos = []
@@ -66,6 +68,7 @@ def t_NUMERO(t):
 
 def t_CADENA(t):
     r'\".*?\"'
+    t.value = t.value[1:-1]  # Remover las comillas al inicio y al final
     return t
 
 def t_COMENTARIO_LINEA(t):
@@ -79,13 +82,23 @@ def t_COMENTARIO_BLOQUE(t):
 
 def t_newline(t):
     r'\n+'
-    t.lexer.lineno += len(t.value)
+    t.lexer.lineno += len(t.value)  # Incrementar el número de línea según los saltos de línea
 
 def t_error(t):
-    errores_lexicos.append((f"Error lexico: Caracter inesperado '{t.value[0]}'", t.lineno))
+    col = encontrar_columna(t.lexer.lexdata, t)
+    if col == -1:
+        col = t.lexpos - t.lexer.lexdata.rfind('\n', 0, t.lexpos) - 1
+    errores_lexicos.append((f"Error lexico: Caracter inesperado '{t.value[0]}'", t.lineno, col))
     t.lexer.skip(1)
 
 lexer = lex.lex()
+
+def encontrar_columna(input, token):
+    # Buscar el último salto de línea antes del token
+    last_cr = input.rfind('\n', 0, token.lexpos)
+    if last_cr < 0:
+        return token.lexpos + 1  # Si no hay salto de línea previo, la columna es la posición del token + 1
+    return (token.lexpos - last_cr)
 
 def analizar_codigo(codigo):
     lexer.lineno = 1
@@ -95,6 +108,7 @@ def analizar_codigo(codigo):
     errores_lexicos = []
 
     while tok := lexer.token():
+        tok.column = encontrar_columna(codigo, tok)  # Agregar columna al token 
         tokens_extraidos.append(tok)
     return tokens_extraidos
 
@@ -112,8 +126,8 @@ def leer_archivo(ruta):
         print(f"Error inesperado: {e}")
 
 # Ruta del código fuente
-# ruta_archivo = "codigo_fuente.txt"
-ruta_archivo = "COMPILADOR Proyecto\codigo_fuente.txt"
+ruta_archivo = "codigo_fuente.txt"
+#ruta_archivo = "COMPILADOR Proyecto\codigo_fuente.txt"
 # ESTO ES PARA SEBAS EN MAC XD
 #ruta_archivo = "COMPILADOR Proyecto/codigo_fuente.txt"
 leer_archivo(ruta_archivo)

@@ -87,15 +87,15 @@ def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Bitácora de Tokens</h2><table><tr><th>Token</th><th>Valor</th><th>Línea</th></tr>
+    <h2>Bitácora de Tokens</h2><table><tr><th>Token</th><th>Valor</th><th>Línea</th><th>Columna</th></tr>
     """
     for token in tokens:
-        html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td></tr>"
+        html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td><td>{token.column}</td></tr>"
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
+ #   abrir_html(nombre_archivo)
 
 def generar_html_errores(errores, nombre_archivo="errores.html"):
     html = f"""
@@ -111,10 +111,13 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Bitácora de Errores</h2><table><tr><th>Mensaje</th><th>Línea</th></tr>
+    <h2>Bitácora de Errores</h2><table><tr><th>Mensaje</th><th>Línea</th><th>Columna</th></tr>
     """
-    for error, linea in errores:
-        html += f"<tr><td>{error}</td><td>{linea}</td></tr>"
+    for error in errores:
+        mensaje = error[0]
+        linea = error[1] if len(error) > 1 else -1
+        columna = error[2] if len(error) > 2 else -1
+        html += f"<tr><td>{mensaje}</td><td>{linea}</td><td>{columna}</td></tr>"
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
@@ -127,7 +130,7 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
     <style>
         body {{ font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; }}
         h2 {{ color: white; text-align: center; animation: fadeIn 1s ease-in; }}
-        table {{ width: 80%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
+        table {{ width: 90%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
         th, td {{ border: 1px solid #1565c0; padding: 12px; text-align: center; }}
         th {{ background-color: #1565c0; color: white; }}
         tr:nth-child(even) {{ background-color: #e3f2fd; }}
@@ -135,10 +138,28 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
-    <h2>Tabla de Símbolos</h2><table><tr><th>Nombre</th><th>Tipo</th><th>Valor</th></tr>
+    <h2>Tabla de Símbolos</h2>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Referencia</th>
+            <th>Valor</th>
+            <th>Línea</th>
+            <th>Columna</th>
+        </tr>
     """
     for nombre, datos in tabla_simbolos.items():
-        html += f"<tr><td>{nombre}</td><td>{datos['tipo']}</td><td>{datos['valor']}</td></tr>"
+        html += f"""
+        <tr>
+            <td>{nombre}</td>
+            <td>{datos['tipo']}</td>
+            <td>{datos['referencia']}</td>
+            <td>{datos['valor']}</td>
+            <td>{datos['linea']}</td>
+            <td>{datos['columna']}</td>
+        </tr>
+        """
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
@@ -174,7 +195,7 @@ def generar_pagina_inicio(nombre_archivo="index.html"):
     """
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
+#    abrir_html(nombre_archivo)
 
 def abrir_todos_los_html():
     generar_pagina_inicio()
