@@ -292,6 +292,11 @@ def leer_archivo(ruta): # Leer el archivo de código fuente
         print(" Error: No se encontro el archivo.")
         return None
 
+def detectar_variables_no_utilizadas(): # Detectar variables no utilizadas
+    for nombre, datos in tabla_simbolos.items():
+        if not datos['usado']:
+            errores_semanticos.append((f"Advertencia: La variable '{nombre}' fue declarada pero no utilizada.", datos['linea'], datos['columna']))
+
 #PARSER
 def analizar_sintaxis(archivo): # Analizar la sintaxis del código fuente
     data = leer_archivo(archivo)
@@ -299,7 +304,8 @@ def analizar_sintaxis(archivo): # Analizar la sintaxis del código fuente
         lexer.lineno = 1
         print("\n Analizando sintaxis del codigo...\n")
         parser.parse(data, lexer=lexer)
-        print("Analisis sintactico finalizado.\n")
+        print("Analisis sintactico finalizado.\n")        
+        #detectar_variables_no_utilizadas()  # Detectar variables no utilizadas
         html_gen.generar_pagina_inicio()
         html_gen.generar_html_tokens(tokens_extraidos)
         html_gen.generar_html_errores(errores_lexicos + errores_sintacticos+errores_semanticos)
@@ -329,3 +335,5 @@ if __name__ == "__main__":
     # ESTO ES PARA SEBAS EN MAC XD
     # analizar_sintaxis("COMPILADOR Proyecto/codigo_fuente.txt")
  # type: ignore
+ 
+ 
