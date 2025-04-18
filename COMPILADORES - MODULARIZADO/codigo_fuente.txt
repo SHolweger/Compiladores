@@ -1,0 +1,7 @@
+inicio() {
+    numero a = 10;
+    numero b = 20;
+    numero c = 20; 
+
+
+}
