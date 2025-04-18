@@ -1,6 +1,7 @@
 from parser import analizar_sintaxis
 from tkinter import Tk, filedialog
 
+
 def seleccionar_archivo():
     """Función para seleccionar un archivo usando Tkinter."""
     Tk().withdraw()  # Ocultar la ventana principal de Tkinter
@@ -11,7 +12,8 @@ def seleccionar_archivo():
     return archivo
 
 if __name__ == "__main__":
-    # Solicitar al usuario que seleccione un archivo
+    
+    
     ruta_archivo = seleccionar_archivo()
     if ruta_archivo:
         try:

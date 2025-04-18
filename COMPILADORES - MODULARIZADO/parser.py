@@ -31,11 +31,16 @@ def obtener_ambito_actual(): # Obtener el ámbito actual
     return pila_ambitos[-1]
 
 # Tabla de símbolos
-def agregar_simbolo(nombre, tipo, valor, linea, columna, modificable=True,parametros=None, retorno=None):  # Agregar una nueva variable a la tabla de símbolos
+def agregar_simbolo(nombre, tipo, valor, linea, columna, modificable=True, parametros=None, retorno=None):
     tipo = tipo.lower()
     ambito = obtener_ambito_actual()
+    clave = f"{nombre}_{ambito}"
+
     if nombre in tabla_simbolos and tabla_simbolos[nombre]['ambito'] == ambito:
-        errores_sintacticos.append((f"Error Sintáctico: La variable '{nombre}' ya ha sido declarada en el ámbito '{ambito}'.", linea, columna))
+        errores_sintacticos.append((
+            f"Error Sintáctico: La variable '{nombre}' ya ha sido declarada en el ámbito '{ambito}'.",
+            linea, columna
+        ))
     else:
         tabla_simbolos[nombre] = {
             'tipo': tipo,
@@ -46,15 +51,15 @@ def agregar_simbolo(nombre, tipo, valor, linea, columna, modificable=True,parame
             'referencia': ambito if ambito != "global" else "global",
             'modificable': modificable,
             'usado': False,
-            'parametros': parametros,  # Lista de parámetros (solo para funciones)
-            'retorno': retorno         # Tipo de retorno (solo para funciones)
+            'parametros': parametros,
+            'retorno': retorno
         }
 
 def actualizar_simbolo(nombre, valor, linea, columna):  # Actualizar el valor de una variable existente
     if nombre in tabla_simbolos:
         simbolo = tabla_simbolos[nombre]
         if not simbolo['modificable']:
-            errores_semanticos.append((f"Error semántico: La variable '{nombre}' es constante y no puede ser modificada.", linea, columna))
+            errores_semanticos.append((f"Error semántico: La variable '{nombre}' es constante y no puede ser modificada.", linea, columna))  # No se puede modificar una constante
             return
 
         tipo = simbolo['tipo']
@@ -81,7 +86,7 @@ def verificar_simbolo(nombre, linea, columna):  # Verificar si una variable exis
     return False
 
 # Reglas de gramática
-def p_programa(p):  # Regla de inicio del programa
+def p_programa(p): # Regla de inicio del programa
     '''programa : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER'''
     print("Código válido: Estructura 'inicio() {}' reconocida.")
 
@@ -90,37 +95,21 @@ def p_empty(p):  # Regla para manejar la producción vacía
     '''empty :'''
     pass
 
-def p_comentario_linea(p):
-    '''comentario : COMENTARIO_LINEA'''
-    pass
-
-def p_comentario_bloque(p):
-    '''comentario : COMENTARIO_BLOQUE'''
-    pass
 
 def p_sentencias(p):
     '''sentencias : sentencia
-                  | sentencia sentencias
-                  | comentario
-                  | comentario sentencias
-                  | empty'''
+                  | sentencia sentencias'''
     pass
-
-"""def p_sentencia(p):
-    '''sentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | BOOLEANO IDENTIFICADOR IGUAL booleano PUNTOYCOMA
-                 | CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | FUNCION IDENTIFICADOR PARENIZQ parametros PARENDER LLAVEIZQ sentencias LLAVEDER
-                 | IDENTIFICADOR PARENIZQ argumentos PARENDER PUNTOYCOMA
-                 | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-                 | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER
-                 | MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-                 | REGRESA expresion PUNTOYCOMA
-                 | REPETIR LLAVEIZQ sentencias LLAVEDER MIENTRAS PARENIZQ condicion PARENDER PUNTOYCOMA
-                 | sentencia_funcion_declaracion'''
-    pass"""
+def p_sentencia(p):
+    '''sentencia : sentencia_funcion_declaracion
+                 | sentencia_si
+                 | sentencia_mientras
+                 | sentencia_regresa
+                 | sentencia_repetir
+                 | sentencia_switch
+                 | sentencia_llamada_funcion
+                 | expresion'''
+    pass
 
 def p_sentencia_declaracion(p):
     '''sentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
@@ -168,62 +157,78 @@ def p_sentencia_asignacion(p):  # Regla para asignación de valores a variables
     
     
     
-def p_sentencia_si(p):  # Regla para sentencia 'si'
-    '''sentencia : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
-                 | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER'''
-    entrar_ambito("local_si")  # Cambiar a un ámbito local específico
-    # Verificar las variables usadas en la condición
-    if isinstance(p[3], str) and p.slice[3].type == "IDENTIFICADOR":
-        if not verificar_simbolo(p[3], p.lineno(3), encontrar_columna(lexer.lexdata, p.slice[3])):
-            return  # Detener el procesamiento si hay un error
-        
-    salir_ambito()  # Salir del ámbito al finalizar el bloque
-    if len(p) == 12:  # Si hay un bloque `sino`
-        entrar_ambito("local_sino")  # Cambiar a un ámbito local específico
-    if isinstance(p[3], str) and p.slice[3].type == "IDENTIFICADOR":
-        if not verificar_simbolo(p[3], p.lineno(3), encontrar_columna(lexer.lexdata, p.slice[3])):
-            return  # Detener el procesamiento si hay un error
-        salir_ambito()
+def p_sentencia_si(p):
+    '''sentencia_si : SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER
+                    | SI PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER SINO LLAVEIZQ sentencias LLAVEDER'''
+    condicion_valida = p[3]
+    if not isinstance(condicion_valida, bool):
+        errores_semanticos.append((f"Error semántico: La condición en 'si' debe ser de tipo booleano.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+ 
 
-def p_sentencia_mientras(p):  # Regla para sentencia 'mientras'
-    '''sentencia : MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER'''
-    entrar_ambito("local_mientras")  # Cambiar a un ámbito local específico
-    # Verificar las variables usadas en la condición
-    if isinstance(p[3], str) and p.slice[3].type == "IDENTIFICADOR":
-        if not verificar_simbolo(p[3], p.lineno(3), encontrar_columna(lexer.lexdata, p.slice[3])):
-            return  # Detener el procesamiento si hay un error
-    salir_ambito()  # Salir del ámbito al finalizar el bloque
+def p_sentencia_mientras(p):
+    '''sentencia_mientras : MIENTRAS PARENIZQ condicion PARENDER LLAVEIZQ sentencias LLAVEDER'''
+    if not isinstance(p[3], bool):
+        errores_semanticos.append((f"Error semántico: La condición en 'mientras' debe ser booleana.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
 
-def p_sentencia_regresa(p):
-    '''sentencia : REGRESA expresion PUNTOYCOMA'''
-    # Obtener el ámbito actual
-    ambito_actual = obtener_ambito_actual()
 
-    # Validar si estamos dentro de una función
-    if not ambito_actual.startswith("funcion_"):
-        errores_semanticos.append((f"Error semántico: La sentencia 'regresa' solo puede usarse dentro de una función.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+def p_sentencia_llamada_funcion(p):
+    '''sentencia_llamada_funcion : IDENTIFICADOR PARENIZQ argumentos PARENDER PUNTOYCOMA'''
+    nombre = p[1]
+    args = p[3]
+    linea = p.lineno(1)
+    columna = encontrar_columna(lexer.lexdata, p.slice[1])
+
+    if nombre not in tabla_simbolos or tabla_simbolos[nombre]['tipo'] != 'funcion':
+        errores_semanticos.append((f"Error semántico: La función '{nombre}' no está declarada.", linea, columna))
         return
 
-    # Obtener el nombre de la función
-    nombre_funcion = ambito_actual.replace("funcion_", "")
-    tipo_retorno = tabla_simbolos[nombre_funcion]['retorno']
+    parametros = tabla_simbolos[nombre]['parametros'] or []
 
-    # Validar el tipo del valor retornado
-    tipo_valor = type(p[2]).__name__
-    if tipo_retorno != tipo_valor:
-        errores_semanticos.append((f"Error semántico: La función '{nombre_funcion}' esperaba retornar un valor de tipo '{tipo_retorno}', pero se intentó retornar un valor de tipo '{tipo_valor}'.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+    if len(args) != len(parametros):
+        errores_semanticos.append((f"Error semántico: La función '{nombre}' esperaba {len(parametros)} argumentos pero se recibieron {len(args)}.", linea, columna))
+        return
 
-def p_sentencia_repetir(p):
-    '''sentencia : REPETIR LLAVEIZQ sentencias LLAVEDER MIENTRAS PARENIZQ condicion PARENDER PUNTOYCOMA'''
-    entrar_ambito("local_repetir")
-    p[0] = p[3]  # Procesar las sentencias dentro del bloque
-    salir_ambito()
-    # Validar la condición
-    if isinstance(p[7], str) and p.slice[7].type == "IDENTIFICADOR":
-        if not verificar_simbolo(p[7], p.lineno(7), encontrar_columna(lexer.lexdata, p.slice[7])):
+    for i, (arg, param) in enumerate(zip(args, parametros)):
+        tipo_python = {'numero': int, 'decimal': float, 'booleano': bool, 'cadena': str}
+        if not isinstance(arg, tipo_python[param['tipo']]):
+            errores_semanticos.append((f"Error semántico: El argumento {i+1} de la función '{nombre}' debe ser de tipo '{param['tipo']}'.", linea, columna))
             return
 
-def p_expresion(p):
+    p[0] = None  # Aquí podrías ejecutar la función si fuera necesario
+
+def p_sentencia_switch(p):
+    '''sentencia_switch : CAMBIAR PARENIZQ expresion PARENDER LLAVEIZQ casos LLAVEDER'''
+    
+    pass
+
+def p_casos(p):
+    '''casos : caso
+             | caso casos'''
+    if len(p) == 2:  # Caso base: un solo caso
+        p[0] = [p[1]]
+    else:  # Caso recursivo: un caso seguido de más casos
+        p[0] = [p[1]] + p[2]
+
+def p_caso(p):
+    '''caso : CASO valor DOSPUNTOS sentencias
+            | PREDETERMINADO DOSPUNTOS sentencias'''
+    # Validar el tipo del valor del caso
+    if len(p) == 4:  # Caso determinado
+        p[0] = {'tipo': 'predeterminado', 'sentencias': p[3]}
+    else:  # Caso con valor
+        p[0] = {'tipo': 'caso', 'valor': p[2], 'sentencias': p[4]}
+    
+def p_sentencia_regresa(p):
+    '''sentencia_regresa : REGRESA expresion PUNTOYCOMA'''
+    p[0] = p[2]
+
+def p_sentencia_repetir(p):
+    '''sentencia_repetir : REPETIR LLAVEIZQ sentencias LLAVEDER MIENTRAS PARENIZQ condicion PARENDER PUNTOYCOMA'''
+    if not isinstance(p[7], bool):
+        errores_semanticos.append((f"Error semántico: La condición en 'repetir mientras' debe ser booleana.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+
+
+def p_expresion(p):  # Regla para evaluar expresiones
     '''expresion : expresion SUMA expresion
                  | expresion RESTA expresion
                  | expresion MULT expresion
@@ -282,37 +287,38 @@ def p_expresion(p):
             errores_semanticos.append((f"Error semántico: Operación no válida entre tipos '{type(p[1]).__name__}' y '{type(p[3]).__name__}'", p.lineno(2), encontrar_columna(lexer.lexdata, p.slice[2])))
             p[0] = None  # Detener el procesamiento
         
-def p_booleano(p):  # Regla para evaluar valores booleanos
+def p_booleano(p):
     '''booleano : VERDADERO
                 | FALSO'''
     p[0] = True if p[1] == 'verdadero' else False
 
+def p_comparador(p):
+    '''
+    comparador : MENOR
+               | MAYOR
+               | MENOR_IGUAL
+               | MAYOR_IGUAL
+               | IGUAL_IGUAL
+               | DIFERENTE
+    '''
+    p[0] = p[1]
+
 def p_condicion(p):
-    '''condicion : IDENTIFICADOR MAYOR valor
-                 | IDENTIFICADOR MENOR valor
-                 | IDENTIFICADOR MAYOR_IGUAL valor
-                 | IDENTIFICADOR MENOR_IGUAL valor
-                 | IDENTIFICADOR IGUAL_IGUAL valor
-                 | IDENTIFICADOR DIFERENTE valor
-                 | valor MAYOR IDENTIFICADOR
-                 | valor MENOR IDENTIFICADOR
-                 | valor MAYOR_IGUAL IDENTIFICADOR
-                 | valor MENOR_IGUAL IDENTIFICADOR
-                 | valor IGUAL_IGUAL IDENTIFICADOR
-                 | valor DIFERENTE IDENTIFICADOR'''
-    pass
+    '''condicion : expresion comparador expresion
+                 | expresion'''
+    if len(p) == 2:
+        if isinstance(p[1], bool):
+            p[0] = p[1]
+        else:
+            errores_semanticos.append((f"Error semántico: La condición debe ser booleana.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+            p[0] = False
+    else:
+        if type(p[1]) != type(p[3]):
+            errores_semanticos.append((f"Error semántico: Tipos incompatibles en comparación.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
+            p[0] = False
+        else:
+            p[0] = True  # Se asume que la comparación es válida si los tipos coinciden
 
-# Validar tipos antes de realizar la comparación
-    if type(p[1]) != type(p[3]):
-        errores_semanticos.append((f"Error semantico: Comparacion no valida entre tipos '{type(p[1]).__name__}' y '{type(p[3]).__name__}'", p.lineno(2), encontrar_columna(lexer.lexdata, p.slice[2])))
-
-    # Verificar si los operandos son identificadores y obtener sus valores
-    if isinstance(p[1], str) and p.slice[1].type == "IDENTIFICADOR":
-        if verificar_simbolo(p[1], p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])):
-            p[1] = tabla_simbolos[p[1]]["valor"]
-    if isinstance(p[3], str) and p.slice[3].type == "IDENTIFICADOR":
-        if verificar_simbolo(p[3], p.lineno(3), encontrar_columna(lexer.lexdata, p.slice[3])):
-            p[3] = tabla_simbolos[p[3]]["valor"]
  
 def p_expresion_logica(p):
     '''expresion : expresion AND expresion
@@ -338,6 +344,41 @@ def p_valor(p):  # Regla para evaluar valores
         p[0] = p[1]
 
 #FUNCIONES
+
+def p_parametros(p):
+    '''parametros : parametro
+                  | parametro COMA parametros
+                  | empty'''
+    if len(p) == 2:
+        if p[1] is None:
+            p[0] = []
+        else:
+            p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+
+def p_parametro(p):
+    '''parametro : NUMERO IDENTIFICADOR
+                 | DECIMAL IDENTIFICADOR
+                 | BOOLEANO IDENTIFICADOR
+                 | CADENA IDENTIFICADOR'''
+    tipo = p[1].lower()
+    nombre = p[2]
+    linea = p.lineno(2)
+    columna = encontrar_columna(lexer.lexdata, p.slice[2])
+    p[0] = {'tipo': tipo, 'nombre': nombre, 'linea': linea, 'columna': columna}
+    
+def p_argumentos(p):
+    '''argumentos : expresion
+                  | expresion COMA argumentos
+                  | empty'''
+    if len(p) == 2:
+        p[0] = [] if p[1] is None else [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+
 def p_sentencia_funcion(p): # Regla para definir una función
     '''sentencia : IDENTIFICADOR PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER'''
     entrar_ambito(f"funcion_{p[1]}")
@@ -348,78 +389,33 @@ def p_sentencia_funcion_declaracion(p):
     '''sentencia_funcion_declaracion : FUNCION IDENTIFICADOR PARENIZQ parametros PARENDER LLAVEIZQ sentencias LLAVEDER'''
     nombre_funcion = p[2]
     parametros = p[4]
+    linea = p.lineno(2)
+    columna = encontrar_columna(lexer.lexdata, p.slice[2])
 
-    # Validar si la función ya fue declarada en el mismo ámbito
-    if nombre_funcion in tabla_simbolos and tabla_simbolos[nombre_funcion]['ambito'] == obtener_ambito_actual():
-        errores_semanticos.append((f"Error semántico: La función '{nombre_funcion}' ya ha sido declarada en el ámbito '{obtener_ambito_actual()}'.", p.lineno(2), encontrar_columna(lexer.lexdata, p.slice[2])))
+    if nombre_funcion in tabla_simbolos:
+        errores_semanticos.append((f"Error semántico: La función '{nombre_funcion}' ya ha sido declarada.", linea, columna))
         return
 
-    # Registrar la función en la tabla de símbolos
-    agregar_simbolo(nombre_funcion, "funcion", None, p.lineno(2), encontrar_columna(lexer.lexdata, p.slice[2]), parametros=parametros, retorno=None)
-
-    # Cambiar al ámbito de la función
-    entrar_ambito(f"funcion_{nombre_funcion}")
-    p[0] = p[7]  # Procesar las sentencias dentro del ámbito de la función
+    agregar_simbolo(nombre_funcion, 'funcion', None, linea, columna, modificable=False, parametros=parametros)
+    
+    entrar_ambito(nombre_funcion)
+    for param in parametros:
+        agregar_simbolo(param['nombre'], param['tipo'], None, param['linea'], param['columna'])
     salir_ambito()
+
+    p[0] = None
+
     
-def p_sentencia_llamada_funcion(p):
-    '''sentencia : IDENTIFICADOR PARENIZQ argumentos PARENDER PUNTOYCOMA'''
-    nombre_funcion = p[1]
-
-    # Validar si la función existe
-    if nombre_funcion not in tabla_simbolos or tabla_simbolos[nombre_funcion]['tipo'] != 'funcion':
-        errores_semanticos.append((f"Error semántico: La función '{nombre_funcion}' no ha sido declarada.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
-        return
-
-    # Validar el número de argumentos
-    parametros = tabla_simbolos[nombre_funcion]['parametros']
-    argumentos = p[3]
-    if len(parametros) != len(argumentos):
-        errores_semanticos.append((f"Error semántico: La función '{nombre_funcion}' esperaba {len(parametros)} argumentos, pero recibió {len(argumentos)}.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
-        return
-
-    # Validar los tipos de los argumentos
-    for i, (parametro, argumento) in enumerate(zip(parametros, argumentos)):
-        tipo_parametro, _ = parametro
-        tipo_argumento = type(argumento).__name__
-        if tipo_parametro != tipo_argumento:
-            errores_semanticos.append((f"Error semántico: El argumento {i+1} de la función '{nombre_funcion}' esperaba un tipo '{tipo_parametro}', pero recibió '{tipo_argumento}'.", p.lineno(1), encontrar_columna(lexer.lexdata, p.slice[1])))
-    
-def p_parametros(p):
-    '''parametros : parametro
-                  | parametro COMA parametros
-                  | empty'''
-    if len(p) == 2:  # Un solo parámetro
-        p[0] = [p[1]]
-    elif len(p) == 4:  # Lista de parámetros
-        p[0] = [p[1]] + p[3]
-    else:  # Sin parámetros
-        p[0] = []
-def p_parametro(p):
-    '''parametro : NUMERO IDENTIFICADOR
-                 | DECIMAL IDENTIFICADOR
-                 | BOOLEANO IDENTIFICADOR
-                 | CADENA IDENTIFICADOR'''
-    p[0] = (p[1], p[2])  # Retorna una tupla con el tipo y el nombre del parámetro
-
-def p_argumentos(p):
-    '''argumentos : expresion
-                  | expresion COMA argumentos
-                  | empty'''
-    if len(p) == 2:  # Un solo argumento
-        p[0] = [p[1]]
-    elif len(p) == 4:  # Lista de argumentos
-        p[0] = [p[1]] + p[3]
-    else:  # Sin argumentos
-        p[0] = []
-
 def p_error(p):  # Regla para manejar errores sintácticos
     if p:
-        # Calcular la columna correctamente
-        col = encontrar_columna(lexer.lexdata, p)
-        errores_sintacticos.append((f"Error de sintaxis: Token inesperado '{p.value}'", p.lineno, col))
+        col = encontrar_columna(p.lexer.lexdata, p)
+        errores_sintacticos.append(
+            (f"Error de sintaxis: Token inesperado '{p.value}'", p.lineno, col)
+        )
     else:
-        errores_sintacticos.append(("Error de sintaxis: Fin de archivo inesperado", 0, -1))
+        errores_sintacticos.append(
+            ("Error de sintaxis: Fin de archivo inesperado", 0, -1)
+        )
 
 parser = yacc.yacc()
 
@@ -433,15 +429,18 @@ def leer_archivo(ruta): # Leer el archivo de código fuente
         print(" Error: No se encontro el archivo.")
         return None
 
-def detectar_variables_no_utilizadas(): # Detectar variables no utilizadas
+def detectar_variables_no_utilizadas():
+    """Detectar variables declaradas pero no utilizadas."""
     for nombre, datos in tabla_simbolos.items():
         if not datos['usado']:
-            errores_semanticos.append((f"Advertencia: La variable '{nombre}' fue declarada pero no utilizada.", datos['linea'], datos['columna']))
-
+            errores_semanticos.append(
+                (f"Advertencia: La variable '{nombre}' fue declarada pero no utilizada.", datos['linea'], datos['columna'])
+            )
+    
 #PARSER
 def analizar_sintaxis(contenido): # Analizar la sintaxis del código fuente
         lexer.lineno = 1  # Inicializar el contador de línea
-        lexer.lexcol = 1  # Inicializar el contador de columna
+        #lexer.lexcol = 1  # Inicializar el contador de columna
         print("\n Analizando tokens del código...\n")
         tokens,errores_lexicos = analizar_codigo(contenido)  # Analizar tokens con el lexer
         for token in tokens:

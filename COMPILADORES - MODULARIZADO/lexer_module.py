@@ -7,9 +7,9 @@ tokens = (
     'IDENTIFICADOR', 'CADENA', 'IGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV',
     'MAYOR', 'MENOR', 'MAYOR_IGUAL', 'MENOR_IGUAL', 'IGUAL_IGUAL', 'DIFERENTE',
     'PARENIZQ', 'PARENDER', 'LLAVEIZQ', 'LLAVEDER', 'PUNTOYCOMA', 'VERDADERO', 'FALSO',
-    'FUNCION', 'COMA', 'AND', 'OR', 'NEGACION',  # Agregar AND, OR y NEGACION
-    'COMENTARIO_LINEA', 'COMENTARIO_BLOQUE', 'LLAVEDER_COMENTARIO', 'LLAVEIZQ_COMENTARIO'
+    'FUNCION', 'COMA', 'AND', 'OR', 'NEGACION', 'CAMBIAR', 'CASO', 'DOSPUNTOS', 'PREDETERMINADO', 'COMENTARIO_LINEA', 'COMENTARIO_BLOQUE'
 )
+
 reserved = {
     'inicio': 'INICIO',
     'numero': 'NUMERO',
@@ -22,7 +22,16 @@ reserved = {
     'repetir': 'REPETIR',
     'regresa': 'REGRESA',
     'verdadero': 'VERDADERO',
-    'falso': 'FALSO'
+    'falso': 'FALSO',
+    'funcion': 'FUNCION',
+    'cambiar': 'CAMBIAR',
+    'caso': 'CASO',
+    'predeterminado': 'PREDETERMINADO',
+    'and': 'AND',
+    'or': 'OR',
+    'not': 'NOT',
+    'true': 'TRUE',
+    'false': 'FALSE',
 }
 # EXPRESIONES REGULARES
 t_SUMA = r'\+'
@@ -42,15 +51,15 @@ t_LLAVEIZQ = r'\{'
 t_LLAVEDER = r'\}'
 t_PUNTOYCOMA = r';'
 t_COMA = r','           # Separador de parámetros o argumentos
-t_FUNCION = r'funcion'  # Palabra clave para declarar funciones
 # Expresiones regulares para los nuevos tokens
-t_AND = r'and'
-t_OR = r'or'
 t_NEGACION = r'!'
-t_ignore = ' \t'
+t_ignore =  ' \t'
+t_DOSPUNTOS = r':'
+t_COMENTARIO_LINEA = r'\/\/.*'
+t_COMENTARIO_BLOQUE = r'/\*[\s\S]*?\*/'
 
-#tokens_extraidos = []
-#errores_lexicos = []
+tokens_extraidos = []
+errores_lexicos = []
 
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -74,15 +83,6 @@ def t_CADENA(t):
     t.value = t.value[1:-1]  # Remover las comillas al inicio y al final
     return t
 
-def t_COMENTARIO_LINEA(t):
-    r'\/\/.*'
-    pass 
-
-def t_COMENTARIO_BLOQUE(t):
-    r'/\*[\s\S]*?\*/'
-    t.lexer.lineno += t.value.count('\n')
-    pass 
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)  # Incrementar el número de línea según los saltos de línea
@@ -93,19 +93,20 @@ def t_error(t):
         col = t.lexpos - t.lexer.lexdata.rfind('\n', 0, t.lexpos) - 1
     errores_lexicos.append((f"Error lexico: Caracter inesperado '{t.value[0]}'", t.lineno, col))
     t.lexer.skip(1)
+    
 
 lexer = lex.lex()
 
-def encontrar_columna(input, token):
-    # Buscar el último salto de línea antes del token
-    last_cr = input.rfind('\n', 0, token.lexpos)
-    if last_cr < 0:
-        return token.lexpos + 1  # Si no hay salto de línea previo, la columna es la posición del token + 1
-    return (token.lexpos - last_cr)
+def encontrar_columna(input, token): # Encuentra la columna del token
+    last_cr = input.rfind('\n', 0, token.lexpos) # Encuentra el último salto de línea antes del token
+    if last_cr < 0: # Si no hay salto de línea previo, la columna es la posición del token
+        last_cr = -1  # Si no hay salto de línea previo, la columna es la posición del token
+    return (token.lexpos - last_cr) # -1 para ajustar a 0-indexed
+
 
 def analizar_codigo(codigo):
     lexer.lineno = 1
-    lexer.lexcol = 1
+#    lexer.lexcol = 1
     lexer.input(codigo)
     global tokens_extraidos, errores_lexicos
     tokens_extraidos = []
@@ -113,5 +114,6 @@ def analizar_codigo(codigo):
 
     while tok := lexer.token():
         tok.column = encontrar_columna(codigo, tok)  # Agregar columna al token 
+        print(f"Token: {tok.type}, Valor: {tok.value}, Línea: {tok.lineno}, Columna: {tok.column}")
         tokens_extraidos.append(tok)
     return tokens_extraidos, errores_lexicos

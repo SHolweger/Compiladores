@@ -122,7 +122,7 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
+  #  abrir_html(nombre_archivo)
 
 def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.html"):
     html = f"""
@@ -164,7 +164,7 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-    abrir_html(nombre_archivo)
+  #  abrir_html(nombre_archivo)
 
 def generar_pagina_inicio(nombre_archivo="index.html"):
     html = """
@@ -195,7 +195,7 @@ def generar_pagina_inicio(nombre_archivo="index.html"):
     """
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-#    abrir_html(nombre_archivo)
+        abrir_html(nombre_archivo)
 
 def abrir_todos_los_html():
     generar_pagina_inicio()
