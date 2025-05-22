@@ -109,16 +109,25 @@ def encontrar_columna(input, token):
     columna = token.lexpos - last_cr
     return columna
 
+def encontrar_linea(input, token):
+    # Cuenta la cantidad de saltos de línea antes del token
+    return input.count('\n', 0, token.lexpos) + 1
+
 # Función para analizar el código fuente
 def analizar_codigo(codigo_fuente):
+    lexer.lineno = 1  # Reinicia el número de línea al analizar nuevo código
     lexer.input(codigo_fuente)
-    lexer.lexdata = codigo_fuente  # ✅ para calcular bien columnas
+    lexer.lexdata = codigo_fuente  # para calcular bien columnas
     tokens = []
     errores = []
     while True:
         tok = lexer.token()
         if not tok:
             break
+        #Asigna línea a cada token
+        tok.line = encontrar_linea(lexer.lexdata, tok)
+        # Asigna columna a cada token
+        tok.column = encontrar_columna(lexer.lexdata, tok)
         tokens.append(tok)
     return tokens, errores
 

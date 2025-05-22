@@ -1,4 +1,4 @@
-from parser import analizar_sintaxis
+from parser_module import analizar_sintaxis
 from tkinter import Tk, filedialog
 
 

@@ -1,9 +1,12 @@
 import os
 import webbrowser
 import time
+from lexer_module import encontrar_columna, lexer
+
 
 def abrir_html(nombre_archivo):
     path = os.path.abspath(nombre_archivo)
+    time.sleep(0.2)  # Espera breve para asegurar que el archivo se guarde
     webbrowser.open(f'file://{path}')
     time.sleep(1)
 
@@ -90,6 +93,7 @@ def generar_html_tokens(tokens, nombre_archivo="tokens.html"):
     <h2>Bitácora de Tokens</h2><table><tr><th>Token</th><th>Valor</th><th>Línea</th><th>Columna</th></tr>
     """
     for token in tokens:
+        token.column = encontrar_columna(lexer.lexdata, token)
         html += f"<tr><td>{token.type}</td><td>{token.value}</td><td>{token.lineno}</td><td>{token.column}</td></tr>"
     html += "</table></body></html>"
 
@@ -101,7 +105,7 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
     html = f"""
     <html><head><title>Bitácora de Errores</title>
     <style>
-        body {{ font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; }}
+        body {{ font-family: 'Segoe UI',a sans-serif; background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; }}
         h2 {{ color: white; text-align: center; animation: fadeIn 1s ease-in; }}
         table {{ width: 90%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
         th, td {{ border: 1px solid #b71c1c; padding: 12px; text-align: center; }}
@@ -113,10 +117,11 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
     {generar_menu()}
     <h2>Bitácora de Errores</h2><table><tr><th>Mensaje</th><th>Línea</th><th>Columna</th></tr>
     """
+    # Para errores
     for error in errores:
-        mensaje = error[0]
-        linea = error[1] if len(error) > 1 else -1
-        columna = error[2] if len(error) > 2 else -1
+        mensaje = error[0] if len(error) > 0 else ''
+        linea = error[1] if len(error) > 1 else '-'
+        columna = error[2] if len(error) > 2 else '-'
         html += f"<tr><td>{mensaje}</td><td>{linea}</td><td>{columna}</td></tr>"
     html += "</table></body></html>"
 
@@ -149,15 +154,17 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
             <th>Columna</th>
         </tr>
     """
-    for nombre, datos in tabla_simbolos.items():
+    # Para tabla de símbolos
+    for clave, datos in tabla_simbolos.items():
+        nombre = clave.split('_')[0]  # Solo el nombre, sin el ámbito
         html += f"""
         <tr>
             <td>{nombre}</td>
-            <td>{datos['tipo']}</td>
-            <td>{datos['referencia']}</td>
-            <td>{datos['valor']}</td>
-            <td>{datos['linea']}</td>
-            <td>{datos['columna']}</td>
+            <td>{datos.get('tipo', '-')}</td>
+            <td>{datos.get('referencia', '-')}</td>
+            <td>{datos.get('valor', '-')}</td>
+            <td>{datos.get('linea', '-')}</td>
+            <td>{datos.get('columna', '-')}</td>
         </tr>
         """
     html += "</table></body></html>"
@@ -195,10 +202,10 @@ def generar_pagina_inicio(nombre_archivo="index.html"):
     """
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-        abrir_html(nombre_archivo)
+        #abrir_html(nombre_archivo)
 
 def abrir_todos_los_html():
     generar_pagina_inicio()
-    abrir_html("tokens.html")
-    abrir_html("errores.html")
-    abrir_html("tabla_simbolos.html")
+    #abrir_html("tokens.html")
+    #abrir_html("errores.html")
+    #abrir_html("tabla_simbolos.html")
