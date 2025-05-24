@@ -1,7 +1,4 @@
 inicio() {
-    if (verdadero) { 
-        numero c = 1; 
-    } else { 
-        numero d = 2; 
-    } 
+    numero a = 5;
+    a = "hola"; // Error semántico: asignación de cadena a variable número
 }

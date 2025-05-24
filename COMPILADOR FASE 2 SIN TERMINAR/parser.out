@@ -2,6 +2,7 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    CARACTER
     CORCHETEDER
     CORCHETEIZQ
     PUNTO
@@ -13,7 +14,7 @@ Rule 1     programa -> lista_funciones
 Rule 2     lista_funciones -> funcion
 Rule 3     lista_funciones -> funcion lista_funciones
 Rule 4     funcion -> INICIO PARENIZQ PARENDER bloque
-Rule 5     funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque
+Rule 5     funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque
 Rule 6     sentencias -> sentencia
 Rule 7     sentencias -> sentencia sentencias
 Rule 8     sentencia -> NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
@@ -107,6 +108,7 @@ BOOLEANO             : 10 26 77
 BREAK                : 84
 CADENA               : 11 27 43 78
 CAMBIAR              : 60
+CARACTER             : 
 CASO                 : 63
 COMA                 : 73 74 83
 CONTINUE             : 85
@@ -174,11 +176,11 @@ for_update           : 33
 funcion              : 2 3
 lista_args           : 81 83
 lista_funciones      : 1 3
-lista_params         : 70 73 74
+lista_params         : 5 70 73 74
 llamada_accion       : 56
 opcion               : 54 55
 opciones             : 53 55
-params               : 5 68
+params               : 68
 programa             : 0
 sentencia            : 6 7
 sentencias           : 7 23 63 64 67
@@ -193,7 +195,7 @@ state 0
     (2) lista_funciones -> . funcion
     (3) lista_funciones -> . funcion lista_funciones
     (4) funcion -> . INICIO PARENIZQ PARENDER bloque
-    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque
+    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque
 
     INICIO          shift and go to state 4
     FUNCION         shift and go to state 5
@@ -222,7 +224,7 @@ state 3
     (2) lista_funciones -> . funcion
     (3) lista_funciones -> . funcion lista_funciones
     (4) funcion -> . INICIO PARENIZQ PARENDER bloque
-    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque
+    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque
 
     $end            reduce using rule 2 (lista_funciones -> funcion .)
     INICIO          shift and go to state 4
@@ -240,7 +242,7 @@ state 4
 
 state 5
 
-    (5) funcion -> FUNCION . IDENTIFICADOR PARENIZQ params PARENDER bloque
+    (5) funcion -> FUNCION . IDENTIFICADOR PARENIZQ lista_params PARENDER bloque
 
     IDENTIFICADOR   shift and go to state 8
 
@@ -261,7 +263,7 @@ state 7
 
 state 8
 
-    (5) funcion -> FUNCION IDENTIFICADOR . PARENIZQ params PARENDER bloque
+    (5) funcion -> FUNCION IDENTIFICADOR . PARENIZQ lista_params PARENDER bloque
 
     PARENIZQ        shift and go to state 10
 
@@ -277,9 +279,7 @@ state 9
 
 state 10
 
-    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ . params PARENDER bloque
-    (69) params -> .
-    (70) params -> . lista_params
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ . lista_params PARENDER bloque
     (71) lista_params -> . tipo IDENTIFICADOR
     (72) lista_params -> . IDENTIFICADOR
     (73) lista_params -> . tipo IDENTIFICADOR COMA lista_params
@@ -289,16 +289,14 @@ state 10
     (77) tipo -> . BOOLEANO
     (78) tipo -> . CADENA
 
-    PARENDER        reduce using rule 69 (params -> .)
     IDENTIFICADOR   shift and go to state 13
-    NUMERO          shift and go to state 17
-    DECIMAL         shift and go to state 18
-    BOOLEANO        shift and go to state 19
-    CADENA          shift and go to state 20
+    NUMERO          shift and go to state 16
+    DECIMAL         shift and go to state 17
+    BOOLEANO        shift and go to state 18
+    CADENA          shift and go to state 19
 
-    params                         shift and go to state 14
-    lista_params                   shift and go to state 15
-    tipo                           shift and go to state 16
+    lista_params                   shift and go to state 14
+    tipo                           shift and go to state 15
 
 state 11
 
@@ -335,7 +333,7 @@ state 12
     VERDADERO       reduce using rule 65 (abrir_ambito -> .)
     FALSO           reduce using rule 65 (abrir_ambito -> .)
 
-    abrir_ambito                   shift and go to state 21
+    abrir_ambito                   shift and go to state 20
 
 state 13
 
@@ -343,60 +341,53 @@ state 13
     (74) lista_params -> IDENTIFICADOR . COMA lista_params
 
     PARENDER        reduce using rule 72 (lista_params -> IDENTIFICADOR .)
-    COMA            shift and go to state 22
+    COMA            shift and go to state 21
 
 
 state 14
 
-    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ params . PARENDER bloque
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params . PARENDER bloque
 
-    PARENDER        shift and go to state 23
+    PARENDER        shift and go to state 22
 
 
 state 15
 
-    (70) params -> lista_params .
-
-    PARENDER        reduce using rule 70 (params -> lista_params .)
-
-
-state 16
-
     (71) lista_params -> tipo . IDENTIFICADOR
     (73) lista_params -> tipo . IDENTIFICADOR COMA lista_params
 
-    IDENTIFICADOR   shift and go to state 24
+    IDENTIFICADOR   shift and go to state 23
 
 
-state 17
+state 16
 
     (75) tipo -> NUMERO .
 
     IDENTIFICADOR   reduce using rule 75 (tipo -> NUMERO .)
 
 
-state 18
+state 17
 
     (76) tipo -> DECIMAL .
 
     IDENTIFICADOR   reduce using rule 76 (tipo -> DECIMAL .)
 
 
-state 19
+state 18
 
     (77) tipo -> BOOLEANO .
 
     IDENTIFICADOR   reduce using rule 77 (tipo -> BOOLEANO .)
 
 
-state 20
+state 19
 
     (78) tipo -> CADENA .
 
     IDENTIFICADOR   reduce using rule 78 (tipo -> CADENA .)
 
 
-state 21
+state 20
 
     (67) bloque -> LLAVEIZQ abrir_ambito . sentencias LLAVEDER cerrar_ambito
     (6) sentencias -> . sentencia
@@ -437,32 +428,32 @@ state 21
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    NUMERO          shift and go to state 27
-    DECIMAL         shift and go to state 30
-    BOOLEANO        shift and go to state 31
-    CADENA          shift and go to state 32
-    IDENTIFICADOR   shift and go to state 28
-    REGRESA         shift and go to state 33
-    SI              shift and go to state 34
-    MIENTRAS        shift and go to state 36
-    REPETIR         shift and go to state 37
-    PARA            shift and go to state 38
-    MENU            shift and go to state 39
-    MOSTRAR         shift and go to state 40
-    CAMBIAR         shift and go to state 41
-    FUNCION         shift and go to state 42
-    BREAK           shift and go to state 43
-    CONTINUE        shift and go to state 44
-    PARENIZQ        shift and go to state 35
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    NUMERO          shift and go to state 26
+    DECIMAL         shift and go to state 29
+    BOOLEANO        shift and go to state 30
+    CADENA          shift and go to state 31
+    IDENTIFICADOR   shift and go to state 27
+    REGRESA         shift and go to state 32
+    SI              shift and go to state 33
+    MIENTRAS        shift and go to state 35
+    REPETIR         shift and go to state 36
+    PARA            shift and go to state 37
+    MENU            shift and go to state 38
+    MOSTRAR         shift and go to state 39
+    CAMBIAR         shift and go to state 40
+    FUNCION         shift and go to state 41
+    BREAK           shift and go to state 42
+    CONTINUE        shift and go to state 43
+    PARENIZQ        shift and go to state 34
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    sentencias                     shift and go to state 25
-    sentencia                      shift and go to state 26
-    expresion                      shift and go to state 29
+    sentencias                     shift and go to state 24
+    sentencia                      shift and go to state 25
+    expresion                      shift and go to state 28
 
-state 22
+state 21
 
     (74) lista_params -> IDENTIFICADOR COMA . lista_params
     (71) lista_params -> . tipo IDENTIFICADOR
@@ -475,40 +466,40 @@ state 22
     (78) tipo -> . CADENA
 
     IDENTIFICADOR   shift and go to state 13
-    NUMERO          shift and go to state 17
-    DECIMAL         shift and go to state 18
-    BOOLEANO        shift and go to state 19
-    CADENA          shift and go to state 20
+    NUMERO          shift and go to state 16
+    DECIMAL         shift and go to state 17
+    BOOLEANO        shift and go to state 18
+    CADENA          shift and go to state 19
 
-    lista_params                   shift and go to state 48
-    tipo                           shift and go to state 16
+    lista_params                   shift and go to state 47
+    tipo                           shift and go to state 15
 
-state 23
+state 22
 
-    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER . bloque
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER . bloque
     (67) bloque -> . LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito
 
     LLAVEIZQ        shift and go to state 12
 
-    bloque                         shift and go to state 49
+    bloque                         shift and go to state 48
 
-state 24
+state 23
 
     (71) lista_params -> tipo IDENTIFICADOR .
     (73) lista_params -> tipo IDENTIFICADOR . COMA lista_params
 
     PARENDER        reduce using rule 71 (lista_params -> tipo IDENTIFICADOR .)
-    COMA            shift and go to state 50
+    COMA            shift and go to state 49
 
 
-state 25
+state 24
 
     (67) bloque -> LLAVEIZQ abrir_ambito sentencias . LLAVEDER cerrar_ambito
 
-    LLAVEDER        shift and go to state 51
+    LLAVEDER        shift and go to state 50
 
 
-state 26
+state 25
 
     (6) sentencias -> sentencia .
     (7) sentencias -> sentencia . sentencias
@@ -552,37 +543,37 @@ state 26
 
     LLAVEDER        reduce using rule 6 (sentencias -> sentencia .)
     HASTA           reduce using rule 6 (sentencias -> sentencia .)
-    NUMERO          shift and go to state 27
-    DECIMAL         shift and go to state 30
-    BOOLEANO        shift and go to state 31
-    CADENA          shift and go to state 32
-    IDENTIFICADOR   shift and go to state 28
-    REGRESA         shift and go to state 33
-    SI              shift and go to state 34
-    MIENTRAS        shift and go to state 36
-    REPETIR         shift and go to state 37
-    PARA            shift and go to state 38
-    MENU            shift and go to state 39
-    MOSTRAR         shift and go to state 40
-    CAMBIAR         shift and go to state 41
-    FUNCION         shift and go to state 42
-    BREAK           shift and go to state 43
-    CONTINUE        shift and go to state 44
-    PARENIZQ        shift and go to state 35
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    NUMERO          shift and go to state 26
+    DECIMAL         shift and go to state 29
+    BOOLEANO        shift and go to state 30
+    CADENA          shift and go to state 31
+    IDENTIFICADOR   shift and go to state 27
+    REGRESA         shift and go to state 32
+    SI              shift and go to state 33
+    MIENTRAS        shift and go to state 35
+    REPETIR         shift and go to state 36
+    PARA            shift and go to state 37
+    MENU            shift and go to state 38
+    MOSTRAR         shift and go to state 39
+    CAMBIAR         shift and go to state 40
+    FUNCION         shift and go to state 41
+    BREAK           shift and go to state 42
+    CONTINUE        shift and go to state 43
+    PARENIZQ        shift and go to state 34
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    sentencia                      shift and go to state 26
-    sentencias                     shift and go to state 52
-    expresion                      shift and go to state 29
+    sentencia                      shift and go to state 25
+    sentencias                     shift and go to state 51
+    expresion                      shift and go to state 28
 
-state 27
+state 26
 
     (8) sentencia -> NUMERO . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
     (41) expresion -> NUMERO .
 
-    IDENTIFICADOR   shift and go to state 53
+    IDENTIFICADOR   shift and go to state 52
     PUNTOYCOMA      reduce using rule 41 (expresion -> NUMERO .)
     SUMA            reduce using rule 41 (expresion -> NUMERO .)
     RESTA           reduce using rule 41 (expresion -> NUMERO .)
@@ -593,7 +584,7 @@ state 27
     OR              reduce using rule 41 (expresion -> NUMERO .)
 
 
-state 28
+state 27
 
     (12) sentencia -> IDENTIFICADOR . OP_ASIG expresion PUNTOYCOMA
     (79) sentencia -> IDENTIFICADOR . PARENIZQ args PARENDER PUNTOYCOMA
@@ -604,7 +595,7 @@ state 28
     (16) OP_ASIG -> . MULT_IGUAL
     (17) OP_ASIG -> . DIV_IGUAL
 
-    PARENIZQ        shift and go to state 55
+    PARENIZQ        shift and go to state 54
     PUNTOYCOMA      reduce using rule 44 (expresion -> IDENTIFICADOR .)
     SUMA            reduce using rule 44 (expresion -> IDENTIFICADOR .)
     RESTA           reduce using rule 44 (expresion -> IDENTIFICADOR .)
@@ -613,15 +604,15 @@ state 28
     MOD             reduce using rule 44 (expresion -> IDENTIFICADOR .)
     AND             reduce using rule 44 (expresion -> IDENTIFICADOR .)
     OR              reduce using rule 44 (expresion -> IDENTIFICADOR .)
-    IGUAL           shift and go to state 56
-    SUMA_IGUAL      shift and go to state 57
-    RESTA_IGUAL     shift and go to state 58
-    MULT_IGUAL      shift and go to state 59
-    DIV_IGUAL       shift and go to state 60
+    IGUAL           shift and go to state 55
+    SUMA_IGUAL      shift and go to state 56
+    RESTA_IGUAL     shift and go to state 57
+    MULT_IGUAL      shift and go to state 58
+    DIV_IGUAL       shift and go to state 59
 
-    OP_ASIG                        shift and go to state 54
+    OP_ASIG                        shift and go to state 53
 
-state 29
+state 28
 
     (34) sentencia -> expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -632,22 +623,22 @@ state 29
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PUNTOYCOMA      shift and go to state 61
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PUNTOYCOMA      shift and go to state 60
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 30
+state 29
 
     (9) sentencia -> DECIMAL . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
     (42) expresion -> DECIMAL .
 
-    IDENTIFICADOR   shift and go to state 69
+    IDENTIFICADOR   shift and go to state 68
     PUNTOYCOMA      reduce using rule 42 (expresion -> DECIMAL .)
     SUMA            reduce using rule 42 (expresion -> DECIMAL .)
     RESTA           reduce using rule 42 (expresion -> DECIMAL .)
@@ -658,19 +649,19 @@ state 30
     OR              reduce using rule 42 (expresion -> DECIMAL .)
 
 
-state 31
+state 30
 
     (10) sentencia -> BOOLEANO . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
 
-    IDENTIFICADOR   shift and go to state 70
+    IDENTIFICADOR   shift and go to state 69
 
 
-state 32
+state 31
 
     (11) sentencia -> CADENA . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
     (43) expresion -> CADENA .
 
-    IDENTIFICADOR   shift and go to state 71
+    IDENTIFICADOR   shift and go to state 70
     PUNTOYCOMA      reduce using rule 43 (expresion -> CADENA .)
     SUMA            reduce using rule 43 (expresion -> CADENA .)
     RESTA           reduce using rule 43 (expresion -> CADENA .)
@@ -681,7 +672,7 @@ state 32
     OR              reduce using rule 43 (expresion -> CADENA .)
 
 
-state 33
+state 32
 
     (18) sentencia -> REGRESA . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -700,26 +691,26 @@ state 33
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 72
+    expresion                      shift and go to state 71
 
-state 34
+state 33
 
     (19) sentencia -> SI . PARENIZQ condicion PARENDER bloque
     (20) sentencia -> SI . PARENIZQ condicion PARENDER bloque SINO bloque
 
-    PARENIZQ        shift and go to state 77
+    PARENIZQ        shift and go to state 76
 
 
-state 35
+state 34
 
     (40) expresion -> PARENIZQ . expresion PARENDER
     (35) expresion -> . expresion SUMA expresion
@@ -738,25 +729,25 @@ state 35
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 78
+    expresion                      shift and go to state 77
 
-state 36
+state 35
 
     (21) sentencia -> MIENTRAS . PARENIZQ condicion PARENDER bloque
 
-    PARENIZQ        shift and go to state 79
+    PARENIZQ        shift and go to state 78
 
 
-state 37
+state 36
 
     (22) sentencia -> REPETIR . bloque HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
     (23) sentencia -> REPETIR . sentencias HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
@@ -800,82 +791,82 @@ state 37
     (90) expresion -> . FALSO
 
     LLAVEIZQ        shift and go to state 12
-    NUMERO          shift and go to state 27
-    DECIMAL         shift and go to state 30
-    BOOLEANO        shift and go to state 31
-    CADENA          shift and go to state 32
-    IDENTIFICADOR   shift and go to state 28
-    REGRESA         shift and go to state 33
-    SI              shift and go to state 34
-    MIENTRAS        shift and go to state 36
-    REPETIR         shift and go to state 37
-    PARA            shift and go to state 38
-    MENU            shift and go to state 39
-    MOSTRAR         shift and go to state 40
-    CAMBIAR         shift and go to state 41
-    FUNCION         shift and go to state 42
-    BREAK           shift and go to state 43
-    CONTINUE        shift and go to state 44
-    PARENIZQ        shift and go to state 35
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    NUMERO          shift and go to state 26
+    DECIMAL         shift and go to state 29
+    BOOLEANO        shift and go to state 30
+    CADENA          shift and go to state 31
+    IDENTIFICADOR   shift and go to state 27
+    REGRESA         shift and go to state 32
+    SI              shift and go to state 33
+    MIENTRAS        shift and go to state 35
+    REPETIR         shift and go to state 36
+    PARA            shift and go to state 37
+    MENU            shift and go to state 38
+    MOSTRAR         shift and go to state 39
+    CAMBIAR         shift and go to state 40
+    FUNCION         shift and go to state 41
+    BREAK           shift and go to state 42
+    CONTINUE        shift and go to state 43
+    PARENIZQ        shift and go to state 34
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    bloque                         shift and go to state 80
-    sentencias                     shift and go to state 81
-    sentencia                      shift and go to state 26
-    expresion                      shift and go to state 29
+    bloque                         shift and go to state 79
+    sentencias                     shift and go to state 80
+    sentencia                      shift and go to state 25
+    expresion                      shift and go to state 28
 
-state 38
+state 37
 
     (33) sentencia -> PARA . PARENIZQ for_init PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque
 
-    PARENIZQ        shift and go to state 82
+    PARENIZQ        shift and go to state 81
+
+
+state 38
+
+    (53) sentencia -> MENU . LLAVEIZQ opciones LLAVEDER
+
+    LLAVEIZQ        shift and go to state 82
 
 
 state 39
 
-    (53) sentencia -> MENU . LLAVEIZQ opciones LLAVEDER
+    (59) sentencia -> MOSTRAR . PARENIZQ expresion PARENDER PUNTOYCOMA
 
-    LLAVEIZQ        shift and go to state 83
+    PARENIZQ        shift and go to state 83
 
 
 state 40
 
-    (59) sentencia -> MOSTRAR . PARENIZQ expresion PARENDER PUNTOYCOMA
+    (60) sentencia -> CAMBIAR . PARENIZQ expresion PARENDER bloque
 
     PARENIZQ        shift and go to state 84
 
 
 state 41
 
-    (60) sentencia -> CAMBIAR . PARENIZQ expresion PARENDER bloque
+    (68) sentencia -> FUNCION . IDENTIFICADOR PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito
 
-    PARENIZQ        shift and go to state 85
+    IDENTIFICADOR   shift and go to state 85
 
 
 state 42
 
-    (68) sentencia -> FUNCION . IDENTIFICADOR PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito
+    (84) sentencia -> BREAK . PUNTOYCOMA
 
-    IDENTIFICADOR   shift and go to state 86
+    PUNTOYCOMA      shift and go to state 86
 
 
 state 43
 
-    (84) sentencia -> BREAK . PUNTOYCOMA
+    (85) sentencia -> CONTINUE . PUNTOYCOMA
 
     PUNTOYCOMA      shift and go to state 87
 
 
 state 44
-
-    (85) sentencia -> CONTINUE . PUNTOYCOMA
-
-    PUNTOYCOMA      shift and go to state 88
-
-
-state 45
 
     (88) expresion -> NEGACION . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -894,18 +885,18 @@ state 45
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 89
+    expresion                      shift and go to state 88
 
-state 46
+state 45
 
     (89) expresion -> VERDADERO .
 
@@ -927,7 +918,7 @@ state 46
     DIFERENTE       reduce using rule 89 (expresion -> VERDADERO .)
 
 
-state 47
+state 46
 
     (90) expresion -> FALSO .
 
@@ -949,23 +940,23 @@ state 47
     DIFERENTE       reduce using rule 90 (expresion -> FALSO .)
 
 
-state 48
+state 47
 
     (74) lista_params -> IDENTIFICADOR COMA lista_params .
 
     PARENDER        reduce using rule 74 (lista_params -> IDENTIFICADOR COMA lista_params .)
 
 
+state 48
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque .
+
+    INICIO          reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque .)
+    FUNCION         reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque .)
+    $end            reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque .)
+
+
 state 49
-
-    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque .
-
-    INICIO          reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque .)
-    FUNCION         reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque .)
-    $end            reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque .)
-
-
-state 50
 
     (73) lista_params -> tipo IDENTIFICADOR COMA . lista_params
     (71) lista_params -> . tipo IDENTIFICADOR
@@ -978,15 +969,15 @@ state 50
     (78) tipo -> . CADENA
 
     IDENTIFICADOR   shift and go to state 13
-    NUMERO          shift and go to state 17
-    DECIMAL         shift and go to state 18
-    BOOLEANO        shift and go to state 19
-    CADENA          shift and go to state 20
+    NUMERO          shift and go to state 16
+    DECIMAL         shift and go to state 17
+    BOOLEANO        shift and go to state 18
+    CADENA          shift and go to state 19
 
-    tipo                           shift and go to state 16
-    lista_params                   shift and go to state 90
+    tipo                           shift and go to state 15
+    lista_params                   shift and go to state 89
 
-state 51
+state 50
 
     (67) bloque -> LLAVEIZQ abrir_ambito sentencias LLAVEDER . cerrar_ambito
     (66) cerrar_ambito -> .
@@ -1017,9 +1008,9 @@ state 51
     FALSO           reduce using rule 66 (cerrar_ambito -> .)
     LLAVEDER        reduce using rule 66 (cerrar_ambito -> .)
 
-    cerrar_ambito                  shift and go to state 91
+    cerrar_ambito                  shift and go to state 90
 
-state 52
+state 51
 
     (7) sentencias -> sentencia sentencias .
 
@@ -1027,14 +1018,14 @@ state 52
     HASTA           reduce using rule 7 (sentencias -> sentencia sentencias .)
 
 
-state 53
+state 52
 
     (8) sentencia -> NUMERO IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
-    IGUAL           shift and go to state 92
+    IGUAL           shift and go to state 91
 
 
-state 54
+state 53
 
     (12) sentencia -> IDENTIFICADOR OP_ASIG . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -1053,18 +1044,18 @@ state 54
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 93
+    expresion                      shift and go to state 92
 
-state 55
+state 54
 
     (79) sentencia -> IDENTIFICADOR PARENIZQ . args PARENDER PUNTOYCOMA
     (80) args -> .
@@ -1088,20 +1079,20 @@ state 55
     (90) expresion -> . FALSO
 
     PARENDER        reduce using rule 80 (args -> .)
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    args                           shift and go to state 94
-    lista_args                     shift and go to state 95
-    expresion                      shift and go to state 96
+    args                           shift and go to state 93
+    lista_args                     shift and go to state 94
+    expresion                      shift and go to state 95
 
-state 56
+state 55
 
     (13) OP_ASIG -> IGUAL .
 
@@ -1115,7 +1106,7 @@ state 56
     FALSO           reduce using rule 13 (OP_ASIG -> IGUAL .)
 
 
-state 57
+state 56
 
     (14) OP_ASIG -> SUMA_IGUAL .
 
@@ -1129,7 +1120,7 @@ state 57
     FALSO           reduce using rule 14 (OP_ASIG -> SUMA_IGUAL .)
 
 
-state 58
+state 57
 
     (15) OP_ASIG -> RESTA_IGUAL .
 
@@ -1143,7 +1134,7 @@ state 58
     FALSO           reduce using rule 15 (OP_ASIG -> RESTA_IGUAL .)
 
 
-state 59
+state 58
 
     (16) OP_ASIG -> MULT_IGUAL .
 
@@ -1157,7 +1148,7 @@ state 59
     FALSO           reduce using rule 16 (OP_ASIG -> MULT_IGUAL .)
 
 
-state 60
+state 59
 
     (17) OP_ASIG -> DIV_IGUAL .
 
@@ -1171,7 +1162,7 @@ state 60
     FALSO           reduce using rule 17 (OP_ASIG -> DIV_IGUAL .)
 
 
-state 61
+state 60
 
     (34) sentencia -> expresion PUNTOYCOMA .
 
@@ -1199,7 +1190,7 @@ state 61
     HASTA           reduce using rule 34 (sentencia -> expresion PUNTOYCOMA .)
 
 
-state 62
+state 61
 
     (35) expresion -> expresion SUMA . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1218,18 +1209,18 @@ state 62
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 97
+    expresion                      shift and go to state 96
 
-state 63
+state 62
 
     (36) expresion -> expresion RESTA . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1248,18 +1239,18 @@ state 63
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 98
+    expresion                      shift and go to state 97
 
-state 64
+state 63
 
     (37) expresion -> expresion MULT . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1278,18 +1269,18 @@ state 64
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 99
+    expresion                      shift and go to state 98
 
-state 65
+state 64
 
     (38) expresion -> expresion DIV . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1308,18 +1299,18 @@ state 65
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 100
+    expresion                      shift and go to state 99
 
-state 66
+state 65
 
     (39) expresion -> expresion MOD . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1338,18 +1329,18 @@ state 66
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 101
+    expresion                      shift and go to state 100
 
-state 67
+state 66
 
     (86) expresion -> expresion AND . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1368,18 +1359,18 @@ state 67
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 102
+    expresion                      shift and go to state 101
 
-state 68
+state 67
 
     (87) expresion -> expresion OR . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -1398,39 +1389,39 @@ state 68
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 103
+    expresion                      shift and go to state 102
+
+state 68
+
+    (9) sentencia -> DECIMAL IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
+
+    IGUAL           shift and go to state 103
+
 
 state 69
 
-    (9) sentencia -> DECIMAL IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
+    (10) sentencia -> BOOLEANO IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
     IGUAL           shift and go to state 104
 
 
 state 70
 
-    (10) sentencia -> BOOLEANO IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
+    (11) sentencia -> CADENA IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
 
     IGUAL           shift and go to state 105
 
 
 state 71
-
-    (11) sentencia -> CADENA IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
-
-    IGUAL           shift and go to state 106
-
-
-state 72
 
     (18) sentencia -> REGRESA expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -1441,17 +1432,17 @@ state 72
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PUNTOYCOMA      shift and go to state 107
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PUNTOYCOMA      shift and go to state 106
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 73
+state 72
 
     (41) expresion -> NUMERO .
 
@@ -1473,7 +1464,7 @@ state 73
     DIFERENTE       reduce using rule 41 (expresion -> NUMERO .)
 
 
-state 74
+state 73
 
     (42) expresion -> DECIMAL .
 
@@ -1495,7 +1486,7 @@ state 74
     DIFERENTE       reduce using rule 42 (expresion -> DECIMAL .)
 
 
-state 75
+state 74
 
     (43) expresion -> CADENA .
 
@@ -1517,7 +1508,7 @@ state 75
     DIFERENTE       reduce using rule 43 (expresion -> CADENA .)
 
 
-state 76
+state 75
 
     (44) expresion -> IDENTIFICADOR .
 
@@ -1539,7 +1530,7 @@ state 76
     DIFERENTE       reduce using rule 44 (expresion -> IDENTIFICADOR .)
 
 
-state 77
+state 76
 
     (19) sentencia -> SI PARENIZQ . condicion PARENDER bloque
     (20) sentencia -> SI PARENIZQ . condicion PARENDER bloque SINO bloque
@@ -1561,19 +1552,19 @@ state 77
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    condicion                      shift and go to state 108
-    expresion                      shift and go to state 109
+    condicion                      shift and go to state 107
+    expresion                      shift and go to state 108
 
-state 78
+state 77
 
     (40) expresion -> PARENIZQ expresion . PARENDER
     (35) expresion -> expresion . SUMA expresion
@@ -1584,17 +1575,17 @@ state 78
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PARENDER        shift and go to state 110
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PARENDER        shift and go to state 109
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 79
+state 78
 
     (21) sentencia -> MIENTRAS PARENIZQ . condicion PARENDER bloque
     (51) condicion -> . expresion comparador expresion
@@ -1615,33 +1606,33 @@ state 79
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    condicion                      shift and go to state 111
-    expresion                      shift and go to state 109
+    condicion                      shift and go to state 110
+    expresion                      shift and go to state 108
+
+state 79
+
+    (22) sentencia -> REPETIR bloque . HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
+
+    HASTA           shift and go to state 111
+
 
 state 80
 
-    (22) sentencia -> REPETIR bloque . HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
+    (23) sentencia -> REPETIR sentencias . HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
 
     HASTA           shift and go to state 112
 
 
 state 81
-
-    (23) sentencia -> REPETIR sentencias . HASTA PARENIZQ condicion PARENDER PUNTOYCOMA
-
-    HASTA           shift and go to state 113
-
-
-state 82
 
     (33) sentencia -> PARA PARENIZQ . for_init PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque
     (24) for_init -> . NUMERO IDENTIFICADOR IGUAL expresion
@@ -1652,29 +1643,29 @@ state 82
     (29) for_init -> . empty
     (32) empty -> .
 
-    NUMERO          shift and go to state 115
-    DECIMAL         shift and go to state 117
-    BOOLEANO        shift and go to state 118
-    CADENA          shift and go to state 119
-    IDENTIFICADOR   shift and go to state 116
+    NUMERO          shift and go to state 114
+    DECIMAL         shift and go to state 116
+    BOOLEANO        shift and go to state 117
+    CADENA          shift and go to state 118
+    IDENTIFICADOR   shift and go to state 115
     PUNTOYCOMA      reduce using rule 32 (empty -> .)
 
-    for_init                       shift and go to state 114
-    empty                          shift and go to state 120
+    for_init                       shift and go to state 113
+    empty                          shift and go to state 119
 
-state 83
+state 82
 
     (53) sentencia -> MENU LLAVEIZQ . opciones LLAVEDER
     (54) opciones -> . opcion
     (55) opciones -> . opciones opcion
     (56) opcion -> . NUMERO DOSPUNTOS llamada_accion PUNTOYCOMA
 
-    NUMERO          shift and go to state 123
+    NUMERO          shift and go to state 122
 
-    opciones                       shift and go to state 121
-    opcion                         shift and go to state 122
+    opciones                       shift and go to state 120
+    opcion                         shift and go to state 121
 
-state 84
+state 83
 
     (59) sentencia -> MOSTRAR PARENIZQ . expresion PARENDER PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -1693,18 +1684,18 @@ state 84
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 124
+    expresion                      shift and go to state 123
 
-state 85
+state 84
 
     (60) sentencia -> CAMBIAR PARENIZQ . expresion PARENDER bloque
     (35) expresion -> . expresion SUMA expresion
@@ -1723,25 +1714,25 @@ state 85
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 125
+    expresion                      shift and go to state 124
 
-state 86
+state 85
 
     (68) sentencia -> FUNCION IDENTIFICADOR . PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito
 
-    PARENIZQ        shift and go to state 126
+    PARENIZQ        shift and go to state 125
 
 
-state 87
+state 86
 
     (84) sentencia -> BREAK PUNTOYCOMA .
 
@@ -1769,7 +1760,7 @@ state 87
     HASTA           reduce using rule 84 (sentencia -> BREAK PUNTOYCOMA .)
 
 
-state 88
+state 87
 
     (85) sentencia -> CONTINUE PUNTOYCOMA .
 
@@ -1797,7 +1788,7 @@ state 88
     HASTA           reduce using rule 85 (sentencia -> CONTINUE PUNTOYCOMA .)
 
 
-state 89
+state 88
 
     (88) expresion -> NEGACION expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -1825,23 +1816,23 @@ state 89
     IGUAL_IGUAL     reduce using rule 88 (expresion -> NEGACION expresion .)
     DIFERENTE       reduce using rule 88 (expresion -> NEGACION expresion .)
 
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! MULT            [ shift and go to state 64 ]
-  ! DIV             [ shift and go to state 65 ]
-  ! MOD             [ shift and go to state 66 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! MULT            [ shift and go to state 63 ]
+  ! DIV             [ shift and go to state 64 ]
+  ! MOD             [ shift and go to state 65 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 90
+state 89
 
     (73) lista_params -> tipo IDENTIFICADOR COMA lista_params .
 
     PARENDER        reduce using rule 73 (lista_params -> tipo IDENTIFICADOR COMA lista_params .)
 
 
-state 91
+state 90
 
     (67) bloque -> LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito .
 
@@ -1872,7 +1863,7 @@ state 91
     LLAVEDER        reduce using rule 67 (bloque -> LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito .)
 
 
-state 92
+state 91
 
     (8) sentencia -> NUMERO IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -1891,18 +1882,18 @@ state 92
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 127
+    expresion                      shift and go to state 126
 
-state 93
+state 92
 
     (12) sentencia -> IDENTIFICADOR OP_ASIG expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -1913,31 +1904,31 @@ state 93
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PUNTOYCOMA      shift and go to state 128
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PUNTOYCOMA      shift and go to state 127
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 94
+state 93
 
     (79) sentencia -> IDENTIFICADOR PARENIZQ args . PARENDER PUNTOYCOMA
 
-    PARENDER        shift and go to state 129
+    PARENDER        shift and go to state 128
 
 
-state 95
+state 94
 
     (81) args -> lista_args .
 
     PARENDER        reduce using rule 81 (args -> lista_args .)
 
 
-state 96
+state 95
 
     (82) lista_args -> expresion .
     (83) lista_args -> expresion . COMA lista_args
@@ -1950,17 +1941,17 @@ state 96
     (87) expresion -> expresion . OR expresion
 
     PARENDER        reduce using rule 82 (lista_args -> expresion .)
-    COMA            shift and go to state 130
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    COMA            shift and go to state 129
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 97
+state 96
 
     (35) expresion -> expresion SUMA expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -1984,20 +1975,20 @@ state 97
     MAYOR_IGUAL     reduce using rule 35 (expresion -> expresion SUMA expresion .)
     IGUAL_IGUAL     reduce using rule 35 (expresion -> expresion SUMA expresion .)
     DIFERENTE       reduce using rule 35 (expresion -> expresion SUMA expresion .)
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
 
   ! MULT            [ reduce using rule 35 (expresion -> expresion SUMA expresion .) ]
   ! DIV             [ reduce using rule 35 (expresion -> expresion SUMA expresion .) ]
   ! MOD             [ reduce using rule 35 (expresion -> expresion SUMA expresion .) ]
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 98
+state 97
 
     (36) expresion -> expresion RESTA expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2021,20 +2012,20 @@ state 98
     MAYOR_IGUAL     reduce using rule 36 (expresion -> expresion RESTA expresion .)
     IGUAL_IGUAL     reduce using rule 36 (expresion -> expresion RESTA expresion .)
     DIFERENTE       reduce using rule 36 (expresion -> expresion RESTA expresion .)
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
 
   ! MULT            [ reduce using rule 36 (expresion -> expresion RESTA expresion .) ]
   ! DIV             [ reduce using rule 36 (expresion -> expresion RESTA expresion .) ]
   ! MOD             [ reduce using rule 36 (expresion -> expresion RESTA expresion .) ]
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 99
+state 98
 
     (37) expresion -> expresion MULT expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2062,16 +2053,16 @@ state 99
     IGUAL_IGUAL     reduce using rule 37 (expresion -> expresion MULT expresion .)
     DIFERENTE       reduce using rule 37 (expresion -> expresion MULT expresion .)
 
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! MULT            [ shift and go to state 64 ]
-  ! DIV             [ shift and go to state 65 ]
-  ! MOD             [ shift and go to state 66 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! MULT            [ shift and go to state 63 ]
+  ! DIV             [ shift and go to state 64 ]
+  ! MOD             [ shift and go to state 65 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 100
+state 99
 
     (38) expresion -> expresion DIV expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2099,16 +2090,16 @@ state 100
     IGUAL_IGUAL     reduce using rule 38 (expresion -> expresion DIV expresion .)
     DIFERENTE       reduce using rule 38 (expresion -> expresion DIV expresion .)
 
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! MULT            [ shift and go to state 64 ]
-  ! DIV             [ shift and go to state 65 ]
-  ! MOD             [ shift and go to state 66 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! MULT            [ shift and go to state 63 ]
+  ! DIV             [ shift and go to state 64 ]
+  ! MOD             [ shift and go to state 65 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 101
+state 100
 
     (39) expresion -> expresion MOD expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2136,16 +2127,16 @@ state 101
     IGUAL_IGUAL     reduce using rule 39 (expresion -> expresion MOD expresion .)
     DIFERENTE       reduce using rule 39 (expresion -> expresion MOD expresion .)
 
-  ! SUMA            [ shift and go to state 62 ]
-  ! RESTA           [ shift and go to state 63 ]
-  ! MULT            [ shift and go to state 64 ]
-  ! DIV             [ shift and go to state 65 ]
-  ! MOD             [ shift and go to state 66 ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! SUMA            [ shift and go to state 61 ]
+  ! RESTA           [ shift and go to state 62 ]
+  ! MULT            [ shift and go to state 63 ]
+  ! DIV             [ shift and go to state 64 ]
+  ! MOD             [ shift and go to state 65 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 102
+state 101
 
     (86) expresion -> expresion AND expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2167,22 +2158,22 @@ state 102
     MAYOR_IGUAL     reduce using rule 86 (expresion -> expresion AND expresion .)
     IGUAL_IGUAL     reduce using rule 86 (expresion -> expresion AND expresion .)
     DIFERENTE       reduce using rule 86 (expresion -> expresion AND expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
 
   ! SUMA            [ reduce using rule 86 (expresion -> expresion AND expresion .) ]
   ! RESTA           [ reduce using rule 86 (expresion -> expresion AND expresion .) ]
   ! MULT            [ reduce using rule 86 (expresion -> expresion AND expresion .) ]
   ! DIV             [ reduce using rule 86 (expresion -> expresion AND expresion .) ]
   ! MOD             [ reduce using rule 86 (expresion -> expresion AND expresion .) ]
-  ! AND             [ shift and go to state 67 ]
-  ! OR              [ shift and go to state 68 ]
+  ! AND             [ shift and go to state 66 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 103
+state 102
 
     (87) expresion -> expresion OR expresion .
     (35) expresion -> expresion . SUMA expresion
@@ -2203,12 +2194,12 @@ state 103
     MAYOR_IGUAL     reduce using rule 87 (expresion -> expresion OR expresion .)
     IGUAL_IGUAL     reduce using rule 87 (expresion -> expresion OR expresion .)
     DIFERENTE       reduce using rule 87 (expresion -> expresion OR expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
 
   ! SUMA            [ reduce using rule 87 (expresion -> expresion OR expresion .) ]
   ! RESTA           [ reduce using rule 87 (expresion -> expresion OR expresion .) ]
@@ -2216,10 +2207,10 @@ state 103
   ! DIV             [ reduce using rule 87 (expresion -> expresion OR expresion .) ]
   ! MOD             [ reduce using rule 87 (expresion -> expresion OR expresion .) ]
   ! AND             [ reduce using rule 87 (expresion -> expresion OR expresion .) ]
-  ! OR              [ shift and go to state 68 ]
+  ! OR              [ shift and go to state 67 ]
 
 
-state 104
+state 103
 
     (9) sentencia -> DECIMAL IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -2238,18 +2229,18 @@ state 104
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 131
+    expresion                      shift and go to state 130
 
-state 105
+state 104
 
     (10) sentencia -> BOOLEANO IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -2268,18 +2259,18 @@ state 105
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 132
+    expresion                      shift and go to state 131
 
-state 106
+state 105
 
     (11) sentencia -> CADENA IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
     (35) expresion -> . expresion SUMA expresion
@@ -2298,18 +2289,18 @@ state 106
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 133
+    expresion                      shift and go to state 132
 
-state 107
+state 106
 
     (18) sentencia -> REGRESA expresion PUNTOYCOMA .
 
@@ -2337,15 +2328,15 @@ state 107
     HASTA           reduce using rule 18 (sentencia -> REGRESA expresion PUNTOYCOMA .)
 
 
-state 108
+state 107
 
     (19) sentencia -> SI PARENIZQ condicion . PARENDER bloque
     (20) sentencia -> SI PARENIZQ condicion . PARENDER bloque SINO bloque
 
-    PARENDER        shift and go to state 134
+    PARENDER        shift and go to state 133
 
 
-state 109
+state 108
 
     (51) condicion -> expresion . comparador expresion
     (52) condicion -> expresion .
@@ -2365,23 +2356,23 @@ state 109
 
     PARENDER        reduce using rule 52 (condicion -> expresion .)
     PUNTOYCOMA      reduce using rule 52 (condicion -> expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
-    MENOR           shift and go to state 136
-    MAYOR           shift and go to state 137
-    MENOR_IGUAL     shift and go to state 138
-    MAYOR_IGUAL     shift and go to state 139
-    IGUAL_IGUAL     shift and go to state 140
-    DIFERENTE       shift and go to state 141
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
+    MENOR           shift and go to state 135
+    MAYOR           shift and go to state 136
+    MENOR_IGUAL     shift and go to state 137
+    MAYOR_IGUAL     shift and go to state 138
+    IGUAL_IGUAL     shift and go to state 139
+    DIFERENTE       shift and go to state 140
 
-    comparador                     shift and go to state 135
+    comparador                     shift and go to state 134
 
-state 110
+state 109
 
     (40) expresion -> PARENIZQ expresion PARENDER .
 
@@ -2403,42 +2394,42 @@ state 110
     DIFERENTE       reduce using rule 40 (expresion -> PARENIZQ expresion PARENDER .)
 
 
-state 111
+state 110
 
     (21) sentencia -> MIENTRAS PARENIZQ condicion . PARENDER bloque
 
-    PARENDER        shift and go to state 142
+    PARENDER        shift and go to state 141
+
+
+state 111
+
+    (22) sentencia -> REPETIR bloque HASTA . PARENIZQ condicion PARENDER PUNTOYCOMA
+
+    PARENIZQ        shift and go to state 142
 
 
 state 112
 
-    (22) sentencia -> REPETIR bloque HASTA . PARENIZQ condicion PARENDER PUNTOYCOMA
+    (23) sentencia -> REPETIR sentencias HASTA . PARENIZQ condicion PARENDER PUNTOYCOMA
 
     PARENIZQ        shift and go to state 143
 
 
 state 113
 
-    (23) sentencia -> REPETIR sentencias HASTA . PARENIZQ condicion PARENDER PUNTOYCOMA
+    (33) sentencia -> PARA PARENIZQ for_init . PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque
 
-    PARENIZQ        shift and go to state 144
+    PUNTOYCOMA      shift and go to state 144
 
 
 state 114
 
-    (33) sentencia -> PARA PARENIZQ for_init . PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque
+    (24) for_init -> NUMERO . IDENTIFICADOR IGUAL expresion
 
-    PUNTOYCOMA      shift and go to state 145
+    IDENTIFICADOR   shift and go to state 145
 
 
 state 115
-
-    (24) for_init -> NUMERO . IDENTIFICADOR IGUAL expresion
-
-    IDENTIFICADOR   shift and go to state 146
-
-
-state 116
 
     (28) for_init -> IDENTIFICADOR . OP_ASIG expresion
     (13) OP_ASIG -> . IGUAL
@@ -2447,54 +2438,54 @@ state 116
     (16) OP_ASIG -> . MULT_IGUAL
     (17) OP_ASIG -> . DIV_IGUAL
 
-    IGUAL           shift and go to state 56
-    SUMA_IGUAL      shift and go to state 57
-    RESTA_IGUAL     shift and go to state 58
-    MULT_IGUAL      shift and go to state 59
-    DIV_IGUAL       shift and go to state 60
+    IGUAL           shift and go to state 55
+    SUMA_IGUAL      shift and go to state 56
+    RESTA_IGUAL     shift and go to state 57
+    MULT_IGUAL      shift and go to state 58
+    DIV_IGUAL       shift and go to state 59
 
-    OP_ASIG                        shift and go to state 147
+    OP_ASIG                        shift and go to state 146
+
+state 116
+
+    (25) for_init -> DECIMAL . IDENTIFICADOR IGUAL expresion
+
+    IDENTIFICADOR   shift and go to state 147
+
 
 state 117
 
-    (25) for_init -> DECIMAL . IDENTIFICADOR IGUAL expresion
+    (26) for_init -> BOOLEANO . IDENTIFICADOR IGUAL expresion
 
     IDENTIFICADOR   shift and go to state 148
 
 
 state 118
 
-    (26) for_init -> BOOLEANO . IDENTIFICADOR IGUAL expresion
+    (27) for_init -> CADENA . IDENTIFICADOR IGUAL expresion
 
     IDENTIFICADOR   shift and go to state 149
 
 
 state 119
 
-    (27) for_init -> CADENA . IDENTIFICADOR IGUAL expresion
-
-    IDENTIFICADOR   shift and go to state 150
-
-
-state 120
-
     (29) for_init -> empty .
 
     PUNTOYCOMA      reduce using rule 29 (for_init -> empty .)
 
 
-state 121
+state 120
 
     (53) sentencia -> MENU LLAVEIZQ opciones . LLAVEDER
     (55) opciones -> opciones . opcion
     (56) opcion -> . NUMERO DOSPUNTOS llamada_accion PUNTOYCOMA
 
-    LLAVEDER        shift and go to state 151
-    NUMERO          shift and go to state 123
+    LLAVEDER        shift and go to state 150
+    NUMERO          shift and go to state 122
 
-    opcion                         shift and go to state 152
+    opcion                         shift and go to state 151
 
-state 122
+state 121
 
     (54) opciones -> opcion .
 
@@ -2502,14 +2493,14 @@ state 122
     NUMERO          reduce using rule 54 (opciones -> opcion .)
 
 
-state 123
+state 122
 
     (56) opcion -> NUMERO . DOSPUNTOS llamada_accion PUNTOYCOMA
 
-    DOSPUNTOS       shift and go to state 153
+    DOSPUNTOS       shift and go to state 152
 
 
-state 124
+state 123
 
     (59) sentencia -> MOSTRAR PARENIZQ expresion . PARENDER PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -2520,17 +2511,17 @@ state 124
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PARENDER        shift and go to state 154
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PARENDER        shift and go to state 153
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 125
+state 124
 
     (60) sentencia -> CAMBIAR PARENIZQ expresion . PARENDER bloque
     (35) expresion -> expresion . SUMA expresion
@@ -2541,17 +2532,17 @@ state 125
     (86) expresion -> expresion . AND expresion
     (87) expresion -> expresion . OR expresion
 
-    PARENDER        shift and go to state 155
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    PARENDER        shift and go to state 154
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 126
+state 125
 
     (68) sentencia -> FUNCION IDENTIFICADOR PARENIZQ . params PARENDER abrir_ambito bloque cerrar_ambito
     (69) params -> .
@@ -2567,16 +2558,16 @@ state 126
 
     PARENDER        reduce using rule 69 (params -> .)
     IDENTIFICADOR   shift and go to state 13
-    NUMERO          shift and go to state 17
-    DECIMAL         shift and go to state 18
-    BOOLEANO        shift and go to state 19
-    CADENA          shift and go to state 20
+    NUMERO          shift and go to state 16
+    DECIMAL         shift and go to state 17
+    BOOLEANO        shift and go to state 18
+    CADENA          shift and go to state 19
 
-    params                         shift and go to state 156
-    lista_params                   shift and go to state 15
-    tipo                           shift and go to state 16
+    params                         shift and go to state 155
+    lista_params                   shift and go to state 156
+    tipo                           shift and go to state 15
 
-state 127
+state 126
 
     (8) sentencia -> NUMERO IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -2588,16 +2579,16 @@ state 127
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      shift and go to state 157
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 128
+state 127
 
     (12) sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .
 
@@ -2625,14 +2616,14 @@ state 128
     HASTA           reduce using rule 12 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
 
 
-state 129
+state 128
 
     (79) sentencia -> IDENTIFICADOR PARENIZQ args PARENDER . PUNTOYCOMA
 
     PUNTOYCOMA      shift and go to state 158
 
 
-state 130
+state 129
 
     (83) lista_args -> expresion COMA . lista_args
     (82) lista_args -> . expresion
@@ -2653,19 +2644,19 @@ state 130
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
-    expresion                      shift and go to state 96
+    expresion                      shift and go to state 95
     lista_args                     shift and go to state 159
 
-state 131
+state 130
 
     (9) sentencia -> DECIMAL IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -2677,16 +2668,16 @@ state 131
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      shift and go to state 160
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 132
+state 131
 
     (10) sentencia -> BOOLEANO IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -2698,16 +2689,16 @@ state 132
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      shift and go to state 161
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 133
+state 132
 
     (11) sentencia -> CADENA IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
     (35) expresion -> expresion . SUMA expresion
@@ -2719,16 +2710,16 @@ state 133
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      shift and go to state 162
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
-state 134
+state 133
 
     (19) sentencia -> SI PARENIZQ condicion PARENDER . bloque
     (20) sentencia -> SI PARENIZQ condicion PARENDER . bloque SINO bloque
@@ -2738,7 +2729,7 @@ state 134
 
     bloque                         shift and go to state 163
 
-state 135
+state 134
 
     (51) condicion -> expresion comparador . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -2757,18 +2748,18 @@ state 135
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 164
 
-state 136
+state 135
 
     (45) comparador -> MENOR .
 
@@ -2782,7 +2773,7 @@ state 136
     FALSO           reduce using rule 45 (comparador -> MENOR .)
 
 
-state 137
+state 136
 
     (46) comparador -> MAYOR .
 
@@ -2796,7 +2787,7 @@ state 137
     FALSO           reduce using rule 46 (comparador -> MAYOR .)
 
 
-state 138
+state 137
 
     (47) comparador -> MENOR_IGUAL .
 
@@ -2810,7 +2801,7 @@ state 138
     FALSO           reduce using rule 47 (comparador -> MENOR_IGUAL .)
 
 
-state 139
+state 138
 
     (48) comparador -> MAYOR_IGUAL .
 
@@ -2824,7 +2815,7 @@ state 139
     FALSO           reduce using rule 48 (comparador -> MAYOR_IGUAL .)
 
 
-state 140
+state 139
 
     (49) comparador -> IGUAL_IGUAL .
 
@@ -2838,7 +2829,7 @@ state 140
     FALSO           reduce using rule 49 (comparador -> IGUAL_IGUAL .)
 
 
-state 141
+state 140
 
     (50) comparador -> DIFERENTE .
 
@@ -2852,7 +2843,7 @@ state 141
     FALSO           reduce using rule 50 (comparador -> DIFERENTE .)
 
 
-state 142
+state 141
 
     (21) sentencia -> MIENTRAS PARENIZQ condicion PARENDER . bloque
     (67) bloque -> . LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito
@@ -2861,7 +2852,7 @@ state 142
 
     bloque                         shift and go to state 165
 
-state 143
+state 142
 
     (22) sentencia -> REPETIR bloque HASTA PARENIZQ . condicion PARENDER PUNTOYCOMA
     (51) condicion -> . expresion comparador expresion
@@ -2882,19 +2873,19 @@ state 143
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     condicion                      shift and go to state 166
-    expresion                      shift and go to state 109
+    expresion                      shift and go to state 108
 
-state 144
+state 143
 
     (23) sentencia -> REPETIR sentencias HASTA PARENIZQ . condicion PARENDER PUNTOYCOMA
     (51) condicion -> . expresion comparador expresion
@@ -2915,19 +2906,19 @@ state 144
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     condicion                      shift and go to state 167
-    expresion                      shift and go to state 109
+    expresion                      shift and go to state 108
 
-state 145
+state 144
 
     (33) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA . condicion PUNTOYCOMA for_update PARENDER bloque
     (51) condicion -> . expresion comparador expresion
@@ -2948,26 +2939,26 @@ state 145
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     condicion                      shift and go to state 168
-    expresion                      shift and go to state 109
+    expresion                      shift and go to state 108
 
-state 146
+state 145
 
     (24) for_init -> NUMERO IDENTIFICADOR . IGUAL expresion
 
     IGUAL           shift and go to state 169
 
 
-state 147
+state 146
 
     (28) for_init -> IDENTIFICADOR OP_ASIG . expresion
     (35) expresion -> . expresion SUMA expresion
@@ -2986,39 +2977,39 @@ state 147
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 170
 
-state 148
+state 147
 
     (25) for_init -> DECIMAL IDENTIFICADOR . IGUAL expresion
 
     IGUAL           shift and go to state 171
 
 
-state 149
+state 148
 
     (26) for_init -> BOOLEANO IDENTIFICADOR . IGUAL expresion
 
     IGUAL           shift and go to state 172
 
 
-state 150
+state 149
 
     (27) for_init -> CADENA IDENTIFICADOR . IGUAL expresion
 
     IGUAL           shift and go to state 173
 
 
-state 151
+state 150
 
     (53) sentencia -> MENU LLAVEIZQ opciones LLAVEDER .
 
@@ -3046,7 +3037,7 @@ state 151
     HASTA           reduce using rule 53 (sentencia -> MENU LLAVEIZQ opciones LLAVEDER .)
 
 
-state 152
+state 151
 
     (55) opciones -> opciones opcion .
 
@@ -3054,7 +3045,7 @@ state 152
     NUMERO          reduce using rule 55 (opciones -> opciones opcion .)
 
 
-state 153
+state 152
 
     (56) opcion -> NUMERO DOSPUNTOS . llamada_accion PUNTOYCOMA
     (57) llamada_accion -> . MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA
@@ -3065,14 +3056,14 @@ state 153
 
     llamada_accion                 shift and go to state 174
 
-state 154
+state 153
 
     (59) sentencia -> MOSTRAR PARENIZQ expresion PARENDER . PUNTOYCOMA
 
     PUNTOYCOMA      shift and go to state 177
 
 
-state 155
+state 154
 
     (60) sentencia -> CAMBIAR PARENIZQ expresion PARENDER . bloque
     (67) bloque -> . LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito
@@ -3081,11 +3072,18 @@ state 155
 
     bloque                         shift and go to state 178
 
-state 156
+state 155
 
     (68) sentencia -> FUNCION IDENTIFICADOR PARENIZQ params . PARENDER abrir_ambito bloque cerrar_ambito
 
     PARENDER        shift and go to state 179
+
+
+state 156
+
+    (70) params -> lista_params .
+
+    PARENDER        reduce using rule 70 (params -> lista_params .)
 
 
 state 157
@@ -3278,13 +3276,13 @@ state 164
 
     PARENDER        reduce using rule 51 (condicion -> expresion comparador expresion .)
     PUNTOYCOMA      reduce using rule 51 (condicion -> expresion comparador expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 165
@@ -3355,14 +3353,14 @@ state 169
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 184
 
@@ -3378,13 +3376,13 @@ state 170
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      reduce using rule 28 (for_init -> IDENTIFICADOR OP_ASIG expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 171
@@ -3406,14 +3404,14 @@ state 171
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 185
 
@@ -3436,14 +3434,14 @@ state 172
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 186
 
@@ -3466,14 +3464,14 @@ state 173
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 187
 
@@ -3611,13 +3609,13 @@ state 184
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      reduce using rule 24 (for_init -> NUMERO IDENTIFICADOR IGUAL expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 185
@@ -3632,13 +3630,13 @@ state 185
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      reduce using rule 25 (for_init -> DECIMAL IDENTIFICADOR IGUAL expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 186
@@ -3653,13 +3651,13 @@ state 186
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      reduce using rule 26 (for_init -> BOOLEANO IDENTIFICADOR IGUAL expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 187
@@ -3674,13 +3672,13 @@ state 187
     (87) expresion -> expresion . OR expresion
 
     PUNTOYCOMA      reduce using rule 27 (for_init -> CADENA IDENTIFICADOR IGUAL expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 188
@@ -3710,14 +3708,14 @@ state 189
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 198
 
@@ -3745,18 +3743,18 @@ state 190
     (90) expresion -> . FALSO
 
     PARENDER        reduce using rule 80 (args -> .)
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     args                           shift and go to state 199
-    lista_args                     shift and go to state 95
-    expresion                      shift and go to state 96
+    lista_args                     shift and go to state 94
+    expresion                      shift and go to state 95
 
 state 191
 
@@ -3867,11 +3865,11 @@ state 196
     (16) OP_ASIG -> . MULT_IGUAL
     (17) OP_ASIG -> . DIV_IGUAL
 
-    IGUAL           shift and go to state 56
-    SUMA_IGUAL      shift and go to state 57
-    RESTA_IGUAL     shift and go to state 58
-    MULT_IGUAL      shift and go to state 59
-    DIV_IGUAL       shift and go to state 60
+    IGUAL           shift and go to state 55
+    SUMA_IGUAL      shift and go to state 56
+    RESTA_IGUAL     shift and go to state 57
+    MULT_IGUAL      shift and go to state 58
+    DIV_IGUAL       shift and go to state 59
 
     OP_ASIG                        shift and go to state 202
 
@@ -3894,13 +3892,13 @@ state 198
     (87) expresion -> expresion . OR expresion
 
     PARENDER        shift and go to state 203
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 199
@@ -3968,14 +3966,14 @@ state 202
     (89) expresion -> . VERDADERO
     (90) expresion -> . FALSO
 
-    PARENIZQ        shift and go to state 35
-    NUMERO          shift and go to state 73
-    DECIMAL         shift and go to state 74
-    CADENA          shift and go to state 75
-    IDENTIFICADOR   shift and go to state 76
-    NEGACION        shift and go to state 45
-    VERDADERO       shift and go to state 46
-    FALSO           shift and go to state 47
+    PARENIZQ        shift and go to state 34
+    NUMERO          shift and go to state 72
+    DECIMAL         shift and go to state 73
+    CADENA          shift and go to state 74
+    IDENTIFICADOR   shift and go to state 75
+    NEGACION        shift and go to state 44
+    VERDADERO       shift and go to state 45
+    FALSO           shift and go to state 46
 
     expresion                      shift and go to state 207
 
@@ -4061,13 +4059,13 @@ state 207
     (87) expresion -> expresion . OR expresion
 
     PARENDER        reduce using rule 30 (for_update -> IDENTIFICADOR OP_ASIG expresion .)
-    SUMA            shift and go to state 62
-    RESTA           shift and go to state 63
-    MULT            shift and go to state 64
-    DIV             shift and go to state 65
-    MOD             shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
+    SUMA            shift and go to state 61
+    RESTA           shift and go to state 62
+    MULT            shift and go to state 63
+    DIV             shift and go to state 64
+    MOD             shift and go to state 65
+    AND             shift and go to state 66
+    OR              shift and go to state 67
 
 
 state 208

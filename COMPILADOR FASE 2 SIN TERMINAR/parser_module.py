@@ -41,19 +41,36 @@ def p_lista_funciones(p):
     else:
         p[0] = [p[1]] + p[2]
 
+#def p_funcion_inicio(p):
+#    'funcion : INICIO PARENIZQ PARENDER bloque'
+#    p[0] = FuncDecl(name='inicio', params=[], body=p[4], linea=1, columna=1)
+#
 def p_funcion_inicio(p):
     'funcion : INICIO PARENIZQ PARENDER bloque'
+    # registrar función inicio() → tipo de retorno 'void' o lo que definas
+    tabla.agregar_simbolo(
+        'inicio', 
+        'funcion', 
+        None,
+        linea=1, 
+        columna=1,
+        modificable=False,
+        parametros=[],
+        retorno=None  # o 'void' si lo usas así
+    )
     p[0] = FuncDecl(name='inicio', params=[], body=p[4], linea=1, columna=1)
 
+
 def p_funcion(p):
-    'funcion : FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque'
+    'funcion : FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque'
     nombre = p[2]
+    parametros = p[4]  # Debe ser lista de Param
     linea  = encontrar_linea(lexer.lexdata, p.slice[2])
-    col    = encontrar_columna(lexer.lexdata, p.slice[2])
+    columna = encontrar_columna(lexer.lexdata, p.slice[2])
     # Agrega params al nuevo ámbito (ya abierto por bloque)
-    for param in p[5]:
+    for param in parametros:
         tabla.agregar_simbolo(param.nombre, param.tipo, None, param.linea, param.columna)
-    p[0] = FuncDecl(name=nombre, params=p[5], body=p[7], linea=linea, columna=col)
+    p[0] = FuncDecl(name=nombre, params=parametros, body=p[6], linea=linea, columna=columna)
     
 
 def p_sentencias(p):
@@ -328,13 +345,33 @@ def p_sentencia_funcion_declaracion(p):
     'sentencia : FUNCION IDENTIFICADOR PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito'
     nombre = p[2]
     linea = encontrar_linea(lexer.lexdata, p.slice[2])
-    col = encontrar_columna(lexer.lexdata, p.slice[2])
-    # Agregar los parámetros al ámbito de la función
+    col    = encontrar_columna(lexer.lexdata, p.slice[2])
+
+    # 1) Registrar la función en el ámbito global
+    tabla.agregar_simbolo(
+        nombre,             # nombre de la función
+        'funcion',          # tipo genérico
+        None,               # sin valor
+        linea, 
+        col,
+        modificable=False,  # no es variable
+        parametros=[(param.nombre, param.tipo) for param in p[4]],
+        retorno=None        # o el tipo de retorno si tu lenguaje lo admite
+    )
+
+    # 2) Luego abrimos ámbito (ya lo hace abrir_ambito en la gramática)
+    #    y agregamos los parámetros como variables locales:
     for param in p[4]:
-        tabla.agregar_simbolo(param.nombre, param.tipo, None, param.linea, param.columna)
+        tabla.agregar_simbolo(
+            param.nombre, 
+            param.tipo, 
+            None,
+            param.linea, 
+            param.columna
+        )
+
     cuerpo = p[7]
-    p[0] = FuncDecl(name=nombre, params=p[4], body=cuerpo, linea=linea, columna=col)
-    
+    p[0]  = FuncDecl(name=nombre, params=p[4], body=cuerpo, linea=linea, columna=col)
 
 def p_params(p):
     '''params :
@@ -488,12 +525,26 @@ def analizar_sintaxis(contenido):
     # ANÁLISIS SEMÁNTICO
     errores_semanticos = []
     if ast:
-        sema = SemanticAnalyzer(tabla.tabla_simbolos)
+#        sema = SemanticAnalyzer(tabla.tabla_simbolos)
+        sema = SemanticAnalyzer(tabla)
         errores_semanticos = sema.analyze(ast)
     
+    errores = errores_lexicos + errores_sintacticos + errores_semanticos
+    errores = filtrar_errores_duplicados(errores)
     
     html_gen.generar_pagina_inicio()
     html_gen.generar_html_tokens(tokens)
-    html_gen.generar_html_errores(errores_lexicos + errores_sintacticos + errores_semanticos)
+    html_gen.generar_html_errores(errores)
     html_gen.generar_html_tabla_simbolos(tabla.tabla_simbolos)
     html_gen.abrir_html("index.html")
+
+def filtrar_errores_duplicados(lista_errores):
+    vistos = set()
+    filtrados = []
+    for err in lista_errores:
+        # err es una tupla (mensaje, linea, columna)
+        clave = (err[0], err[1], err[2])
+        if clave not in vistos:
+            vistos.add(clave)
+            filtrados.append(err)
+    return filtrados

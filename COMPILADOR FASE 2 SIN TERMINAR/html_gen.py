@@ -110,24 +110,26 @@ def generar_html_errores(errores, nombre_archivo="errores.html"):
         table {{ width: 90%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }}
         th, td {{ border: 1px solid #b71c1c; padding: 12px; text-align: center; }}
         th {{ background-color: #b71c1c; color: white; }}
-        tr:nth-child(even) {{ background-color: #fce4ec; }}
+        tr.error {{ background-color: #ffcccc; color: #b71c1c; }}
+        tr.advertencia {{ background-color: #fff9c4; color: #bfa600; }}
+        tr:nth-child(even):not(.error):not(.advertencia) {{ background-color: #fce4ec; }}
         tr:hover {{ background-color: #ffcdd2; }}
         @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
     </style></head><body>
     {generar_menu()}
     <h2>Bitácora de Errores</h2><table><tr><th>Mensaje</th><th>Línea</th><th>Columna</th></tr>
     """
-    # Para errores
     for error in errores:
         mensaje = error[0] if len(error) > 0 else ''
         linea = error[1] if len(error) > 1 else '-'
         columna = error[2] if len(error) > 2 else '-'
-        html += f"<tr><td>{mensaje}</td><td>{linea}</td><td>{columna}</td></tr>"
+        clase = "advertencia" if "Advertencia" in mensaje else "error"
+        html += f"<tr class='{clase}'><td>{mensaje}</td><td>{linea}</td><td>{columna}</td></tr>"
     html += "</table></body></html>"
 
     with open(nombre_archivo, "w", encoding="utf-8") as file:
         file.write(html)
-  #  abrir_html(nombre_archivo)
+    # abrir_html(nombre_archivo)
 
 def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.html"):
     html = f"""

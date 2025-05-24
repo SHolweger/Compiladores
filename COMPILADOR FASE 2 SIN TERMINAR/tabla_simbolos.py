@@ -39,7 +39,7 @@ class SymbolTable:
         key = (nombre, interno)
         if key in self.tabla_simbolos:
             self.errors.append((
-                f"Error: La variable '{nombre}' ya ha sido declarada en el ámbito '{self.obtener_ambito_para_mostrar()}'.",
+                f"Error Semántico: La variable '{nombre}' ya ha sido declarada en el ámbito '{self.obtener_ambito_para_mostrar()}'.",
                 linea, columna
             ))
         else:
@@ -63,7 +63,7 @@ class SymbolTable:
             if key in self.tabla_simbolos:
                 self.tabla_simbolos[key]['usado'] = True
                 return self.tabla_simbolos[key]
-        self.errors.append((f"Variable '{nombre}' no declarada.", linea, columna))
+        self.errors.append((f"Error Semántico: Variable '{nombre}' no declarada.", linea, columna))
         return None
 
     # --- Actualizar valor ---
@@ -72,7 +72,7 @@ class SymbolTable:
         if not entry:
             return
         if not entry['modificable']:
-            self.errors.append((f"Variable '{nombre}' no modificable.", linea, columna))
+            self.errors.append((f"Error Semántico: Variable '{nombre}' no modificable.", linea, columna)) 
             return
         entry['valor'] = valor
 

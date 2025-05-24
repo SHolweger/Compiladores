@@ -60,6 +60,7 @@ reservadas = {
     'decimal': 'DECIMAL',
     'booleano': 'BOOLEANO',
     'cadena': 'CADENA',
+    'caracter' : 'CARACTER',
 }
 
 # tokens reserva como tupla
@@ -135,6 +136,12 @@ def t_newline(t):
 # Cadenas de texto (elimina comillas)
 def t_CADENA(t):
     r'\"([^\\\n]|(\\.))*?\"'
+    t.value = t.value[1:-1]
+    return t
+
+#Caracteres (elimina comillas)
+def t_CARACTER(t):
+    r'\'([^\\\n]|(\\.))*?\''
     t.value = t.value[1:-1]
     return t
 
