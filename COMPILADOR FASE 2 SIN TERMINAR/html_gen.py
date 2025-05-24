@@ -156,13 +156,17 @@ def generar_html_tabla_simbolos(tabla_simbolos, nombre_archivo="tabla_simbolos.h
     """
     # Para tabla de símbolos
     for clave, datos in tabla_simbolos.items():
-        nombre = clave.split('_')[0]  # Solo el nombre, sin el ámbito
+        nombre = clave[0]
+        valor = datos.get('valor', '-')
+        # Si es un Literal, muestra su valor real
+        if hasattr(valor, 'value'):
+            valor = valor.value
         html += f"""
         <tr>
             <td>{nombre}</td>
             <td>{datos.get('tipo', '-')}</td>
             <td>{datos.get('referencia', '-')}</td>
-            <td>{datos.get('valor', '-')}</td>
+            <td>{valor}</td>
             <td>{datos.get('linea', '-')}</td>
             <td>{datos.get('columna', '-')}</td>
         </tr>

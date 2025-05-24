@@ -1,14 +1,22 @@
 inicio() {
-    numero x = 2;
-    cambiar (x) {
-        caso 1:
-            numero y = 10;
-            regresa y;
-        caso 2:
-            numero z = 20;
-            regresa z;
-        predeterminado:
-            numero w = 0;
-            regresa w;
+    numero total = 0;
+    para (numero i = 0; i < 3; i = i + 1) {
+        si (i % 2 == 0) {
+            numero par = i;
+            total = total + par;
+        } sino {
+            numero impar = i;
+            total = total + impar;
+        }
     }
+    mostrar(total);
+}
+
+funcion sumaHasta(n) {
+    numero suma = 0;
+    mientras (n > 0) {
+        suma = suma + n;
+        n = n - 1;
+    }
+    regresa suma;
 }
