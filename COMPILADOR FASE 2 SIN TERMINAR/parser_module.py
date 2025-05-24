@@ -41,19 +41,19 @@ def p_lista_funciones(p):
     else:
         p[0] = [p[1]] + p[2]
 
+def p_funcion_inicio(p):
+    'funcion : INICIO PARENIZQ PARENDER bloque'
+    p[0] = FuncDecl(name='inicio', params=[], body=p[4], linea=1, columna=1)
+
 def p_funcion(p):
-    '''funcion : INICIO PARENIZQ PARENDER LLAVEIZQ sentencias LLAVEDER
-               | FUNCION IDENTIFICADOR PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito'''
-    if p[1] == 'inicio':
-        p[0] = Program(p[5])
-    else:
-        nombre = p[2]
-        linea = encontrar_linea(lexer.lexdata, p.slice[2])
-        col = encontrar_columna(lexer.lexdata, p.slice[2])
-        for param in p[4]:
-            tabla.agregar_simbolo(param.nombre, param.tipo, None, param.linea, param.columna)
-        cuerpo = p[7]
-        p[0] = FuncDecl(name=nombre, params=p[4], body=cuerpo, linea=linea, columna=col)
+    'funcion : FUNCION IDENTIFICADOR PARENIZQ params PARENDER bloque'
+    nombre = p[2]
+    linea  = encontrar_linea(lexer.lexdata, p.slice[2])
+    col    = encontrar_columna(lexer.lexdata, p.slice[2])
+    # Agrega params al nuevo ámbito (ya abierto por bloque)
+    for param in p[5]:
+        tabla.agregar_simbolo(param.nombre, param.tipo, None, param.linea, param.columna)
+    p[0] = FuncDecl(name=nombre, params=p[5], body=p[7], linea=linea, columna=col)
     
 
 def p_sentencias(p):
@@ -71,8 +71,11 @@ def p_sentencia_declaracion(p):
     tipo, nombre, expr = p[1].lower(), p[2], p[4]
     linea = encontrar_linea(lexer.lexdata, p.slice[2])
     col = encontrar_columna(lexer.lexdata, p.slice[2])
+    # Opción 1: Solo guardar el valor si es un literal
+    valor_real = expr.value if isinstance(expr, Literal) else None
     p[0] = VarDecl(tipo, nombre, expr, linea, col)
-    tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
+    #tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
+    tabla.agregar_simbolo(nombre, tipo, valor_real, linea, col)
 
 # Asignación, soportando operadores compuestos
 
@@ -101,29 +104,29 @@ def p_sentencia_regresa(p):
 
 # If-Then y If-Then-Else
 def p_sentencia_si(p):
-    '''sentencia : SI PARENIZQ condicion PARENDER abrir_ambito bloque cerrar_ambito
-                 | SI PARENIZQ condicion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito'''
+    '''sentencia : SI PARENIZQ condicion PARENDER bloque
+                 | SI PARENIZQ condicion PARENDER bloque SINO bloque'''
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
     col = encontrar_columna(lexer.lexdata, p.slice[1])
-    if len(p) == 8:
-        p[0] = IfThen(p[3], p[6], linea, col)
+    if len(p) == 6:
+        p[0] = IfThen(p[3], p[5], linea, col)
     else:
-        p[0] = IfThenElse(p[3], p[6], p[10], linea, col)
+        p[0] = IfThenElse(p[3], p[5], p[7], linea, col)
 
 
 # While loop
 def p_sentencia_mientras(p):
-    'sentencia : MIENTRAS PARENIZQ condicion PARENDER abrir_ambito bloque cerrar_ambito'
+    'sentencia : MIENTRAS PARENIZQ condicion PARENDER bloque'
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = While(p[3], p[6], linea, col)
+    col   = encontrar_columna(lexer.lexdata, p.slice[1])
+    p[0] = While(p[3], p[5], linea, col)
 
-# Do-While loop
+# Do-While
 def p_sentencia_hacer_mientras(p):
-    'sentencia : REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ condicion PARENDER PUNTOYCOMA'
+    'sentencia : REPETIR bloque HASTA PARENIZQ condicion PARENDER PUNTOYCOMA'
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = DoWhile(p[3], p[7], linea, col)
+    col   = encontrar_columna(lexer.lexdata, p.slice[1])
+    p[0] = DoWhile(p[2], p[5], linea, col)
 
 def p_sentencia_repetir(p):
     'sentencia : REPETIR sentencias HASTA PARENIZQ condicion PARENDER PUNTOYCOMA'
@@ -172,10 +175,10 @@ def p_empty(p):
     pass
 
 def p_sentencia_para(p):
-    '''sentencia : PARA PARENIZQ for_init PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito'''
+    'sentencia : PARA PARENIZQ for_init PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque'
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
     col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = ForLoop(p[3], p[5], p[7], p[10], linea, col)
+    p[0] = ForLoop(p[3], p[5], p[7], p[9], linea, col)
     #p[0] = ForLoop(p[3], p[4], p[6], p[10], linea, col)si
 
 # EXPRESSIONS STATEMENT (para permitir llamadas a función o cálculos sueltos terminados en ;) 
@@ -286,24 +289,24 @@ def p_sentencia_mostrar(p):
 # Switch / Case
 # -------------------------
 def p_sentencia_switch(p):
-    'sentencia : CAMBIAR PARENIZQ expresion PARENDER LLAVEIZQ casos LLAVEDER'
+    'sentencia : CAMBIAR PARENIZQ expresion PARENDER bloque'
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
     col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Switch(p[3], p[7], linea, col)
+    p[0] = Switch(p[3], p[5], linea, col)
 
 def p_casos(p):
     '''casos : caso
              | caso casos'''
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 def p_caso(p):
-    '''caso : CASO expresion DOSPUNTOS abrir_ambito sentencias cerrar_ambito
-            | PREDETERMINADO DOSPUNTOS abrir_ambito sentencias cerrar_ambito'''
+    '''caso : CASO expresion DOSPUNTOS sentencias
+            | PREDETERMINADO DOSPUNTOS sentencias'''
     linea = encontrar_linea(lexer.lexdata, p.slice[1])
     col = encontrar_columna(lexer.lexdata, p.slice[1])
     if p.slice[1].type == 'CASO':
         p[0] = Case(p[2], p[5], linea, col)
     else:
-        p[0] = Default(p[4], linea, col)
+        p[0] = Default(p[3], linea, col)
 
 # AMBITOS
 def p_abrir_ambito(p):
@@ -315,7 +318,7 @@ def p_cerrar_ambito(p):
     tabla.salir_ambito()
 
 def p_bloque(p):
-    'bloque : LLAVEIZQ abrir_ambito sentencias cerrar_ambito LLAVEDER'
+    'bloque : LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito'
     p[0] = p[3]
 
 # -------------------------

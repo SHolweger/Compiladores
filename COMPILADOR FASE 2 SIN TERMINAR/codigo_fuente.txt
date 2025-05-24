@@ -1,22 +1,7 @@
 inicio() {
-    numero total = 0;
-    para (numero i = 0; i < 3; i = i + 1) {
-        si (i % 2 == 0) {
-            numero par = i;
-            total = total + par;
-        } sino {
-            numero impar = i;
-            total = total + impar;
-        }
-    }
-    mostrar(total);
-}
-
-funcion sumaHasta(n) {
-    numero suma = 0;
-    mientras (n > 0) {
-        suma = suma + n;
-        n = n - 1;
-    }
-    regresa suma;
+    if (verdadero) { 
+        numero c = 1; 
+    } else { 
+        numero d = 2; 
+    } 
 }
