@@ -1,89 +1,87 @@
 class SymbolTable:
     def __init__(self):
-        self.tabla_simbolos = {}     # clave: (nombre, ambito) -> metadata
+        self.tabla_simbolos = {}   # (nombre, ambito) -> metadata
         self.errors = []
         self.scopes = ['global']
-        self._local_counter = 0      # contador de bloques “local”
+        self._local_counter = 0
+        self._function_scope = None
 
-    # --- Manejo de ámbitos ---
-    def entrar_ambito(self):
-        """Crea un nuevo ámbito local único y lo pone en la pila."""
+    def entrar_ambito(self, tipo="bloque"):
         self._local_counter += 1
-        ambito = f"local#{self._local_counter}"
-        self.scopes.append(ambito)
-        
-        return ambito
+        if tipo == "funcion":
+            amb = f"funcion#{self._local_counter}"
+            self._function_scope = amb
+        elif tipo == "parametros":
+            amb = self._function_scope or f"funcion#{self._local_counter}"
+        else:
+            amb = f"bloque#{self._local_counter}"
+        self.scopes.append(amb)
+        return amb
 
     def salir_ambito(self):
-        print("Saliendo de ambito:", self.scopes[-1])
-        """Sale del ámbito actual (si no es el global)."""
         if len(self.scopes) > 1:
-            self.scopes.pop()
-            
+            out = self.scopes.pop()
+            if out.startswith("funcion#"):
+                self._function_scope = None
 
-    def obtener_ambito_interno(self):
-        """Devuelve el nombre interno del ámbito en la cima de la pila."""
-        interno = self.scopes[-1]
-        print("Obteniendo ambito interno:", interno)
-        return interno
+    def obtener_ambito(self):
+        return self.scopes[-1]
 
-    def obtener_ambito_para_mostrar(self):
-        """Mapa el nombre interno a la etiqueta "local" o mantiene global."""
-        interno = self.scopes[-1]
-        print("Obteniendo ambito para mostrar:", interno)
-        return 'local' if interno.startswith('local#') else interno
-
-    # --- Declarar símbolo ---
-    def agregar_simbolo(self, nombre, tipo, valor, linea, columna, modificable=True, parametros=None, retorno=None):
-        interno = self.obtener_ambito_interno()
-        key = (nombre, interno)
+    def agregar_simbolo(self, nombre, tipo, valor_original, linea, columna,
+                       modificable=True, parametros=None, retorno=None):
+        amb = self.obtener_ambito()
+        key = (nombre, amb)
         if key in self.tabla_simbolos:
-            self.errors.append((
-                f"Error Semántico: La variable '{nombre}' ya ha sido declarada en el ámbito '{self.obtener_ambito_para_mostrar()}'.",
-                linea, columna
-            ))
-        else:
-            self.tabla_simbolos[key] = {
-                'tipo': tipo,
-                'valor': valor,
-                'linea': linea,
-                'columna': columna,
-                'ambito': interno,
-                'referencia': self.obtener_ambito_para_mostrar(),
-                'modificable': modificable,
-                'usado': False,
-                'parametros': parametros,
-                'retorno': retorno
-            }
+            self.errors.append((f"Error Semántico: '{nombre}' ya declarado en {amb}.", linea, columna))
+            return False
+        # Guardamos el nodo AST en valor_original, no lo evaluamos aquí
+        self.tabla_simbolos[key] = {
+            'tipo': tipo,
+            'valor_original': valor_original,
+            'valor': None,  # se llenará tras interpretación
+            'linea': linea,
+            'columna': columna,
+            'ambito': amb,
+            'modificable': modificable,
+            'usado': False,
+            'parametros': parametros or [],
+            'retorno': retorno
+        }
+        return True
 
-    # --- Buscar y marcar uso ---
     def buscar_simbolo(self, nombre, linea, columna):
-        for scope in reversed(self.scopes):
-            key = (nombre, scope)
+        for amb in reversed(self.scopes):
+            key = (nombre, amb)
             if key in self.tabla_simbolos:
                 self.tabla_simbolos[key]['usado'] = True
                 return self.tabla_simbolos[key]
         self.errors.append((f"Error Semántico: Variable '{nombre}' no declarada.", linea, columna))
         return None
 
-    # --- Actualizar valor ---
     def actualizar_simbolo(self, nombre, valor, linea, columna):
-        entry = self.buscar_simbolo(nombre, linea, columna)
-        if not entry:
-            return
-        if not entry['modificable']:
-            self.errors.append((f"Error Semántico: Variable '{nombre}' no modificable.", linea, columna)) 
-            return
-        entry['valor'] = valor
+        for amb in reversed(self.scopes):
+            key = (nombre, amb)
+            if key in self.tabla_simbolos:
+                if not self.tabla_simbolos[key]['modificable']:
+                    self.errors.append((f"Error Semántico: '{nombre}' no modificable.", linea, columna))
+                    return False
+                # tras interpretar, guardamos el valor real
+                self.tabla_simbolos[key]['valor'] = valor
+                self.tabla_simbolos[key]['usado'] = True
+                return True
+        self.errors.append((f"Error Semántico: Variable '{nombre}' no declarada.", linea, columna))
+        return False
 
-    # --- Detectar no usados (advertencias) ---
-    def verificar_uso_variables(self):
-        for (nombre, _), meta in self.tabla_simbolos.items():
-            if not meta['usado']:
-                self.errors.append((
-                    f"Advertencia: '{nombre}' declarado pero no usado.",
-                    meta['linea'], meta['columna']
-                ))
-
-    def all_symbols(self):
-        return self.tabla_simbolos
+    def mostrar_tabla(self):
+        rows = []
+        for (nombre, amb), m in self.tabla_simbolos.items():
+            rows.append({
+                'nombre': nombre,
+                'tipo': m['tipo'],
+                'ambito': amb,
+                'valor': m['valor'] if m['valor'] is not None else "Sin inicializar",
+                'linea': m['linea'],
+                'columna': m['columna'],
+                'usado': m['usado']
+            })
+        return rows

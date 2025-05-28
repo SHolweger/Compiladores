@@ -1,23 +1,16 @@
-#Parser_module.py
+# parser_module.py
+
 import ply.yacc as yacc
-from lexer_module import tokens, lexer, encontrar_columna, encontrar_linea
-import html_gen
+from lexer_module import tokens, lexer, analizar_codigo, encontrar_linea, encontrar_columna
 from tabla_simbolos import SymbolTable
 from ast_nodes import *
 from semantic_module import SemanticAnalyzer
+from interpreter import Interpreter
+import html_gen
 
-# ----------------------------------------------------------------------------
-# Tabla de símbolos y colecciones de errore
-# ----------------------------------------------------------------------------
-tabla = SymbolTable()
-errores_lexicos = []
-errores_sintacticos = []
-pila_ambitos = []
-
-# ----------------------------------------------------------------------------
-# Precedencia de operadores
-# ----------------------------------------------------------------------------
-global precedence
+# ------------------------------------------------------------
+# Precedencia y asociatividad de operadores
+# ------------------------------------------------------------
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -27,82 +20,124 @@ precedence = (
     ('left', 'MULT', 'DIV', 'MOD'),
     ('right', 'NEGACION'),
 )
-# === Reglas de gramática que construyen el AST ===
+
+# ------------------------------------------------------------
+# Estado global: tabla de símbolos y listas de errores
+# ------------------------------------------------------------
+tabla = SymbolTable()
+errores_lexicos: list = []
+errores_sintacticos: list = []
+
+# ------------------------------------------------------------
+# Funciones auxiliares para línea/columna
+# ------------------------------------------------------------
+def _line(p, i):
+    try:
+        tok = p.slice[i]
+        return encontrar_linea(lexer.lexdata, tok)
+    except:
+        return 0
+
+def _col(p, i):
+    try:
+        tok = p.slice[i]
+        return encontrar_columna(lexer.lexdata, tok)
+    except:
+        return 0
+
+# ------------------------------------------------------------
+# Reglas de la gramática (todas construyen AST, no evalúan)
+# ------------------------------------------------------------
 
 def p_programa(p):
-    '''programa : lista_funciones'''
+    'programa : lista_funciones'
     p[0] = Program(p[1])
 
 def p_lista_funciones(p):
     '''lista_funciones : funcion
                        | funcion lista_funciones'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = [p[1]] + p[2]
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
-#def p_funcion_inicio(p):
-#    'funcion : INICIO PARENIZQ PARENDER bloque'
-#    p[0] = FuncDecl(name='inicio', params=[], body=p[4], linea=1, columna=1)
-#
 def p_funcion_inicio(p):
-    'funcion : INICIO PARENIZQ PARENDER bloque'
-    # registrar función inicio() → tipo de retorno 'void' o lo que definas
+    'funcion : INICIO PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito'
+    linea, col = _line(p,1), _col(p,1)
+    # Registramos 'inicio' como función sin parámetros
     tabla.agregar_simbolo(
-        'inicio', 
-        'funcion', 
-        None,
-        linea=1, 
-        columna=1,
-        modificable=False,
-        parametros=[],
-        retorno=None  # o 'void' si lo usas así
+        'inicio', 'funcion', None, linea, col,
+        modificable=False, parametros=[], retorno=None
     )
-    p[0] = FuncDecl(name='inicio', params=[], body=p[4], linea=1, columna=1)
+    p[0] = FuncDecl('inicio', [], p[5], linea, col)
 
-
-def p_funcion(p):
-    'funcion : FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque'
+def p_funcion_normal(p):
+    'funcion : FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito'
     nombre = p[2]
-    parametros = p[4]  # Debe ser lista de Param
-    linea  = encontrar_linea(lexer.lexdata, p.slice[2])
-    columna = encontrar_columna(lexer.lexdata, p.slice[2])
-    # Agrega params al nuevo ámbito (ya abierto por bloque)
-    for param in parametros:
-        tabla.agregar_simbolo(param.nombre, param.tipo, None, param.linea, param.columna)
-    p[0] = FuncDecl(name=nombre, params=parametros, body=p[6], linea=linea, columna=columna)
-    
+    linea, col = _line(p,2), _col(p,2)
+    params = p[4]
+    tabla.agregar_simbolo(
+        nombre, 'funcion', None, linea, col,
+        modificable=False,
+        parametros=[(par.nombre, par.tipo) for par in params],
+        retorno=None
+    )
+    p[0] = FuncDecl(nombre, params, p[8], linea, col)
+
+def p_lista_params(p):
+    '''lista_params :
+                    | params_no_vacios'''
+    p[0] = [] if len(p) == 1 else p[1]
+
+def p_params_no_vacios(p):
+    '''params_no_vacios : param
+                        | param COMA params_no_vacios'''
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
+
+def p_param(p):
+    'param : tipo IDENTIFICADOR'
+    linea, col = _line(p,2), _col(p,2)
+    tipo, nombre = p[1], p[2]
+    tabla.agregar_simbolo(nombre, tipo, None, linea, col)
+    p[0] = Param(tipo, nombre, linea, col)
+
+def p_tipo(p):
+    '''tipo : NUMERO
+            | DECIMAL
+            | BOOLEANO
+            | CADENA'''
+    p[0] = p[1]
+
+def p_bloque(p):
+    'bloque : LLAVEIZQ sentencias LLAVEDER'
+    p[0] = p[2]
+
+def p_abrir_ambito_funcion(p):
+    'abrir_ambito_funcion :'
+    tabla.entrar_ambito("funcion")
+
+def p_abrir_ambito(p):
+    'abrir_ambito :'
+    tabla.entrar_ambito("bloque")
+
+def p_cerrar_ambito(p):
+    'cerrar_ambito :'
+    tabla.salir_ambito()
 
 def p_sentencias(p):
     '''sentencias : sentencia
                   | sentencia sentencias'''
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
-# Declaración de variable con inicialización
-
 def p_sentencia_declaracion(p):
-    '''sentencia : NUMERO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | DECIMAL IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | BOOLEANO IDENTIFICADOR IGUAL expresion PUNTOYCOMA
-                 | CADENA IDENTIFICADOR IGUAL expresion PUNTOYCOMA'''
-    tipo, nombre, expr = p[1].lower(), p[2], p[4]
-    linea = encontrar_linea(lexer.lexdata, p.slice[2])
-    col = encontrar_columna(lexer.lexdata, p.slice[2])
-    # Opción 1: Solo guardar el valor si es un literal
-    valor_real = expr.value if isinstance(expr, Literal) else None
+    '''sentencia : tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+                 | tipo IDENTIFICADOR PUNTOYCOMA'''
+    tipo, nombre = p[1], p[2]
+    linea, col = _line(p,2), _col(p,2)
+    expr = p[4] if len(p) == 6 else None
+    tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
     p[0] = VarDecl(tipo, nombre, expr, linea, col)
-    #tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
-    tabla.agregar_simbolo(nombre, tipo, valor_real, linea, col)
-
-# Asignación, soportando operadores compuestos
 
 def p_sentencia_asignacion(p):
     'sentencia : IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA'
-    nombre, op, expr = p[1], p[2], p[3]
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Assign(nombre, op, expr, linea, col)
-    tabla.actualizar_simbolo(nombre, expr, linea, col)
+    p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1))
 
 def p_OP_ASIG(p):
     '''OP_ASIG : IGUAL
@@ -112,106 +147,20 @@ def p_OP_ASIG(p):
                | DIV_IGUAL'''
     p[0] = p[1]
 
-# SENTENCIA DE RETORNO (REGRESA)
-def p_sentencia_regresa(p):
-    'sentencia : REGRESA expresion PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Return(p[2], linea, col)           # Nodo AST Return
+def p_sentencia_llamada(p):
+    'sentencia : IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA'
+    p[0] = FuncCall(p[1], p[3], _line(p,1), _col(p,1))
 
-# If-Then y If-Then-Else
-def p_sentencia_si(p):
-    '''sentencia : SI PARENIZQ condicion PARENDER bloque
-                 | SI PARENIZQ condicion PARENDER bloque SINO bloque'''
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    if len(p) == 6:
-        p[0] = IfThen(p[3], p[5], linea, col)
-    else:
-        p[0] = IfThenElse(p[3], p[5], p[7], linea, col)
+def p_args(p):
+    '''args :
+            | lista_args'''
+    p[0] = [] if len(p) == 1 else p[1]
 
+def p_lista_args(p):
+    '''lista_args : expresion
+                  | expresion COMA lista_args'''
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
-# While loop
-def p_sentencia_mientras(p):
-    'sentencia : MIENTRAS PARENIZQ condicion PARENDER bloque'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = While(p[3], p[5], linea, col)
-
-# Do-While
-def p_sentencia_hacer_mientras(p):
-    'sentencia : REPETIR bloque HASTA PARENIZQ condicion PARENDER PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = DoWhile(p[2], p[5], linea, col)
-
-def p_sentencia_repetir(p):
-    'sentencia : REPETIR sentencias HASTA PARENIZQ condicion PARENDER PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = DoWhile(p[2], p[5], linea, col)    # Nodo AST DoWhile
-
-# FOR LOOP (PARA)
-def p_for_init(p):
-    '''for_init : NUMERO IDENTIFICADOR IGUAL expresion
-                | DECIMAL IDENTIFICADOR IGUAL expresion
-                | BOOLEANO IDENTIFICADOR IGUAL expresion
-                | CADENA IDENTIFICADOR IGUAL expresion
-                | IDENTIFICADOR OP_ASIG expresion
-                | empty'''
-    # Puedes devolver un nodo AST o None
-    if len(p) == 5:
-        tipo, nombre, expr = p[1].lower(), p[2], p[4]
-        linea = encontrar_linea(lexer.lexdata, p.slice[2])
-        col = encontrar_columna(lexer.lexdata, p.slice[2])
-        p[0] = VarDecl(tipo, nombre, expr, linea, col)
-        tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
-    elif len(p) == 4:
-        nombre, op, expr = p[1], p[2], p[3]
-        linea = encontrar_linea(lexer.lexdata, p.slice[1])
-        col = encontrar_columna(lexer.lexdata, p.slice[1])
-        p[0] = Assign(nombre, op, expr, linea, col)
-        tabla.actualizar_simbolo(nombre, expr, linea, col)
-    else:
-        p[0] = None
-
-def p_for_update(p):
-    '''for_update : IDENTIFICADOR OP_ASIG expresion
-                  | empty'''
-    if len(p) == 4:
-        nombre, op, expr = p[1], p[2], p[3]
-        linea = encontrar_linea(lexer.lexdata, p.slice[1])
-        col = encontrar_columna(lexer.lexdata, p.slice[1])
-        p[0] = Assign(nombre, op, expr, linea, col)
-        tabla.actualizar_simbolo(nombre, expr, linea, col)
-    else:
-        p[0] = None
-
-def p_empty(p):
-    'empty :'
-    pass
-
-def p_sentencia_para(p):
-    'sentencia : PARA PARENIZQ for_init PUNTOYCOMA condicion PUNTOYCOMA for_update PARENDER bloque'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = ForLoop(p[3], p[5], p[7], p[9], linea, col)
-    #p[0] = ForLoop(p[3], p[4], p[6], p[10], linea, col)si
-
-# EXPRESSIONS STATEMENT (para permitir llamadas a función o cálculos sueltos terminados en ;) 
-def p_sentencia_exprstmt(p):
-    'sentencia : expresion PUNTOYCOMA'
-    # si tienes un AST ExprStmt, úsalo; si no, descártala o envuélvela:
-    p[0] = ExprStmt(p[1])
-# Asignacion
-#def p_asignacion(p):
-#    'asignacion : IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA'
-#    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-#    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-#    p[0] = Assign(nombre=p[1], op=p[2], expr=p[3], linea=linea, columna=col)
-
-
-# Expresiones aritméticas y literales
 def p_expresion(p):
     '''expresion : expresion SUMA expresion
                  | expresion RESTA expresion
@@ -219,332 +168,134 @@ def p_expresion(p):
                  | expresion DIV expresion
                  | expresion MOD expresion
                  | PARENIZQ expresion PARENDER
-                 | NUMERO
-                 | DECIMAL
-                 | CADENA
-                 | IDENTIFICADOR'''
+                 | literal
+                 | IDENTIFICADOR
+                 | llamada_funcion_expr'''
     if len(p) == 2:
-        if isinstance(p[1], (int, float, str)):
-            p[0] = Literal(p[1])
-        elif isinstance(p[1], str):  # IDENTIFICADOR
-            nombre = p[1]
-            linea = encontrar_linea(lexer.lexdata, p.slice[1])
-            col = encontrar_columna(lexer.lexdata, p.slice[1])
-            p[0] = VarRef(nombre, linea, col)
-            tabla.buscar_simbolo(nombre, linea, col)
-    elif p.slice[1].type == 'PARENIZQ':
+        if isinstance(p[1], str):
+            p[0] = VarRef(p[1], _line(p,1), _col(p,1))
+        else:
+            p[0] = p[1]
+    elif p[1] == '(':
         p[0] = p[2]
     else:
-        p[0] = BinOp(p[1], p[2], p[3])
+        p[0] = BinOp(p[1], p[2], p[3], _line(p,2), _col(p,2))
 
-# Comparadores y condición
+def p_literal(p):
+    '''literal : NUMERO
+               | DECIMAL
+               | CADENA
+               | VERDADERO
+               | FALSO'''
+    val = (p[1] == 'verdadero') if isinstance(p[1], str) and p[1] in ('verdadero','falso') else p[1]
+    p[0] = Literal(val, _line(p,1), _col(p,1))
 
-def p_comparador(p):
-    '''comparador : MENOR
-                  | MAYOR
-                  | MENOR_IGUAL
-                  | MAYOR_IGUAL
-                  | IGUAL_IGUAL
-                  | DIFERENTE'''
-    p[0] = p[1]
+def p_llamada_funcion_expr(p):
+    'llamada_funcion_expr : IDENTIFICADOR PARENIZQ args PARENDER'
+    p[0] = FuncCall(p[1], p[3], _line(p,1), _col(p,1))
 
-
-def p_condicion(p):
-    '''condicion : expresion comparador expresion
-                 | expresion'''
-    if len(p) == 2:
-        p[0] = p[1]
+def p_sentencia_si(p):
+    '''sentencia : SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+                 | SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito'''
+    if len(p) == 8:
+        p[0] = IfThen(p[3], p[6], _line(p,1), _col(p,1))
     else:
-        p[0] = (p[1], p[2], p[3])   
+        p[0] = IfThenElse(p[3], p[6], p[10], _line(p,1), _col(p,1))
 
-# -------------------------
-# Menú de usuario
-# -------------------------
-def p_sentencia_menu(p):
-    'sentencia : MENU LLAVEIZQ opciones LLAVEDER'
-    p[0] = Menu(p[3], 
-                encontrar_linea(lexer.lexdata, p.slice[1]),
-                encontrar_columna(lexer.lexdata, p.slice[1]))
+def p_sentencia_mientras(p):
+    'sentencia : MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito'
+    p[0] = While(p[3], p[6], _line(p,1), _col(p,1))
 
-def p_opciones(p):
-    '''opciones : opcion
-                | opciones opcion'''
-    if len(p) == 2:
-        p[0] = [p[1]]
+def p_sentencia_hacer_mientras(p):
+    'sentencia : REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA'
+    p[0] = DoWhile(p[3], p[7], _line(p,1), _col(p,1))
+
+def p_sentencia_para(p):
+    'sentencia : PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito'
+    p[0] = ForLoop(p[3], p[5], p[7], p[11], _line(p,1), _col(p,1))
+
+def p_for_init(p):
+    '''for_init : tipo IDENTIFICADOR IGUAL expresion
+                | IDENTIFICADOR OP_ASIG expresion
+                | empty'''
+    if len(p) == 5:
+        linea, col = _line(p,2), _col(p,2)
+        tabla.agregar_simbolo(p[2], p[1], p[4], linea, col)
+        p[0] = VarDecl(p[1], p[2], p[4], linea, col)
+    elif len(p) == 4:
+        p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1))
     else:
-        p[0] = p[1] + [p[2]]
+        p[0] = None
 
-def p_opcion(p):
-    'opcion : NUMERO DOSPUNTOS llamada_accion PUNTOYCOMA'
-    p[0] = Option(p[1], p[3],
-                  encontrar_linea(lexer.lexdata, p.slice[1]),
-                  encontrar_columna(lexer.lexdata, p.slice[1]))
+def p_for_update(p):
+    '''for_update : IDENTIFICADOR OP_ASIG expresion
+                  | empty'''
+    p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1)) if len(p) == 4 else None
 
-def p_llamada_accion(p):
-    '''llamada_accion : MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA
-                      | IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA'''
-    # aquí devuelves el nodo AST que corresponda:
-    if p.slice[1].type == 'MOSTRAR':
-        p[0] = Print(p[3],
-                     encontrar_linea(lexer.lexdata, p.slice[1]),
-                     encontrar_columna(lexer.lexdata, p.slice[1]))
-    else:
-        p[0] = FuncCall(name=p[1], args=p[3],
-                        linea=encontrar_linea(lexer.lexdata, p.slice[1]),
-                        columna=encontrar_columna(lexer.lexdata, p.slice[1]))
+def p_empty(p):
+    'empty :'
+    pass
 
-# -------------------------
-# Mostrar / Print
-# -------------------------
 def p_sentencia_mostrar(p):
     'sentencia : MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Print(p[3], linea, col)
+    p[0] = Print(p[3], _line(p,1), _col(p,1))
 
-# -------------------------
-# Switch / Case
-# -------------------------
-def p_sentencia_switch(p):
-    'sentencia : CAMBIAR PARENIZQ expresion PARENDER bloque'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Switch(p[3], p[5], linea, col)
+def p_sentencia_regresa(p):
+    'sentencia : REGRESA expresion PUNTOYCOMA'
+    p[0] = Return(p[2], _line(p,1), _col(p,1))
 
-def p_casos(p):
-    '''casos : caso
-             | caso casos'''
-    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
-def p_caso(p):
-    '''caso : CASO expresion DOSPUNTOS sentencias
-            | PREDETERMINADO DOSPUNTOS sentencias'''
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col = encontrar_columna(lexer.lexdata, p.slice[1])
-    if p.slice[1].type == 'CASO':
-        p[0] = Case(p[2], p[5], linea, col)
-    else:
-        p[0] = Default(p[3], linea, col)
+def p_sentencia_exprstmt(p):
+    'sentencia : expresion PUNTOYCOMA'
+    p[0] = ExprStmt(p[1])
 
-# AMBITOS
-def p_abrir_ambito(p):
-    'abrir_ambito :'
-    tabla.entrar_ambito()
-
-def p_cerrar_ambito(p):
-    'cerrar_ambito :'
-    tabla.salir_ambito()
-
-def p_bloque(p):
-    'bloque : LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito'
-    p[0] = p[3]
-
-# -------------------------
-# Funciones y procedimientos
-# -------------------------
-def p_sentencia_funcion_declaracion(p):
-    'sentencia : FUNCION IDENTIFICADOR PARENIZQ params PARENDER abrir_ambito bloque cerrar_ambito'
-    nombre = p[2]
-    linea = encontrar_linea(lexer.lexdata, p.slice[2])
-    col    = encontrar_columna(lexer.lexdata, p.slice[2])
-
-    # 1) Registrar la función en el ámbito global
-    tabla.agregar_simbolo(
-        nombre,             # nombre de la función
-        'funcion',          # tipo genérico
-        None,               # sin valor
-        linea, 
-        col,
-        modificable=False,  # no es variable
-        parametros=[(param.nombre, param.tipo) for param in p[4]],
-        retorno=None        # o el tipo de retorno si tu lenguaje lo admite
-    )
-
-    # 2) Luego abrimos ámbito (ya lo hace abrir_ambito en la gramática)
-    #    y agregamos los parámetros como variables locales:
-    for param in p[4]:
-        tabla.agregar_simbolo(
-            param.nombre, 
-            param.tipo, 
-            None,
-            param.linea, 
-            param.columna
-        )
-
-    cuerpo = p[7]
-    p[0]  = FuncDecl(name=nombre, params=p[4], body=cuerpo, linea=linea, columna=col)
-
-def p_params(p):
-    '''params :
-              | lista_params'''
-    p[0] = [] if len(p) == 2 and p[1] is None else p[1]
-
-def p_lista_params(p):
-    '''lista_params : tipo IDENTIFICADOR
-                    | IDENTIFICADOR
-                    | tipo IDENTIFICADOR COMA lista_params
-                    | IDENTIFICADOR COMA lista_params'''
-    if len(p) == 3 and isinstance(p[1], str) and p[1] in ['numero', 'decimal', 'booleano', 'cadena']:
-        param = Param(tipo=p[1].lower(), nombre=p[2],
-                      linea=encontrar_linea(lexer.lexdata, p.slice[2]),
-                      columna=encontrar_columna(lexer.lexdata, p.slice[2]))
-        p[0] = [param]
-    elif len(p) == 2:
-        param = Param(tipo=None, nombre=p[1],
-                      linea=encontrar_linea(lexer.lexdata, p.slice[1]),
-                      columna=encontrar_columna(lexer.lexdata, p.slice[1]))
-        p[0] = [param]
-    else:
-        # Recursivo para ambos casos
-        if p[1] in ['numero', 'decimal', 'booleano', 'cadena']:
-            param = Param(tipo=p[1].lower(), nombre=p[2],
-                          linea=encontrar_linea(lexer.lexdata, p.slice[2]),
-                          columna=encontrar_columna(lexer.lexdata, p.slice[2]))
-            p[0] = [param] + p[4]
-        else:
-            param = Param(tipo=None, nombre=p[1],
-                          linea=encontrar_linea(lexer.lexdata, p.slice[1]),
-                          columna=encontrar_columna(lexer.lexdata, p.slice[1]))
-            p[0] = [param] + p[3]
-
-def p_tipo(p):
-    '''tipo : NUMERO
-            | DECIMAL
-            | BOOLEANO
-            | CADENA'''
-    p[0] = p[1].lower()
-
-def p_sentencia_llamada_funcion(p):
-    'sentencia : IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = FuncCall(name=p[1], args=p[3], linea=linea, columna=col)
-
-def p_args(p):
-    '''args : 
-            | lista_args'''
-    if len(p) == 1:
-        p[0] = []
-    else:
-        p[0] = p[1]
-
-def p_lista_args(p):
-    '''lista_args : expresion
-                  | expresion COMA lista_args'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = [p[1]] + p[3]
-
-# -------------------------
-# Break y Continue
-# -------------------------
 def p_sentencia_break(p):
     'sentencia : BREAK PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Break(linea, col)
+    p[0] = Break(_line(p,1), _col(p,1))
 
 def p_sentencia_continue(p):
     'sentencia : CONTINUE PUNTOYCOMA'
-    linea = encontrar_linea(lexer.lexdata, p.slice[1])
-    col   = encontrar_columna(lexer.lexdata, p.slice[1])
-    p[0] = Continue(linea, col)
+    p[0] = Continue(_line(p,1), _col(p,1))
 
-
-# BOOLEANOS Y LÓGICA
-# ----------------------------------------------------------------------------
-def p_expresion_logica(p):
-    '''expresion : expresion AND expresion
-                 | expresion OR expresion
-                 | NEGACION expresion'''
-    if len(p) == 4:
-        if p[2] == '&&':
-            p[0] = LogicalOp('and', p[1], p[3])
-        else:
-            p[0] = LogicalOp('or',  p[1], p[3])
-    else:
-        p[0] = LogicalOp('not', p[2], None)
-
-def p_booleano(p):
-    '''expresion : VERDADERO
-                 | FALSO'''
-    value = True if p[1].lower() == 'verdadero' else False
-    p[0] = Literal(value)
-
-
-
-# Errores sintácticos
 def p_error(p):
     if p:
-        linea = encontrar_linea(p.lexer.lexdata, p)
-        col = encontrar_columna(p.lexer.lexdata, p)
-        errores_sintacticos.append((f"Error sintáctico: '{p.value}' inesperado", linea, col))
+        errores_sintacticos.append(
+            (f"Error sintáctico: '{p.value}' inesperado", _line(p,0), _col(p,0))
+        )
     else:
         errores_sintacticos.append(("Error sintáctico: fin de archivo inesperado", 0, 0))
 
+# ------------------------------------------------------------
+# Construir el parser
+# ------------------------------------------------------------
 parser = yacc.yacc()
 
-def leer_archivo(ruta):
-    try:
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            contenido = archivo.read()
-        print(" Archivo leído correctamente.\n")
-        return contenido
-    except FileNotFoundError:
-        print(" Error: No se encontró el archivo.")
-        return None
+def analizar_sintaxis(contenido: str):
+    global errores_lexicos, errores_sintacticos, tabla
 
-def analizar_sintaxis(contenido):
-    lexer.errores = []
-    lexer.lineno = 1
-    lexer.input(contenido)
-    lexer.lexdata = contenido
+    # 1) Léxico
+    tokens_list, errores_lexicos = analizar_codigo(contenido)
 
-    tokens = []
-    errores_lexicos = lexer.errores
+    # 2) Primer pase: parseo y tabla limpia
+    tabla = SymbolTable()
+    errores_sintacticos.clear()
+    lexer.input(contenido); lexer.lexdata = contenido
+    ast = parser.parse(contenido, lexer=lexer, debug=True, tracking=True)
 
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        tokens.append(tok)
+    # 3) Semántica
+    sem = SemanticAnalyzer(tabla)
+    sem_res = sem.analyze(ast)
+    errores_sintacticos += sem.get_errors_for_html()
 
-    
-    for token in tokens:
-        token.lineno = encontrar_linea(lexer.lexdata, token)
-        token.column = encontrar_columna(lexer.lexdata, token)
+    # 4) Interpretación
+    interp = Interpreter(tabla)
+    interp.interpret(ast)
 
-    # Mostrar tokens con línea y columna (opcional)
-    for token in tokens:
-        print(f"Token: {token.type}, Valor: {token.value}, Línea: {token.lineno}, Columna: {token.column}")
-    # Volver a alimentar el lexer para el parser
-    lexer.input(contenido)
-    
-    ast = parser.parse(contenido, lexer=lexer)
-    
-    # ANÁLISIS SEMÁNTICO
-    errores_semanticos = []
-    if ast:
-#        sema = SemanticAnalyzer(tabla.tabla_simbolos)
-        sema = SemanticAnalyzer(tabla)
-        errores_semanticos = sema.analyze(ast)
-    
-    errores = errores_lexicos + errores_sintacticos + errores_semanticos
-    errores = filtrar_errores_duplicados(errores)
-    
+    # 5) Reportes HTML (sin duplicados)
+    errores_sintacticos = list(dict.fromkeys(errores_lexicos + errores_sintacticos + tabla.errors))
     html_gen.generar_pagina_inicio()
-    html_gen.generar_html_tokens(tokens)
-    html_gen.generar_html_errores(errores)
-    html_gen.generar_html_tabla_simbolos(tabla.tabla_simbolos)
+    html_gen.generar_html_tokens(tokens_list)
+    html_gen.generar_html_errores(errores_sintacticos)
+    html_gen.generar_html_tabla_simbolos(tabla)
     html_gen.abrir_html("index.html")
 
-def filtrar_errores_duplicados(lista_errores):
-    vistos = set()
-    filtrados = []
-    for err in lista_errores:
-        # err es una tupla (mensaje, linea, columna)
-        clave = (err[0], err[1], err[2])
-        if clave not in vistos:
-            vistos.add(clave)
-            filtrados.append(err)
-    return filtrados
+    return ast

@@ -1,4 +1,6 @@
 inicio() {
-    numero a = 5;
-    a = "hola"; // Error semántico: asignación de cadena a variable número
+    numero x = 10;
+    if ( x > 5 ) {
+        mostrar(x);
+    }
 }

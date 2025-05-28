@@ -1,262 +1,258 @@
-# === semantic_module.py ===
-"""
-Análisis semántico robusto: chequeo de tipos, usos, retornos, llamadas y control de flujo.
-Utiliza la SymbolTable gestionada por el parser.
-"""
+# semantic_module.py
+
 from ast_nodes import *
 
 class SemanticAnalyzer:
     def __init__(self, symbol_table):
-        """Recibe la instancia de SymbolTable con declaraciones cargadas."""
-        self.symtab = symbol_table
-        self.errors = self.symtab.errors
-        self._loop_depth = 0
-        self._current_function = None
+        self.symbol_table = symbol_table
+        self.errors = []
+        self.warnings = []
+        self.current_function = None
+        self.loop_depth = 0
+        self.function_definitions = {}
 
-    def analyze(self, program: Program):
-        """Inicia el recorrido semántico sobre el AST de programa."""
-        for stmt in program.sentencias:
-            self._check_pass(stmt)
-        self.symtab.verificar_uso_variables()
-        return self.errors
+        # Estadísticas
+        self.variables_declared = 0
+        self.variables_used = 0
+        self.functions_declared = 0
+        self.functions_called = 0
 
-    def _check_pass(self, node):
-        # Manejo de Funciones
-        if isinstance(node, FuncDecl):
-            entry = self.symtab.buscar_simbolo(node.name, node.linea, node.columna)
-            prev = self._current_function
-            self._current_function = entry
-            for stmt in node.body:
-                self._check_pass(stmt)
-            self._current_function = prev
-            return
+    def analyze(self, ast_root: Program):
+        """Ejecuta el análisis semántico completo sobre el AST."""
+        # Reiniciar estado
+        self.errors.clear()
+        self.warnings.clear()
+        self.function_definitions.clear()
+        self.variables_declared = 0
+        self.variables_used = 0
+        self.functions_declared = 0
+        self.functions_called = 0
 
-        # Declaración de variables
-        if isinstance(node, VarDecl):
-            if node.expr:
-                t_expr = self._eval_type(node.expr)
-                if t_expr and t_expr != node.tipo:
-                    self.errors.append((
-                        f"Error Semántico: Inicialización de '{node.nombre}' con tipo '{t_expr}' no coincide con '{node.tipo}'.",
-                        node.linea, node.columna
-                    ))
-                self._check_expr(node.expr)
-            return
+        # 1) Recolectar las funciones declaradas en la tabla de símbolos
+        self._collect_functions()
 
-        # Asignaciones
-        if isinstance(node, Assign):
-            entry = self.symtab.buscar_simbolo(node.nombre, node.linea, node.columna)
-            if entry:
-                t_expr = self._eval_type(node.expr)
-                if t_expr and t_expr != entry['tipo']:
-                    self.errors.append((
-                        f"Error Semántico: Asignación de tipo '{t_expr}' a variable '{node.nombre}' de tipo '{entry['tipo']}'.",
-                        node.linea, node.columna
-                    ))
-                self._check_expr(node.expr)
-            return
+        # 2) Recorrer el AST
+        self._visit(ast_root)
 
-        # Estructuras de control
-        if isinstance(node, IfThen) or isinstance(node, IfThenElse):
-            nombre = 'si' if isinstance(node, IfThen) else 'si-sino'
-            self._check_cond(node.cond, nombre)
-            for s in node.then_body:
-                self._check_pass(s)
-            if isinstance(node, IfThenElse):
-                for s in node.else_body:
-                    self._check_pass(s)
-            return
+        # 3) Verificar variables no usadas
+        self._check_unused_variables()
 
-        if isinstance(node, While):
-            self._loop_depth += 1
-            self._check_cond(node.cond, 'mientras')
-            for s in node.body:
-                self._check_pass(s)
-            self._loop_depth -= 1
-            return
+        return {
+            'errors': self.errors,
+            'warnings': self.warnings,
+            'statistics': self._get_statistics()
+        }
 
-        if isinstance(node, DoWhile):
-            self._loop_depth += 1
-            for s in node.body:
-                self._check_pass(s)
-            self._check_cond(node.cond, 'hacer-mientras')
-            self._loop_depth -= 1
-            return
+    def _collect_functions(self):
+        """Busca en la tabla de símbolos todas las funciones declaradas."""
+        for (name, scope), meta in self.symbol_table.tabla_simbolos.items():
+            if meta['tipo'] == 'funcion':
+                self.function_definitions[name] = {
+                    'params': meta.get('parametros', []),
+                    'return_type': meta.get('retorno', None),
+                    'called': False,
+                    'has_return': False,
+                    'line': meta['linea'],
+                    'column': meta['columna']
+                }
+                self.functions_declared += 1
 
-        if isinstance(node, ForLoop):
-            self._loop_depth += 1
-            if node.init: self._check_pass(node.init)
-            self._check_cond(node.cond, 'para')
-            if node.update: self._check_pass(node.update)
-            for s in node.body:
-                self._check_pass(s)
-            self._loop_depth -= 1
-            return
-
-        # Return
-        if isinstance(node, Return):
-            if self._current_function is None:
-                self.errors.append((
-                    "Error Semántico: 'regresa' fuera de función.",
-                    node.linea, node.columna
-                ))
-            if node.expr is not None:
-                t = self._eval_type(node.expr)
-                exp = self._current_function.get('retorno') if self._current_function else None
-                if exp and t and t != exp:
-                    self.errors.append((
-                        f"Error Semántico: Return de tipo '{t}' no coincide con '{exp}'.",
-                        node.linea, node.columna
-                    ))
-                self._check_expr(node.expr)
-            return
-
-        # Sentencias y expresiones sueltas
-        if isinstance(node, ExprStmt): self._check_expr(node.expr); return
-        if isinstance(node, Print): self._check_expr(node.expr); return
-        if isinstance(node, FuncCall):
-            entry = self.symtab.buscar_simbolo(node.name, node.linea, node.columna)
-            if entry:
-                params = entry.get('parametros') or []
-                if len(node.args) != len(params):
-                    self.errors.append((
-                        f"Error Semántico: Llamada a '{node.name}' con {len(node.args)} args, se esperaban {len(params)}.",
-                        node.linea, node.columna
-                    ))
-                for arg in node.args: self._check_expr(arg)
-            return
-
-        # Switch/Case
-        if isinstance(node, Switch):
-            t_expr = self._eval_type(node.expr)
-            self._check_expr(node.expr)
-            has_def = False
-            for case in node.casos:
-                if case.value is None:
-                    has_def = True
-                else:
-                    t_case = self._eval_type(case.value)
-                    if t_case and t_case != t_expr:
-                        self.errors.append((
-                            f"Error Semántico: Case con tipo '{t_case}' no coincide con switch de tipo '{t_expr}'.",
-                            case.linea, case.columna
-                        ))
-                for s in case.body: self._check_pass(s)
-            if not has_def:
-                self.errors.append((
-                    "Error Semántico: Switch sin caso 'predeterminado'.",
-                    node.linea, node.columna
-                ))
-            return
-
-        # Break/Continue
-        if isinstance(node, Break) or isinstance(node, Continue):
-            if self._loop_depth == 0:
-                self.errors.append((
-                    f"Error Semántico: '{type(node).__name__}' fuera de bucle.",
-                    node.linea, node.columna
-                ))
-            return
-
-        # Otros nodos no manejados
-
-    def _check_cond(self, expr, nombre):
-        # manejar comparaciones tupla (expr1, op, expr2)
-        if isinstance(expr, tuple) and len(expr) == 3:
-            left, op, right = expr
-            t_l = self._eval_type(left)
-            t_r = self._eval_type(right)
-            # solo error si los tipos de operandos difieren
-            if t_l and t_r and t_l != t_r:
-                self.errors.append((
-                    f"Error Semántico: Comparador '{op}' con operandos de distintos tipos '{t_l}' y '{t_r}'.",
-                    getattr(left, 'linea', 0), getattr(left, 'columna', 0)
-                ))
-            # recorrer subexpresiones
-            self._check_expr(left)
-            self._check_expr(right)
-            return
-
-        # caso normal: expr debe ser booleano
-        t = self._eval_type(expr)
-        if t != 'booleano':
-            self.errors.append((
-                f"Error Semántico: Condición de '{nombre}' no es booleano (obtuvo '{t}').",
-                getattr(expr, 'linea', 0), getattr(expr, 'columna', 0)
-            ))
-        # recorrer la expresión
-        self._check_expr(expr)
-
-    def _check_expr(self, expr):
-        # manejar comparaciones tupla
-        if isinstance(expr, tuple) and len(expr) == 3:
-            left, op, right = expr
-            t_l = self._eval_type(left); t_r = self._eval_type(right)
-            if t_l and t_r and t_l != t_r:
-                self.errors.append((
-                    f"Error Semántico: Operador '{op}' con operandos de distintos tipos '{t_l}' y '{t_r}'.",
-                    left.linea, left.columna
-                ))
-            self._check_expr(left); self._check_expr(right)
-            return
-
-        if isinstance(expr, BinOp):
-            lt = self._eval_type(expr.left); rt = self._eval_type(expr.right)
-            if lt and rt and lt != rt:
-                self.errors.append((
-                    f"Error Semántico: Operador '{expr.op}' con operandos de distintos tipos '{lt}' y '{rt}'.",
-                    getattr(expr, 'linea', 0), getattr(expr, 'columna', 0)
-                ))
-            self._check_expr(expr.left); self._check_expr(expr.right)
-            return
-
-        if isinstance(expr, LogicalOp):
-            for sub in (expr.left, expr.right):
-                if sub: self._check_expr(sub)
-            return
-
-        if isinstance(expr, VarRef):
-            self.symtab.buscar_simbolo(expr.nombre, expr.linea, expr.columna)
-            return
-
-        if isinstance(expr, FuncCall):
-            self._check_pass(expr)
-            return
-
-    def _eval_type(self, expr):
-        # Literales
-        if isinstance(expr, Literal):
-            v = expr.value
-            if isinstance(v, bool): return 'booleano'
-            if isinstance(v, int): return 'numero'
-            if isinstance(v, float): return 'decimal'
-            if isinstance(v, str): return 'cadena'
-
-        # Comparación como tupla
-        if isinstance(expr, tuple) and len(expr) == 3:
-            left, op, right = expr
-            t_l = self._eval_type(left); t_r = self._eval_type(right)
-            if t_l == t_r:
-                return 'booleano' if op in ['>', '<', '>=', '<=', '==', '!='] else t_l
+    def _visit(self, node):
+        """Dispatcher genérico según el tipo de nodo."""
+        if node is None:
             return None
-
-        # Variable por referencia
-        if isinstance(expr, VarRef):
-            entry = self.symtab.buscar_simbolo(expr.nombre, expr.linea, expr.columna)
-            return entry.get('tipo') if entry else None
-
-        if isinstance(expr, BinOp):
-            lt = self._eval_type(expr.left); rt = self._eval_type(expr.right)
-            if lt == rt:
-                if expr.op in ['>', '<', '>=', '<=', '==', '!=']:
-                    return 'booleano'
-                return lt
-
-        if isinstance(expr, LogicalOp):
-            return 'booleano'
-
-        if isinstance(expr, FuncCall):
-            entry = self.symtab.buscar_simbolo(expr.name, expr.linea, expr.columna)
-            return entry.get('retorno') if entry else None
-
+        method = f"_visit_{type(node).__name__.lower()}"
+        visitor = getattr(self, method, None)
+        if visitor:
+            return visitor(node)
+        # nodos sin acción semántica particular
         return None
+
+    def _visit_program(self, node: Program):
+        for stmt in node.sentencias:
+            self._visit(stmt)
+
+    def _visit_funcdecl(self, node: FuncDecl):
+        old_fn = self.current_function
+        self.current_function = node.name
+        # Verificar que no se declare dos veces (ya en tabla)
+        # Recorrer parámetros
+        for param in node.params:
+            # marcar declaración
+            self.variables_declared += 1
+        # Recorrer cuerpo
+        for stmt in node.body:
+            self._visit(stmt)
+        self.current_function = old_fn
+
+    def _visit_vardecl(self, node: VarDecl):
+        # Cuenta variable declarada
+        self.variables_declared += 1
+        # Analizar inicializador si existe
+        if node.expr:
+            self._visit(node.expr)
+
+    def _visit_assign(self, node: Assign):
+        # Verificar existencia y marcar uso
+        found = self.symbol_table.buscar_simbolo(node.nombre, node.linea, node.columna)
+        if found:
+            self.variables_used += 1
+        # Analizar expresión
+        self._visit(node.expr)
+
+    def _visit_varref(self, node: VarRef):
+        found = self.symbol_table.buscar_simbolo(node.nombre, node.linea, node.columna)
+        if found:
+            self.variables_used += 1
+            return found['tipo']
+        return None
+
+    def _visit_literal(self, node: Literal):
+        if isinstance(node.value, bool):
+            return 'booleano'
+        if isinstance(node.value, int):
+            return 'numero'
+        if isinstance(node.value, float):
+            return 'decimal'
+        if isinstance(node.value, str):
+            return 'cadena'
+        return None
+
+    def _visit_binop(self, node: BinOp):
+        lt = self._visit(node.left)
+        rt = self._visit(node.right)
+        if lt and rt:
+            if not self._types_compatible(lt, rt, node.op):
+                self._add_error(
+                    f"Tipos incompatibles en operación '{node.op}': {lt} vs {rt}",
+                    node.linea, node.columna
+                )
+        return lt or rt
+
+    def _visit_compareop(self, node: CompareOp):
+        lt = self._visit(node.left)
+        rt = self._visit(node.right)
+        if lt and rt:
+            if not self._types_compatible(lt, rt, node.op):
+                self._add_error(
+                    f"Tipos incompatibles en comparación '{node.op}': {lt} vs {rt}",
+                    node.linea, node.columna
+                )
+        return 'booleano'
+
+    def _visit_logicalop(self, node: LogicalOp):
+        # ignoramos op de corto circuito; solo chequeamos subexpresiones
+        self._visit(node.left)
+        if node.right:
+            self._visit(node.right)
+        return 'booleano'
+
+    def _visit_funccall(self, node: FuncCall):
+        if node.name not in self.function_definitions:
+            self._add_error(
+                f"Función '{node.name}' no declarada",
+                node.linea, node.columna
+            )
+        else:
+            # marcar llamada
+            self.function_definitions[node.name]['called'] = True
+            self.functions_called += 1
+        # analizar argumentos
+        for arg in node.args:
+            self._visit(arg)
+        return self.function_definitions.get(node.name, {}).get('return_type', None)
+
+    def _visit_ifthen(self, node: IfThen):
+        ctype = self._visit(node.cond)
+        for stmt in node.then_body:
+            self._visit(stmt)
+
+    def _visit_ifthenelse(self, node: IfThenElse):
+        self._visit(node.cond)
+        for stmt in node.then_body:
+            self._visit(stmt)
+        for stmt in node.else_body:
+            self._visit(stmt)
+
+    def _visit_while(self, node: While):
+        self.loop_depth += 1
+        self._visit(node.cond)
+        for stmt in node.body:
+            self._visit(stmt)
+        self.loop_depth -= 1
+
+    def _visit_dowhile(self, node: DoWhile):
+        self.loop_depth += 1
+        for stmt in node.body:
+            self._visit(stmt)
+        self._visit(node.cond)
+        self.loop_depth -= 1
+
+    def _visit_forloop(self, node: ForLoop):
+        self.loop_depth += 1
+        if node.init:
+            self._visit(node.init)
+        if node.cond:
+            self._visit(node.cond)
+        if node.update:
+            self._visit(node.update)
+        for stmt in node.body:
+            self._visit(stmt)
+        self.loop_depth -= 1
+
+    def _visit_print(self, node: Print):
+        self._visit(node.expr)
+
+    def _visit_return(self, node: Return):
+        if node.expr:
+            self._visit(node.expr)
+        # marcar que la función actual tiene return
+        if self.current_function:
+            self.function_definitions[self.current_function]['has_return'] = True
+
+    def _visit_exprstmt(self, node: ExprStmt):
+        self._visit(node.expr)
+
+    def _visit_break(self, node: Break):
+        if self.loop_depth == 0:
+            self._add_error("break fuera de bucle", node.linea, node.columna)
+
+    def _visit_continue(self, node: Continue):
+        if self.loop_depth == 0:
+            self._add_error("continue fuera de bucle", node.linea, node.columna)
+
+    def _check_unused_variables(self):
+        """Genera advertencias para variables no usadas."""
+        for (name, scope), meta in self.symbol_table.tabla_simbolos.items():
+            if meta['tipo'] != 'funcion' and not meta.get('usado', False):
+                self._add_warning(
+                    f"Variable '{name}' declarada pero no usada en ámbito '{scope}'",
+                    meta['linea'], meta['columna']
+                )
+
+    def _types_compatible(self, t1, t2, op):
+        """Comprueba compatibilidad básica de tipos."""
+        if t1 == t2:
+            return True
+        numeric = {'numero', 'decimal'}
+        if t1 in numeric and t2 in numeric:
+            return True
+        return False
+
+    def _add_error(self, msg, line, col):
+        self.errors.append((f"Error Semántico: {msg}", line, col))
+
+    def _add_warning(self, msg, line, col):
+        self.warnings.append((f"Advertencia Semántica: {msg}", line, col))
+
+    def _get_statistics(self):
+        return {
+            'variables_declared': self.variables_declared,
+            'variables_used': self.variables_used,
+            'functions_declared': self.functions_declared,
+            'functions_called': self.functions_called
+        }
+
+    def get_errors_for_html(self):
+        """Combina errores y advertencias para reporte."""
+        return self.errors + self.warnings
