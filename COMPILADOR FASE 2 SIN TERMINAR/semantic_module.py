@@ -1,5 +1,3 @@
-# semantic_module.py
-
 from ast_nodes import *
 
 class SemanticAnalyzer:
@@ -65,7 +63,6 @@ class SemanticAnalyzer:
         visitor = getattr(self, method, None)
         if visitor:
             return visitor(node)
-        # nodos sin acción semántica particular
         return None
 
     def _visit_program(self, node: Program):
@@ -73,31 +70,29 @@ class SemanticAnalyzer:
             self._visit(stmt)
 
     def _visit_funcdecl(self, node: FuncDecl):
-        old_fn = self.current_function
-        self.current_function = node.name
-        # Verificar que no se declare dos veces (ya en tabla)
-        # Recorrer parámetros
-        for param in node.params:
-            # marcar declaración
-            self.variables_declared += 1
-        # Recorrer cuerpo
-        for stmt in node.body:
-            self._visit(stmt)
-        self.current_function = old_fn
+            old_fn = self.current_function
+            self.current_function = node.name
+            self.symbol_table.entrar_ambito("funcion")  # ✅ entrar al ámbito de función
+
+            for param in node.params:
+                self.variables_declared += 1
+
+            for stmt in node.body:
+                self._visit(stmt)
+
+            self.symbol_table.salir_ambito()  # ✅ salir del ámbito de función
+            self.current_function = old_fn
+
 
     def _visit_vardecl(self, node: VarDecl):
-        # Cuenta variable declarada
         self.variables_declared += 1
-        # Analizar inicializador si existe
         if node.expr:
             self._visit(node.expr)
 
     def _visit_assign(self, node: Assign):
-        # Verificar existencia y marcar uso
         found = self.symbol_table.buscar_simbolo(node.nombre, node.linea, node.columna)
         if found:
             self.variables_used += 1
-        # Analizar expresión
         self._visit(node.expr)
 
     def _visit_varref(self, node: VarRef):
@@ -108,40 +103,25 @@ class SemanticAnalyzer:
         return None
 
     def _visit_literal(self, node: Literal):
-        if isinstance(node.value, bool):
-            return 'booleano'
-        if isinstance(node.value, int):
-            return 'numero'
-        if isinstance(node.value, float):
-            return 'decimal'
-        if isinstance(node.value, str):
-            return 'cadena'
+        if isinstance(node.value, bool): return 'booleano'
+        if isinstance(node.value, int): return 'numero'
+        if isinstance(node.value, float): return 'decimal'
+        if isinstance(node.value, str): return 'cadena'
         return None
 
     def _visit_binop(self, node: BinOp):
         lt = self._visit(node.left)
         rt = self._visit(node.right)
-        if lt and rt:
-            if not self._types_compatible(lt, rt, node.op):
-                self._add_error(
-                    f"Tipos incompatibles en operación '{node.op}': {lt} vs {rt}",
-                    node.linea, node.columna
-                )
+        if lt and rt and not self._types_compatible(lt, rt, node.op):
+            self._add_error(f"Tipos incompatibles en oper '{node.op}': {lt} vs {rt}", node.linea, node.columna)
         return lt or rt
 
     def _visit_compareop(self, node: CompareOp):
-        lt = self._visit(node.left)
-        rt = self._visit(node.right)
-        if lt and rt:
-            if not self._types_compatible(lt, rt, node.op):
-                self._add_error(
-                    f"Tipos incompatibles en comparación '{node.op}': {lt} vs {rt}",
-                    node.linea, node.columna
-                )
+        self._visit(node.left)
+        self._visit(node.right)
         return 'booleano'
 
     def _visit_logicalop(self, node: LogicalOp):
-        # ignoramos op de corto circuito; solo chequeamos subexpresiones
         self._visit(node.left)
         if node.right:
             self._visit(node.right)
@@ -149,21 +129,16 @@ class SemanticAnalyzer:
 
     def _visit_funccall(self, node: FuncCall):
         if node.name not in self.function_definitions:
-            self._add_error(
-                f"Función '{node.name}' no declarada",
-                node.linea, node.columna
-            )
+            self._add_error(f"Función '{node.name}' no declarada", node.linea, node.columna)
         else:
-            # marcar llamada
             self.function_definitions[node.name]['called'] = True
             self.functions_called += 1
-        # analizar argumentos
         for arg in node.args:
             self._visit(arg)
         return self.function_definitions.get(node.name, {}).get('return_type', None)
 
     def _visit_ifthen(self, node: IfThen):
-        ctype = self._visit(node.cond)
+        self._visit(node.cond)
         for stmt in node.then_body:
             self._visit(stmt)
 
@@ -190,12 +165,9 @@ class SemanticAnalyzer:
 
     def _visit_forloop(self, node: ForLoop):
         self.loop_depth += 1
-        if node.init:
-            self._visit(node.init)
-        if node.cond:
-            self._visit(node.cond)
-        if node.update:
-            self._visit(node.update)
+        if node.init: self._visit(node.init)
+        if node.cond: self._visit(node.cond)
+        if node.update: self._visit(node.update)
         for stmt in node.body:
             self._visit(stmt)
         self.loop_depth -= 1
@@ -204,9 +176,7 @@ class SemanticAnalyzer:
         self._visit(node.expr)
 
     def _visit_return(self, node: Return):
-        if node.expr:
-            self._visit(node.expr)
-        # marcar que la función actual tiene return
+        if node.expr: self._visit(node.expr)
         if self.current_function:
             self.function_definitions[self.current_function]['has_return'] = True
 
@@ -222,22 +192,15 @@ class SemanticAnalyzer:
             self._add_error("continue fuera de bucle", node.linea, node.columna)
 
     def _check_unused_variables(self):
-        """Genera advertencias para variables no usadas."""
         for (name, scope), meta in self.symbol_table.tabla_simbolos.items():
             if meta['tipo'] != 'funcion' and not meta.get('usado', False):
-                self._add_warning(
-                    f"Variable '{name}' declarada pero no usada en ámbito '{scope}'",
-                    meta['linea'], meta['columna']
-                )
+                self._add_warning(f"Variable '{name}' declarada pero no usada en ámbito '{scope}'",
+                                  meta['linea'], meta['columna'])
 
     def _types_compatible(self, t1, t2, op):
-        """Comprueba compatibilidad básica de tipos."""
-        if t1 == t2:
-            return True
+        if t1 == t2: return True
         numeric = {'numero', 'decimal'}
-        if t1 in numeric and t2 in numeric:
-            return True
-        return False
+        return t1 in numeric and t2 in numeric
 
     def _add_error(self, msg, line, col):
         self.errors.append((f"Error Semántico: {msg}", line, col))
@@ -254,5 +217,4 @@ class SemanticAnalyzer:
         }
 
     def get_errors_for_html(self):
-        """Combina errores y advertencias para reporte."""
         return self.errors + self.warnings

@@ -1,6 +1,6 @@
 inicio() {
     numero x = 10;
-    if ( x > 5 ) {
+    si ( x > 5 ) {
         mostrar(x);
     }
 }

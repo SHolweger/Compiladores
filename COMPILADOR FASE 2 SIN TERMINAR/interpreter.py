@@ -11,17 +11,23 @@ class Interpreter:
         # buscar FuncDecl 'inicio' y ejecutarlo
         for stmt in program.sentencias:
             if isinstance(stmt, FuncDecl) and stmt.name == 'inicio':
-                self._execute_block(stmt.body)
+                # aislamos el entorno al entrar en la función 'inicio'
+                self._execute_block(stmt.body, isolate_env=True)
                 return
 
-    def _execute_block(self, stmts):
-        # crear nuevo ámbito de variables locales
-        old_env = self.env.copy()
+    def _execute_block(self, stmts, isolate_env: bool = False):
+        """
+        Ejecuta una lista de sentencias.
+        Si isolate_env es True, restaura el entorno al finalizar (para funciones).
+        """
+        if isolate_env:
+            old_env = self.env.copy()
         for s in stmts:
             result = self._exec(s)
             if isinstance(result, Return):  # detener al regresar
                 break
-        self.env = old_env
+        if isolate_env:
+            self.env = old_env
 
     def _exec(self, node):
         name = type(node).__name__.lower()
@@ -52,6 +58,7 @@ class Interpreter:
 
     def _exec_ifthen(self, node: IfThen):
         if self._eval(node.cond):
+            # no aislamos para que cambios persistan
             self._execute_block(node.then_body)
 
     def _exec_ifthenelse(self, node: IfThenElse):
@@ -62,6 +69,7 @@ class Interpreter:
 
     def _exec_while(self, node: While):
         while self._eval(node.cond):
+            # no aislamos para que i++ persista
             self._execute_block(node.body)
 
     def _exec_dowhile(self, node: DoWhile):
@@ -91,7 +99,8 @@ class Interpreter:
         raise RuntimeError("continue no soportado en interpretación directa")
 
     def _eval(self, node):
-        if node is None: return None
+        if node is None:
+            return None
         type_name = type(node).__name__.lower()
         method = f'_eval_{type_name}'
         if hasattr(self, method):
@@ -125,6 +134,8 @@ class Interpreter:
             return not self._eval(node.left)
         left = self._eval(node.left)
         right = self._eval(node.right)
-        if node.op == 'and': return left and right
-        if node.op == 'or': return left or right
+        if node.op == 'and':
+            return left and right
+        if node.op == 'or':
+            return left or right
         return None

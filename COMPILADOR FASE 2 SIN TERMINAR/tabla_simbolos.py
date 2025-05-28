@@ -50,13 +50,14 @@ class SymbolTable:
         return True
 
     def buscar_simbolo(self, nombre, linea, columna):
-        for amb in reversed(self.scopes):
+        for amb in reversed(self.scopes):  # <- IMPORTANTE: revisa todos los ámbitos
             key = (nombre, amb)
             if key in self.tabla_simbolos:
                 self.tabla_simbolos[key]['usado'] = True
                 return self.tabla_simbolos[key]
         self.errors.append((f"Error Semántico: Variable '{nombre}' no declarada.", linea, columna))
         return None
+
 
     def actualizar_simbolo(self, nombre, valor, linea, columna):
         for amb in reversed(self.scopes):
