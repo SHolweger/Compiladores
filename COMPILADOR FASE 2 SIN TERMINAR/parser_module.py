@@ -1,5 +1,4 @@
 # parser_module.py
-
 import ply.yacc as yacc
 from lexer_module import tokens, lexer, analizar_codigo, encontrar_linea, encontrar_columna
 from tabla_simbolos import SymbolTable
@@ -29,7 +28,7 @@ errores_lexicos: list = []
 errores_sintacticos: list = []
 
 # ------------------------------------------------------------
-# Auxiliares línea/columna
+# Funciones auxiliares para línea/columna
 # ------------------------------------------------------------
 def _line(p, i):
     try:
@@ -46,7 +45,7 @@ def _col(p, i):
         return 0
 
 # ------------------------------------------------------------
-# Gramática
+# Reglas de la gramática (todas construyen AST, no evalúan)
 # ------------------------------------------------------------
 
 def p_programa(p):
@@ -56,42 +55,47 @@ def p_programa(p):
 def p_lista_funciones(p):
     '''lista_funciones : funcion
                        | funcion lista_funciones'''
-    p[0] = [p[1]] if len(p)==2 else [p[1]] + p[2]
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
 def p_funcion_inicio(p):
-    'funcion : INICIO PARENIZQ PARENDER bloque_funcion'
+    'funcion : INICIO PARENIZQ PARENDER bloque'
     linea, col = _line(p,1), _col(p,1)
-    # registrar 'inicio'
-    tabla.agregar_simbolo('inicio','funcion', None, linea, col,
-                          modificable=False, parametros=[], retorno=None)
+    # Registramos 'inicio' como función sin parámetros
+    tabla.agregar_simbolo(
+        'inicio', 'funcion', None, linea, col,
+        modificable=False, parametros=[], retorno=None
+    )
     p[0] = FuncDecl('inicio', [], p[4], linea, col)
 
 def p_funcion_normal(p):
-    'funcion : FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER bloque_funcion'
+    'funcion : FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito'
     nombre = p[2]
     linea, col = _line(p,2), _col(p,2)
     params = p[4]
-    tabla.agregar_simbolo(nombre,'funcion', None, linea, col,
-                          modificable=False,
-                          parametros=[(par.nombre,par.tipo) for par in params],
-                          retorno=None)
-    p[0] = FuncDecl(nombre, params, p[6], linea, col)
+    tabla.agregar_simbolo(
+        nombre, 'funcion', None, linea, col,
+        modificable=False,
+        parametros=[(par.nombre, par.tipo) for par in params],
+        retorno=None
+    )
+    p[0] = FuncDecl(nombre, params, p[8], linea, col)
 
 def p_lista_params(p):
     '''lista_params :
                     | params_no_vacios'''
-    p[0] = [] if len(p)==1 else p[1]
+    p[0] = [] if len(p) == 1 else p[1]
 
 def p_params_no_vacios(p):
     '''params_no_vacios : param
                         | param COMA params_no_vacios'''
-    p[0] = [p[1]] if len(p)==2 else [p[1]] + p[3]
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
 def p_param(p):
     'param : tipo IDENTIFICADOR'
     linea, col = _line(p,2), _col(p,2)
-    tabla.agregar_simbolo(p[2], p[1], None, linea, col)
-    p[0] = Param(p[1], p[2], linea, col)
+    tipo, nombre = p[1], p[2]
+    tabla.agregar_simbolo(nombre, tipo, None, linea, col)
+    p[0] = Param(tipo, nombre, linea, col)
 
 def p_tipo(p):
     '''tipo : NUMERO
@@ -100,39 +104,33 @@ def p_tipo(p):
             | CADENA'''
     p[0] = p[1]
 
-# bloque de función = entra al ámbito, lee llaves, sale
-def p_bloque_funcion(p):
-    'bloque_funcion : LLAVEIZQ abrir_ambito_funcion sentencias LLAVEDER cerrar_ambito'
-    p[0] = p[3]
+def p_bloque(p):
+    'bloque : LLAVEIZQ sentencias LLAVEDER'
+    p[0] = p[2]
 
 def p_abrir_ambito_funcion(p):
     'abrir_ambito_funcion :'
     tabla.entrar_ambito("funcion")
 
-def p_cerrar_ambito(p):
-    'cerrar_ambito :'
-    tabla.salir_ambito()
-
-# bloque genérico para if/while/for/dowhile
-def p_bloque(p):
-    'bloque : LLAVEIZQ abrir_ambito sentencias LLAVEDER cerrar_ambito'
-    p[0] = p[3]
-
 def p_abrir_ambito(p):
     'abrir_ambito :'
     tabla.entrar_ambito("bloque")
 
+def p_cerrar_ambito(p):
+    'cerrar_ambito :'
+    tabla.salir_ambito()
+
 def p_sentencias(p):
     '''sentencias : sentencia
                   | sentencia sentencias'''
-    p[0] = [p[1]] if len(p)==2 else [p[1]] + p[2]
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
 def p_sentencia_declaracion(p):
     '''sentencia : tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA
                  | tipo IDENTIFICADOR PUNTOYCOMA'''
     tipo, nombre = p[1], p[2]
     linea, col = _line(p,2), _col(p,2)
-    expr = p[4] if len(p)==6 else None
+    expr = p[4] if len(p) == 6 else None
     tabla.agregar_simbolo(nombre, tipo, expr, linea, col)
     p[0] = VarDecl(tipo, nombre, expr, linea, col)
 
@@ -155,32 +153,12 @@ def p_sentencia_llamada(p):
 def p_args(p):
     '''args :
             | lista_args'''
-    p[0] = [] if len(p)==1 else p[1]
+    p[0] = [] if len(p) == 1 else p[1]
 
 def p_lista_args(p):
     '''lista_args : expresion
                   | expresion COMA lista_args'''
-    p[0] = [p[1]] if len(p)==2 else [p[1]] + p[3]
-
-def p_expresion_relacional(p):
-    '''expresion : expresion IGUAL_IGUAL expresion
-                 | expresion DIFERENTE expresion
-                 | expresion MAYOR expresion
-                 | expresion MENOR expresion
-                 | expresion MAYOR_IGUAL expresion
-                 | expresion MENOR_IGUAL expresion'''
-    p[0] = CompareOp(p[1], p[2], p[3], _line(p,2), _col(p,2))
-
-def p_expresion_logica(p):
-    '''expresion : expresion AND expresion
-                 | expresion OR expresion
-                 | NEGACION expresion'''
-    if len(p) == 3:
-        # !expr
-        p[0] = LogicalOp('not', p[2], None, _line(p,1), _col(p,1))
-    else:
-        # expr && expr  o expr || expr
-        p[0] = LogicalOp(p[2].lower(), p[1], p[3], _line(p,2), _col(p,2))
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
 def p_expresion(p):
     '''expresion : expresion SUMA expresion
@@ -192,12 +170,12 @@ def p_expresion(p):
                  | literal
                  | IDENTIFICADOR
                  | llamada_funcion_expr'''
-    if len(p)==2:
+    if len(p) == 2:
         if isinstance(p[1], str):
             p[0] = VarRef(p[1], _line(p,1), _col(p,1))
         else:
             p[0] = p[1]
-    elif p[1]=='(':
+    elif p[1] == '(':
         p[0] = p[2]
     else:
         p[0] = BinOp(p[1], p[2], p[3], _line(p,2), _col(p,2))
@@ -208,9 +186,7 @@ def p_literal(p):
                | CADENA
                | VERDADERO
                | FALSO'''
-    val = p[1]
-    if isinstance(val, str) and val.lower() in ('verdadero','falso'):
-        val = (val.lower()=='verdadero')
+    val = (p[1] == 'verdadero') if isinstance(p[1], str) and p[1] in ('verdadero','falso') else p[1]
     p[0] = Literal(val, _line(p,1), _col(p,1))
 
 def p_llamada_funcion_expr(p):
@@ -218,34 +194,34 @@ def p_llamada_funcion_expr(p):
     p[0] = FuncCall(p[1], p[3], _line(p,1), _col(p,1))
 
 def p_sentencia_si(p):
-    '''sentencia : SI PARENIZQ expresion PARENDER bloque
-                 | SI PARENIZQ expresion PARENDER bloque SINO bloque'''
-    if len(p)==6:
-        p[0] = IfThen(p[3], p[5], _line(p,1), _col(p,1))
+    '''sentencia : SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+                 | SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito'''
+    if len(p) == 8:
+        p[0] = IfThen(p[3], p[6], _line(p,1), _col(p,1))
     else:
-        p[0] = IfThenElse(p[3], p[5], p[7], _line(p,1), _col(p,1))
+        p[0] = IfThenElse(p[3], p[6], p[10], _line(p,1), _col(p,1))
 
 def p_sentencia_mientras(p):
-    'sentencia : MIENTRAS PARENIZQ expresion PARENDER bloque'
-    p[0] = While(p[3], p[5], _line(p,1), _col(p,1))
+    'sentencia : MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito'
+    p[0] = While(p[3], p[6], _line(p,1), _col(p,1))
 
 def p_sentencia_hacer_mientras(p):
-    'sentencia : REPETIR bloque HASTA PARENIZQ expresion PARENDER PUNTOYCOMA'
-    p[0] = DoWhile(p[2], p[5], _line(p,1), _col(p,1))
+    'sentencia : REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA'
+    p[0] = DoWhile(p[3], p[7], _line(p,1), _col(p,1))
 
 def p_sentencia_para(p):
-    'sentencia : PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER bloque'
-    p[0] = ForLoop(p[3], p[5], p[7], p[9], _line(p,1), _col(p,1))
+    'sentencia : PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito'
+    p[0] = ForLoop(p[3], p[5], p[7], p[11], _line(p,1), _col(p,1))
 
 def p_for_init(p):
     '''for_init : tipo IDENTIFICADOR IGUAL expresion
                 | IDENTIFICADOR OP_ASIG expresion
                 | empty'''
-    if len(p)==5:
+    if len(p) == 5:
         linea, col = _line(p,2), _col(p,2)
         tabla.agregar_simbolo(p[2], p[1], p[4], linea, col)
         p[0] = VarDecl(p[1], p[2], p[4], linea, col)
-    elif len(p)==4:
+    elif len(p) == 4:
         p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1))
     else:
         p[0] = None
@@ -253,10 +229,7 @@ def p_for_init(p):
 def p_for_update(p):
     '''for_update : IDENTIFICADOR OP_ASIG expresion
                   | empty'''
-    if len(p)==4:
-        p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1))
-    else:
-        p[0] = None
+    p[0] = Assign(p[1], p[2], p[3], _line(p,1), _col(p,1)) if len(p) == 4 else None
 
 def p_empty(p):
     'empty :'
@@ -290,34 +263,38 @@ def p_error(p):
     else:
         errores_sintacticos.append(("Error sintáctico: fin de archivo inesperado", 0, 0))
 
-# construir parser
+# ------------------------------------------------------------
+# Construir el parser
+# ------------------------------------------------------------
 parser = yacc.yacc()
 
-def analizar_sintaxis(contenido:str):
-    global tabla, errores_lexicos, errores_sintacticos
-    # 1) léxico
+def analizar_sintaxis(contenido: str):
+    global errores_lexicos, errores_sintacticos, tabla
+
+    # 1) Léxico
     tokens_list, errores_lexicos = analizar_codigo(contenido)
-    # 2) parse + tabla limpia
+
+    # 2) Primer pase: parseo y tabla limpia
     tabla = SymbolTable()
     errores_sintacticos.clear()
-    lexer.input(contenido); lexer.lexdata=contenido
-    ast = parser.parse(contenido, lexer=lexer)
-    if ast is None:
-        print("❌ Error: el parser devolvió None")
-        print("Errores sintácticos:", errores_sintacticos)
-        return
+    lexer.input(contenido); lexer.lexdata = contenido
+    ast = parser.parse(contenido, lexer=lexer, debug=True, tracking=True)
 
-    # 3) semántica
+    # 3) Semántica
     sem = SemanticAnalyzer(tabla)
     sem_res = sem.analyze(ast)
     errores_sintacticos += sem.get_errors_for_html()
-    # 4) interpretación
-    Interpreter(tabla).interpret(ast)
-    # 5) HTML
-    all_errs = errores_lexicos + errores_sintacticos + tabla.errors
+
+    # 4) Interpretación
+    interp = Interpreter(tabla)
+    interp.interpret(ast)
+
+    # 5) Reportes HTML (sin duplicados)
+    errores_sintacticos = list(dict.fromkeys(errores_lexicos + errores_sintacticos + tabla.errors))
     html_gen.generar_pagina_inicio()
     html_gen.generar_html_tokens(tokens_list)
-    html_gen.generar_html_errores(list(dict.fromkeys(all_errs)))
+    html_gen.generar_html_errores(errores_sintacticos)
     html_gen.generar_html_tabla_simbolos(tabla)
     html_gen.abrir_html("index.html")
+
     return ast

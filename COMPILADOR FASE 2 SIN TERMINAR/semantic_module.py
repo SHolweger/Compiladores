@@ -1,3 +1,4 @@
+#semantic_module.py
 from ast_nodes import *
 
 class SemanticAnalyzer:
@@ -70,26 +71,39 @@ class SemanticAnalyzer:
             self._visit(stmt)
 
     def _visit_funcdecl(self, node: FuncDecl):
-            old_fn = self.current_function
-            self.current_function = node.name
-            self.symbol_table.entrar_ambito("funcion")  # ✅ entrar al ámbito de función
+        # 'inicio' comparte ámbito global, el resto abren su propio ambito
+        is_main = (node.name == 'inicio')
+        if not is_main:
+            self.symbol_table.entrar_ambito("funcion")
 
-            for param in node.params:
-                self.variables_declared += 1
+        old_fn = self.current_function
+        self.current_function = node.name
 
-            for stmt in node.body:
-                self._visit(stmt)
+        # parámetros
+        for param in node.params:
+            self.variables_declared += 1
+            # marcamos como usados en la tabla
+            self.symbol_table.buscar_simbolo(param.nombre, param.linea, param.columna)
 
-            self.symbol_table.salir_ambito()  # ✅ salir del ámbito de función
-            self.current_function = old_fn
+        # cuerpo
+        for stmt in node.body:
+            self._visit(stmt)
+
+        # cerramos ámbito si lo abrimos
+        if not is_main:
+            self.symbol_table.salir_ambito()
+
+        self.current_function = old_fn
 
 
     def _visit_vardecl(self, node: VarDecl):
         self.variables_declared += 1
+        # analizamos la inicialización para marcar usos en ella
         if node.expr:
             self._visit(node.expr)
 
     def _visit_assign(self, node: Assign):
+        # marcar el uso de la variable a la que asignamos
         found = self.symbol_table.buscar_simbolo(node.nombre, node.linea, node.columna)
         if found:
             self.variables_used += 1
@@ -103,17 +117,20 @@ class SemanticAnalyzer:
         return None
 
     def _visit_literal(self, node: Literal):
-        if isinstance(node.value, bool): return 'booleano'
-        if isinstance(node.value, int): return 'numero'
-        if isinstance(node.value, float): return 'decimal'
-        if isinstance(node.value, str): return 'cadena'
+        if isinstance(node.value, bool):   return 'booleano'
+        if isinstance(node.value, int):    return 'numero'
+        if isinstance(node.value, float):  return 'decimal'
+        if isinstance(node.value, str):    return 'cadena'
         return None
 
     def _visit_binop(self, node: BinOp):
         lt = self._visit(node.left)
         rt = self._visit(node.right)
         if lt and rt and not self._types_compatible(lt, rt, node.op):
-            self._add_error(f"Tipos incompatibles en oper '{node.op}': {lt} vs {rt}", node.linea, node.columna)
+            self._add_error(
+                f"Tipos incompatibles en operación '{node.op}': {lt} vs {rt}",
+                node.linea, node.columna
+            )
         return lt or rt
 
     def _visit_compareop(self, node: CompareOp):
@@ -129,7 +146,10 @@ class SemanticAnalyzer:
 
     def _visit_funccall(self, node: FuncCall):
         if node.name not in self.function_definitions:
-            self._add_error(f"Función '{node.name}' no declarada", node.linea, node.columna)
+            self._add_error(
+                f"Función '{node.name}' no declarada",
+                node.linea, node.columna
+            )
         else:
             self.function_definitions[node.name]['called'] = True
             self.functions_called += 1
@@ -138,6 +158,7 @@ class SemanticAnalyzer:
         return self.function_definitions.get(node.name, {}).get('return_type', None)
 
     def _visit_ifthen(self, node: IfThen):
+        # aquí marcamos cualquier VarRef en la condición
         self._visit(node.cond)
         for stmt in node.then_body:
             self._visit(stmt)
@@ -165,9 +186,12 @@ class SemanticAnalyzer:
 
     def _visit_forloop(self, node: ForLoop):
         self.loop_depth += 1
-        if node.init: self._visit(node.init)
-        if node.cond: self._visit(node.cond)
-        if node.update: self._visit(node.update)
+        if node.init:
+            self._visit(node.init)
+        if node.cond:
+            self._visit(node.cond)
+        if node.update:
+            self._visit(node.update)
         for stmt in node.body:
             self._visit(stmt)
         self.loop_depth -= 1
@@ -176,7 +200,8 @@ class SemanticAnalyzer:
         self._visit(node.expr)
 
     def _visit_return(self, node: Return):
-        if node.expr: self._visit(node.expr)
+        if node.expr:
+            self._visit(node.expr)
         if self.current_function:
             self.function_definitions[self.current_function]['has_return'] = True
 
@@ -194,11 +219,14 @@ class SemanticAnalyzer:
     def _check_unused_variables(self):
         for (name, scope), meta in self.symbol_table.tabla_simbolos.items():
             if meta['tipo'] != 'funcion' and not meta.get('usado', False):
-                self._add_warning(f"Variable '{name}' declarada pero no usada en ámbito '{scope}'",
-                                  meta['linea'], meta['columna'])
+                self._add_warning(
+                    f"Variable '{name}' declarada pero no usada en ámbito '{scope}'",
+                    meta['linea'], meta['columna']
+                )
 
     def _types_compatible(self, t1, t2, op):
-        if t1 == t2: return True
+        if t1 == t2:
+            return True
         numeric = {'numero', 'decimal'}
         return t1 in numeric and t2 in numeric
 

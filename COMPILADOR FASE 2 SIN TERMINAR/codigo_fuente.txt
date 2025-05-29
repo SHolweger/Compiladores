@@ -1,6 +1,6 @@
 inicio() {
     numero x = 10;
-    si ( x > 5 ) {
-        mostrar(x);
-    }
+    numero y = 20;
+    numero suma = x + y;
+    mostrar(suma);
 }

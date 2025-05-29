@@ -1,3 +1,4 @@
+#tabla_simbolos.py
 class SymbolTable:
     def __init__(self):
         self.tabla_simbolos = {}   # (nombre, ambito) -> metadata
@@ -6,13 +7,23 @@ class SymbolTable:
         self._local_counter = 0
         self._function_scope = None
 
+#   def entrar_ambito(self, tipo="bloque"):
+#       self._local_counter += 1
+#       if tipo == "funcion":
+#           amb = f"funcion#{self._local_counter}"
+#            self._function_scope = amb
+#        elif tipo == "parametros":
+#            amb = self._function_scope or f"funcion#{self._local_counter}"
+#        else:
+#            amb = f"bloque#{self._local_counter}"
+#        self.scopes.append(amb)
+#        return amb
+    
     def entrar_ambito(self, tipo="bloque"):
         self._local_counter += 1
         if tipo == "funcion":
             amb = f"funcion#{self._local_counter}"
             self._function_scope = amb
-        elif tipo == "parametros":
-            amb = self._function_scope or f"funcion#{self._local_counter}"
         else:
             amb = f"bloque#{self._local_counter}"
         self.scopes.append(amb)
