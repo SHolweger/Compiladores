@@ -1,0 +1,28 @@
+inicio() {
+  
+  numero a = 10;
+  numero b = 5;
+  numero c = a + b * 2;
+  mostrar(c);
+
+  si (a > 5) {
+    mostrar(a);
+  }
+
+  si (a < 5) {
+    mostrar(100);
+  } sino {
+    mostrar(200);
+  }
+
+  numero i = 0;
+  mientras (i < 3) {
+    numero z = 10;
+    mostrar(i);
+    i = i + 1;
+  }
+
+  numero x = 42;
+  mostrar(z);
+  cadena g = "hola";
+}

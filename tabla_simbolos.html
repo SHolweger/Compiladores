@@ -1,0 +1,196 @@
+
+    <html><head><title>Tabla de Símbolos</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; }
+        h2 { color: white; text-align: center; animation: fadeIn 1s ease-in; }
+        table { width: 95%; margin: 30px auto; border-collapse: collapse; background: white; color: black; }
+        th, td { border: 1px solid #1565c0; padding: 10px; text-align: center; font-size: 14px; }
+        th { background-color: #1565c0; color: white; font-weight: bold; }
+        tr:nth-child(even) { background-color: #e3f2fd; }
+        tr:nth-child(odd) { background-color: #f8f9fa; }
+        tr:hover { background-color: #bbdefb; }
+        .usado-si { color: #1565c0; font-weight: bold; }
+        .usado-no { color: #757575; font-weight: bold; }
+        .funcion { background-color: #e1f5fe; }
+        .variable { background-color: #f3e5f5; }
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        .stats { 
+            background: rgba(255,255,255,0.2); 
+            padding: 15px; 
+            margin: 20px auto; 
+            width: 90%; 
+            border-radius: 10px; 
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .stats h3, .stats p { color: white; }
+    </style></head><body>
+    
+    <div class='menu'>
+        <a href='index.html'>🏠 Inicio</a>
+        <a href='tokens.html'>📄 Tokens</a>
+        <a href='errores.html'>❌ Errores</a>
+        <a href='tabla_simbolos.html'>📘 Tabla de Símbolos</a>
+        <a href='codigo_intermedio.txt'>🔧 Código Intermedio</a>
+        <button onclick='window.print()'>🖨️ Exportar PDF</button>
+    </div>
+    <style>
+        .menu {
+            text-align: center;
+            margin: 20px;
+            animation: slide-in 0.8s ease-in-out;
+        }
+        .menu a, .menu button {
+            margin: 0 10px;
+            padding: 8px 16px;
+            background: #ffffff33;
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 15px;
+        }
+        .menu a:hover, .menu button:hover {
+            background: #ffffff66;
+            cursor: pointer;
+            transform: scale(1.05) rotate(-1deg);
+        }
+        @keyframes slide-in {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 18px;
+            background-color: #ffffff44;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s ease, transform 0.3s ease;
+            animation: bounce-in 1s ease forwards;
+        }
+        .scroll-top:hover {
+            background-color: #ffffff88;
+            transform: scale(1.2);
+        }
+        @keyframes bounce-in {
+            0%   { transform: translateY(100px); opacity: 0; }
+            60%  { transform: translateY(-10px); opacity: 1; }
+            80%  { transform: translateY(5px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+    <button class='scroll-top' onclick='window.scrollTo({top: 0, behavior: "smooth"})'>⬆</button>
+    
+    <h2>📘 Tabla de Símbolos</h2>
+    
+    <div class='stats'>
+        <h3>📈 Estadísticas de Símbolos</h3>
+        <p>Variables: 7 | Funciones: 0 | Variables Usadas: 6/7</p>
+    </div>
+    
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Ámbito</th>
+            <th>Valor</th>
+            <th>Usado</th>
+            <th>Modificable</th>
+            <th>Línea</th>
+            <th>Columna</th>
+            <th>Detalles</th>
+        </tr>
+    
+        <tr class='variable'>
+            <td><strong>a</strong></td>
+            <td>numero</td>
+            <td>global</td>
+            <td>10</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>3</td>
+            <td>10</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>b</strong></td>
+            <td>numero</td>
+            <td>global</td>
+            <td>5</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>4</td>
+            <td>10</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>c</strong></td>
+            <td>numero</td>
+            <td>global</td>
+            <td>20</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>5</td>
+            <td>10</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>i</strong></td>
+            <td>numero</td>
+            <td>global</td>
+            <td>0</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>18</td>
+            <td>10</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>z</strong></td>
+            <td>numero</td>
+            <td>bloque#4</td>
+            <td>Sin inicializar</td>
+            <td class='usado-no'>❌ No</td>
+            <td>✅ Sí</td>
+            <td>20</td>
+            <td>12</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>x</strong></td>
+            <td>numero</td>
+            <td>global</td>
+            <td>42</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>25</td>
+            <td>10</td>
+            <td><small>Tipo: numero</small></td>
+        </tr>
+        
+        <tr class='variable'>
+            <td><strong>g</strong></td>
+            <td>cadena</td>
+            <td>global</td>
+            <td>hola</td>
+            <td class='usado-si'>✅ Sí</td>
+            <td>✅ Sí</td>
+            <td>27</td>
+            <td>10</td>
+            <td><small>Tipo: cadena</small></td>
+        </tr>
+        </table></body></html>

@@ -1,0 +1,32 @@
+# CÓDIGO DE TRES DIRECCIONES GENERADO
+# =====================================
+
+func_calcular:
+t0 = a * b
+t1 = t0 + 10
+resultado = t1
+return resultado
+func_inicio:
+x = 5
+y = 3
+param x
+param y
+t2 = call calcular, 2
+total = t2
+t3 = total > 20
+if_false t3 goto L0
+print Mayor que 20
+goto L1
+L0:
+print Menor o igual a 20
+L1:
+i = 0
+L2:
+t4 = i < 3
+if_false t4 goto L3
+print i
+t5 = i + 1
+i = t5
+goto L2
+L3:
+return

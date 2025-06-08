@@ -1,0 +1,3724 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    CORCHETEDER
+    CORCHETEIZQ
+    DOSPUNTOS
+    NEGACION
+    OR
+    PUNTO
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> lista_funciones
+Rule 2     lista_funciones -> funcion
+Rule 3     lista_funciones -> funcion lista_funciones
+Rule 4     funcion -> INICIO PARENIZQ PARENDER bloque
+Rule 5     funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+Rule 6     funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+Rule 7     funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+Rule 8     lista_params -> <empty>
+Rule 9     lista_params -> params_no_vacios
+Rule 10    params_no_vacios -> param
+Rule 11    params_no_vacios -> param COMA params_no_vacios
+Rule 12    param -> tipo IDENTIFICADOR
+Rule 13    tipo -> NUMERO
+Rule 14    tipo -> DECIMAL
+Rule 15    tipo -> BOOLEANO
+Rule 16    tipo -> CADENA
+Rule 17    bloque -> LLAVEIZQ sentencias LLAVEDER
+Rule 18    abrir_ambito_funcion -> <empty>
+Rule 19    abrir_ambito -> <empty>
+Rule 20    cerrar_ambito -> <empty>
+Rule 21    sentencias -> sentencia
+Rule 22    sentencias -> sentencia sentencias
+Rule 23    sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+Rule 24    sentencia -> tipo IDENTIFICADOR PUNTOYCOMA
+Rule 25    sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA
+Rule 26    OP_ASIG -> IGUAL
+Rule 27    OP_ASIG -> SUMA_IGUAL
+Rule 28    OP_ASIG -> RESTA_IGUAL
+Rule 29    OP_ASIG -> MULT_IGUAL
+Rule 30    OP_ASIG -> DIV_IGUAL
+Rule 31    sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA
+Rule 32    args -> <empty>
+Rule 33    args -> lista_args
+Rule 34    lista_args -> expresion
+Rule 35    lista_args -> expresion COMA lista_args
+Rule 36    expresion -> expresion SUMA expresion
+Rule 37    expresion -> expresion RESTA expresion
+Rule 38    expresion -> expresion MULT expresion
+Rule 39    expresion -> expresion DIV expresion
+Rule 40    expresion -> expresion MOD expresion
+Rule 41    expresion -> expresion IGUAL_IGUAL expresion
+Rule 42    expresion -> expresion DIFERENTE expresion
+Rule 43    expresion -> expresion MAYOR expresion
+Rule 44    expresion -> expresion MENOR expresion
+Rule 45    expresion -> expresion MAYOR_IGUAL expresion
+Rule 46    expresion -> expresion MENOR_IGUAL expresion
+Rule 47    expresion -> PARENIZQ expresion PARENDER
+Rule 48    expresion -> literal
+Rule 49    expresion -> IDENTIFICADOR
+Rule 50    expresion -> llamada_funcion_expr
+Rule 51    literal -> NUMERO
+Rule 52    literal -> DECIMAL
+Rule 53    literal -> CADENA
+Rule 54    literal -> VERDADERO
+Rule 55    literal -> FALSO
+Rule 56    llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER
+Rule 57    sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+Rule 58    sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+Rule 59    sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+Rule 60    sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+Rule 61    sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+Rule 62    for_init -> tipo IDENTIFICADOR IGUAL expresion
+Rule 63    for_init -> IDENTIFICADOR OP_ASIG expresion
+Rule 64    for_init -> empty
+Rule 65    for_update -> IDENTIFICADOR OP_ASIG expresion
+Rule 66    for_update -> empty
+Rule 67    empty -> <empty>
+Rule 68    sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA
+Rule 69    sentencia -> REGRESA expresion PUNTOYCOMA
+Rule 70    sentencia -> expresion PUNTOYCOMA
+Rule 71    sentencia -> BREAK PUNTOYCOMA
+Rule 72    sentencia -> CONTINUE PUNTOYCOMA
+
+Terminals, with rules where they appear
+
+AND                  : 
+BOOLEANO             : 15
+BREAK                : 71
+CADENA               : 16 53
+COMA                 : 11 35
+CONTINUE             : 72
+CORCHETEDER          : 
+CORCHETEIZQ          : 
+DECIMAL              : 14 52
+DIFERENTE            : 42
+DIV                  : 39
+DIV_IGUAL            : 30
+DOSPUNTOS            : 
+FALSO                : 55
+FUNCION              : 5 6 7
+HASTA                : 60
+IDENTIFICADOR        : 5 6 7 12 23 24 25 31 49 56 62 63 65
+IGUAL                : 23 26 62
+IGUAL_IGUAL          : 41
+INICIO               : 4
+LLAVEDER             : 17
+LLAVEIZQ             : 17
+MAYOR                : 43
+MAYOR_IGUAL          : 45
+MENOR                : 44
+MENOR_IGUAL          : 46
+MIENTRAS             : 59
+MOD                  : 40
+MOSTRAR              : 68
+MULT                 : 38
+MULT_IGUAL           : 29
+NEGACION             : 
+NUMERO               : 13 51
+OR                   : 
+PARA                 : 61
+PARENDER             : 4 5 6 7 31 47 56 57 58 59 60 61 68
+PARENIZQ             : 4 5 6 7 31 47 56 57 58 59 60 61 68
+PUNTO                : 
+PUNTOYCOMA           : 23 24 25 31 60 61 61 68 69 70 71 72
+REGRESA              : 69
+REPETIR              : 60
+RESTA                : 37
+RESTA_IGUAL          : 28
+SI                   : 57 58
+SINO                 : 58
+SUMA                 : 36
+SUMA_IGUAL           : 27
+VERDADERO            : 54
+error                : 
+
+Nonterminals, with rules where they appear
+
+OP_ASIG              : 25 63 65
+abrir_ambito         : 57 58 58 59 60 61
+abrir_ambito_funcion : 5 6 7
+args                 : 31 56
+bloque               : 4 5 6 7 57 58 58 59 60 61
+cerrar_ambito        : 5 6 7 57 58 58 59 60 61
+empty                : 64 66
+expresion            : 23 25 34 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 57 58 59 60 61 62 63 65 68 69 70
+for_init             : 61
+for_update           : 61
+funcion              : 2 3
+lista_args           : 33 35
+lista_funciones      : 1 3
+lista_params         : 5
+literal              : 48
+llamada_funcion_expr : 50
+param                : 10 11
+params_no_vacios     : 9 11
+programa             : 0
+sentencia            : 21 22
+sentencias           : 17 22
+tipo                 : 7 12 23 24 62
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . lista_funciones
+    (2) lista_funciones -> . funcion
+    (3) lista_funciones -> . funcion lista_funciones
+    (4) funcion -> . INICIO PARENIZQ PARENDER bloque
+    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (6) funcion -> . FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (7) funcion -> . FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    INICIO          shift and go to state 4
+    FUNCION         shift and go to state 5
+
+    programa                       shift and go to state 1
+    lista_funciones                shift and go to state 2
+    funcion                        shift and go to state 3
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> lista_funciones .
+
+    $end            reduce using rule 1 (programa -> lista_funciones .)
+
+
+state 3
+
+    (2) lista_funciones -> funcion .
+    (3) lista_funciones -> funcion . lista_funciones
+    (2) lista_funciones -> . funcion
+    (3) lista_funciones -> . funcion lista_funciones
+    (4) funcion -> . INICIO PARENIZQ PARENDER bloque
+    (5) funcion -> . FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (6) funcion -> . FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (7) funcion -> . FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    $end            reduce using rule 2 (lista_funciones -> funcion .)
+    INICIO          shift and go to state 4
+    FUNCION         shift and go to state 5
+
+    funcion                        shift and go to state 3
+    lista_funciones                shift and go to state 6
+
+state 4
+
+    (4) funcion -> INICIO . PARENIZQ PARENDER bloque
+
+    PARENIZQ        shift and go to state 7
+
+
+state 5
+
+    (5) funcion -> FUNCION . IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (6) funcion -> FUNCION . IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (7) funcion -> FUNCION . tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+
+    IDENTIFICADOR   shift and go to state 8
+    NUMERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+
+    tipo                           shift and go to state 9
+
+state 6
+
+    (3) lista_funciones -> funcion lista_funciones .
+
+    $end            reduce using rule 3 (lista_funciones -> funcion lista_funciones .)
+
+
+state 7
+
+    (4) funcion -> INICIO PARENIZQ . PARENDER bloque
+
+    PARENDER        shift and go to state 14
+
+
+state 8
+
+    (5) funcion -> FUNCION IDENTIFICADOR . PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (6) funcion -> FUNCION IDENTIFICADOR . PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    PARENIZQ        shift and go to state 15
+
+
+state 9
+
+    (7) funcion -> FUNCION tipo . IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    IDENTIFICADOR   shift and go to state 16
+
+
+state 10
+
+    (13) tipo -> NUMERO .
+
+    IDENTIFICADOR   reduce using rule 13 (tipo -> NUMERO .)
+
+
+state 11
+
+    (14) tipo -> DECIMAL .
+
+    IDENTIFICADOR   reduce using rule 14 (tipo -> DECIMAL .)
+
+
+state 12
+
+    (15) tipo -> BOOLEANO .
+
+    IDENTIFICADOR   reduce using rule 15 (tipo -> BOOLEANO .)
+
+
+state 13
+
+    (16) tipo -> CADENA .
+
+    IDENTIFICADOR   reduce using rule 16 (tipo -> CADENA .)
+
+
+state 14
+
+    (4) funcion -> INICIO PARENIZQ PARENDER . bloque
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 17
+
+state 15
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ . lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (6) funcion -> FUNCION IDENTIFICADOR PARENIZQ . PARENDER abrir_ambito_funcion bloque cerrar_ambito
+    (8) lista_params -> .
+    (9) lista_params -> . params_no_vacios
+    (10) params_no_vacios -> . param
+    (11) params_no_vacios -> . param COMA params_no_vacios
+    (12) param -> . tipo IDENTIFICADOR
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+
+  ! shift/reduce conflict for PARENDER resolved as shift
+    PARENDER        shift and go to state 20
+    NUMERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+
+  ! PARENDER        [ reduce using rule 8 (lista_params -> .) ]
+
+    lista_params                   shift and go to state 19
+    params_no_vacios               shift and go to state 21
+    param                          shift and go to state 22
+    tipo                           shift and go to state 23
+
+state 16
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR . PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    PARENIZQ        shift and go to state 24
+
+
+state 17
+
+    (4) funcion -> INICIO PARENIZQ PARENDER bloque .
+
+    INICIO          reduce using rule 4 (funcion -> INICIO PARENIZQ PARENDER bloque .)
+    FUNCION         reduce using rule 4 (funcion -> INICIO PARENIZQ PARENDER bloque .)
+    $end            reduce using rule 4 (funcion -> INICIO PARENIZQ PARENDER bloque .)
+
+
+state 18
+
+    (17) bloque -> LLAVEIZQ . sentencias LLAVEDER
+    (21) sentencias -> . sentencia
+    (22) sentencias -> . sentencia sentencias
+    (23) sentencia -> . tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (24) sentencia -> . tipo IDENTIFICADOR PUNTOYCOMA
+    (25) sentencia -> . IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA
+    (31) sentencia -> . IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA
+    (57) sentencia -> . SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> . SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (59) sentencia -> . MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (60) sentencia -> . REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+    (61) sentencia -> . PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (68) sentencia -> . MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA
+    (69) sentencia -> . REGRESA expresion PUNTOYCOMA
+    (70) sentencia -> . expresion PUNTOYCOMA
+    (71) sentencia -> . BREAK PUNTOYCOMA
+    (72) sentencia -> . CONTINUE PUNTOYCOMA
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    IDENTIFICADOR   shift and go to state 28
+    SI              shift and go to state 31
+    MIENTRAS        shift and go to state 32
+    REPETIR         shift and go to state 33
+    PARA            shift and go to state 34
+    MOSTRAR         shift and go to state 35
+    REGRESA         shift and go to state 36
+    BREAK           shift and go to state 37
+    CONTINUE        shift and go to state 38
+    NUMERO          shift and go to state 39
+    DECIMAL         shift and go to state 40
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 41
+    PARENIZQ        shift and go to state 30
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    sentencias                     shift and go to state 25
+    sentencia                      shift and go to state 26
+    tipo                           shift and go to state 27
+    expresion                      shift and go to state 29
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 19
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params . PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    PARENDER        shift and go to state 46
+
+
+state 20
+
+    (6) funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER . abrir_ambito_funcion bloque cerrar_ambito
+    (18) abrir_ambito_funcion -> .
+
+    LLAVEIZQ        reduce using rule 18 (abrir_ambito_funcion -> .)
+
+    abrir_ambito_funcion           shift and go to state 47
+
+state 21
+
+    (9) lista_params -> params_no_vacios .
+
+    PARENDER        reduce using rule 9 (lista_params -> params_no_vacios .)
+
+
+state 22
+
+    (10) params_no_vacios -> param .
+    (11) params_no_vacios -> param . COMA params_no_vacios
+
+    PARENDER        reduce using rule 10 (params_no_vacios -> param .)
+    COMA            shift and go to state 48
+
+
+state 23
+
+    (12) param -> tipo . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 49
+
+
+state 24
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ . PARENDER abrir_ambito_funcion bloque cerrar_ambito
+
+    PARENDER        shift and go to state 50
+
+
+state 25
+
+    (17) bloque -> LLAVEIZQ sentencias . LLAVEDER
+
+    LLAVEDER        shift and go to state 51
+
+
+state 26
+
+    (21) sentencias -> sentencia .
+    (22) sentencias -> sentencia . sentencias
+    (21) sentencias -> . sentencia
+    (22) sentencias -> . sentencia sentencias
+    (23) sentencia -> . tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (24) sentencia -> . tipo IDENTIFICADOR PUNTOYCOMA
+    (25) sentencia -> . IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA
+    (31) sentencia -> . IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA
+    (57) sentencia -> . SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> . SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (59) sentencia -> . MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (60) sentencia -> . REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+    (61) sentencia -> . PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (68) sentencia -> . MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA
+    (69) sentencia -> . REGRESA expresion PUNTOYCOMA
+    (70) sentencia -> . expresion PUNTOYCOMA
+    (71) sentencia -> . BREAK PUNTOYCOMA
+    (72) sentencia -> . CONTINUE PUNTOYCOMA
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    LLAVEDER        reduce using rule 21 (sentencias -> sentencia .)
+    IDENTIFICADOR   shift and go to state 28
+    SI              shift and go to state 31
+    MIENTRAS        shift and go to state 32
+    REPETIR         shift and go to state 33
+    PARA            shift and go to state 34
+    MOSTRAR         shift and go to state 35
+    REGRESA         shift and go to state 36
+    BREAK           shift and go to state 37
+    CONTINUE        shift and go to state 38
+    NUMERO          shift and go to state 39
+    DECIMAL         shift and go to state 40
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 41
+    PARENIZQ        shift and go to state 30
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    sentencia                      shift and go to state 26
+    sentencias                     shift and go to state 52
+    tipo                           shift and go to state 27
+    expresion                      shift and go to state 29
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 27
+
+    (23) sentencia -> tipo . IDENTIFICADOR IGUAL expresion PUNTOYCOMA
+    (24) sentencia -> tipo . IDENTIFICADOR PUNTOYCOMA
+
+    IDENTIFICADOR   shift and go to state 53
+
+
+state 28
+
+    (25) sentencia -> IDENTIFICADOR . OP_ASIG expresion PUNTOYCOMA
+    (31) sentencia -> IDENTIFICADOR . PARENIZQ args PARENDER PUNTOYCOMA
+    (49) expresion -> IDENTIFICADOR .
+    (56) llamada_funcion_expr -> IDENTIFICADOR . PARENIZQ args PARENDER
+    (26) OP_ASIG -> . IGUAL
+    (27) OP_ASIG -> . SUMA_IGUAL
+    (28) OP_ASIG -> . RESTA_IGUAL
+    (29) OP_ASIG -> . MULT_IGUAL
+    (30) OP_ASIG -> . DIV_IGUAL
+
+    PARENIZQ        shift and go to state 55
+    PUNTOYCOMA      reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    SUMA            reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    RESTA           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MULT            reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    DIV             reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MOD             reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    IGUAL_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    DIFERENTE       reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MAYOR           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MENOR           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MAYOR_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MENOR_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    IGUAL           shift and go to state 56
+    SUMA_IGUAL      shift and go to state 57
+    RESTA_IGUAL     shift and go to state 58
+    MULT_IGUAL      shift and go to state 59
+    DIV_IGUAL       shift and go to state 60
+
+    OP_ASIG                        shift and go to state 54
+
+state 29
+
+    (70) sentencia -> expresion . PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      shift and go to state 61
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 30
+
+    (47) expresion -> PARENIZQ . expresion PARENDER
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 73
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 31
+
+    (57) sentencia -> SI . PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> SI . PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+
+    PARENIZQ        shift and go to state 78
+
+
+state 32
+
+    (59) sentencia -> MIENTRAS . PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito
+
+    PARENIZQ        shift and go to state 79
+
+
+state 33
+
+    (60) sentencia -> REPETIR . abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+    (19) abrir_ambito -> .
+
+    LLAVEIZQ        reduce using rule 19 (abrir_ambito -> .)
+
+    abrir_ambito                   shift and go to state 80
+
+state 34
+
+    (61) sentencia -> PARA . PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+
+    PARENIZQ        shift and go to state 81
+
+
+state 35
+
+    (68) sentencia -> MOSTRAR . PARENIZQ expresion PARENDER PUNTOYCOMA
+
+    PARENIZQ        shift and go to state 82
+
+
+state 36
+
+    (69) sentencia -> REGRESA . expresion PUNTOYCOMA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 83
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 37
+
+    (71) sentencia -> BREAK . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 84
+
+
+state 38
+
+    (72) sentencia -> CONTINUE . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 85
+
+
+state 39
+
+    (13) tipo -> NUMERO .
+    (51) literal -> NUMERO .
+
+    IDENTIFICADOR   reduce using rule 13 (tipo -> NUMERO .)
+    PUNTOYCOMA      reduce using rule 51 (literal -> NUMERO .)
+    SUMA            reduce using rule 51 (literal -> NUMERO .)
+    RESTA           reduce using rule 51 (literal -> NUMERO .)
+    MULT            reduce using rule 51 (literal -> NUMERO .)
+    DIV             reduce using rule 51 (literal -> NUMERO .)
+    MOD             reduce using rule 51 (literal -> NUMERO .)
+    IGUAL_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+    DIFERENTE       reduce using rule 51 (literal -> NUMERO .)
+    MAYOR           reduce using rule 51 (literal -> NUMERO .)
+    MENOR           reduce using rule 51 (literal -> NUMERO .)
+    MAYOR_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+    MENOR_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+
+
+state 40
+
+    (14) tipo -> DECIMAL .
+    (52) literal -> DECIMAL .
+
+    IDENTIFICADOR   reduce using rule 14 (tipo -> DECIMAL .)
+    PUNTOYCOMA      reduce using rule 52 (literal -> DECIMAL .)
+    SUMA            reduce using rule 52 (literal -> DECIMAL .)
+    RESTA           reduce using rule 52 (literal -> DECIMAL .)
+    MULT            reduce using rule 52 (literal -> DECIMAL .)
+    DIV             reduce using rule 52 (literal -> DECIMAL .)
+    MOD             reduce using rule 52 (literal -> DECIMAL .)
+    IGUAL_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+    DIFERENTE       reduce using rule 52 (literal -> DECIMAL .)
+    MAYOR           reduce using rule 52 (literal -> DECIMAL .)
+    MENOR           reduce using rule 52 (literal -> DECIMAL .)
+    MAYOR_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+    MENOR_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+
+
+state 41
+
+    (16) tipo -> CADENA .
+    (53) literal -> CADENA .
+
+    IDENTIFICADOR   reduce using rule 16 (tipo -> CADENA .)
+    PUNTOYCOMA      reduce using rule 53 (literal -> CADENA .)
+    SUMA            reduce using rule 53 (literal -> CADENA .)
+    RESTA           reduce using rule 53 (literal -> CADENA .)
+    MULT            reduce using rule 53 (literal -> CADENA .)
+    DIV             reduce using rule 53 (literal -> CADENA .)
+    MOD             reduce using rule 53 (literal -> CADENA .)
+    IGUAL_IGUAL     reduce using rule 53 (literal -> CADENA .)
+    DIFERENTE       reduce using rule 53 (literal -> CADENA .)
+    MAYOR           reduce using rule 53 (literal -> CADENA .)
+    MENOR           reduce using rule 53 (literal -> CADENA .)
+    MAYOR_IGUAL     reduce using rule 53 (literal -> CADENA .)
+    MENOR_IGUAL     reduce using rule 53 (literal -> CADENA .)
+
+
+state 42
+
+    (48) expresion -> literal .
+
+    PUNTOYCOMA      reduce using rule 48 (expresion -> literal .)
+    SUMA            reduce using rule 48 (expresion -> literal .)
+    RESTA           reduce using rule 48 (expresion -> literal .)
+    MULT            reduce using rule 48 (expresion -> literal .)
+    DIV             reduce using rule 48 (expresion -> literal .)
+    MOD             reduce using rule 48 (expresion -> literal .)
+    IGUAL_IGUAL     reduce using rule 48 (expresion -> literal .)
+    DIFERENTE       reduce using rule 48 (expresion -> literal .)
+    MAYOR           reduce using rule 48 (expresion -> literal .)
+    MENOR           reduce using rule 48 (expresion -> literal .)
+    MAYOR_IGUAL     reduce using rule 48 (expresion -> literal .)
+    MENOR_IGUAL     reduce using rule 48 (expresion -> literal .)
+    PARENDER        reduce using rule 48 (expresion -> literal .)
+    COMA            reduce using rule 48 (expresion -> literal .)
+
+
+state 43
+
+    (50) expresion -> llamada_funcion_expr .
+
+    PUNTOYCOMA      reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    SUMA            reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    RESTA           reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MULT            reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    DIV             reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MOD             reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    IGUAL_IGUAL     reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    DIFERENTE       reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MAYOR           reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MENOR           reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MAYOR_IGUAL     reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    MENOR_IGUAL     reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    PARENDER        reduce using rule 50 (expresion -> llamada_funcion_expr .)
+    COMA            reduce using rule 50 (expresion -> llamada_funcion_expr .)
+
+
+state 44
+
+    (54) literal -> VERDADERO .
+
+    PUNTOYCOMA      reduce using rule 54 (literal -> VERDADERO .)
+    SUMA            reduce using rule 54 (literal -> VERDADERO .)
+    RESTA           reduce using rule 54 (literal -> VERDADERO .)
+    MULT            reduce using rule 54 (literal -> VERDADERO .)
+    DIV             reduce using rule 54 (literal -> VERDADERO .)
+    MOD             reduce using rule 54 (literal -> VERDADERO .)
+    IGUAL_IGUAL     reduce using rule 54 (literal -> VERDADERO .)
+    DIFERENTE       reduce using rule 54 (literal -> VERDADERO .)
+    MAYOR           reduce using rule 54 (literal -> VERDADERO .)
+    MENOR           reduce using rule 54 (literal -> VERDADERO .)
+    MAYOR_IGUAL     reduce using rule 54 (literal -> VERDADERO .)
+    MENOR_IGUAL     reduce using rule 54 (literal -> VERDADERO .)
+    PARENDER        reduce using rule 54 (literal -> VERDADERO .)
+    COMA            reduce using rule 54 (literal -> VERDADERO .)
+
+
+state 45
+
+    (55) literal -> FALSO .
+
+    PUNTOYCOMA      reduce using rule 55 (literal -> FALSO .)
+    SUMA            reduce using rule 55 (literal -> FALSO .)
+    RESTA           reduce using rule 55 (literal -> FALSO .)
+    MULT            reduce using rule 55 (literal -> FALSO .)
+    DIV             reduce using rule 55 (literal -> FALSO .)
+    MOD             reduce using rule 55 (literal -> FALSO .)
+    IGUAL_IGUAL     reduce using rule 55 (literal -> FALSO .)
+    DIFERENTE       reduce using rule 55 (literal -> FALSO .)
+    MAYOR           reduce using rule 55 (literal -> FALSO .)
+    MENOR           reduce using rule 55 (literal -> FALSO .)
+    MAYOR_IGUAL     reduce using rule 55 (literal -> FALSO .)
+    MENOR_IGUAL     reduce using rule 55 (literal -> FALSO .)
+    PARENDER        reduce using rule 55 (literal -> FALSO .)
+    COMA            reduce using rule 55 (literal -> FALSO .)
+
+
+state 46
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER . abrir_ambito_funcion bloque cerrar_ambito
+    (18) abrir_ambito_funcion -> .
+
+    LLAVEIZQ        reduce using rule 18 (abrir_ambito_funcion -> .)
+
+    abrir_ambito_funcion           shift and go to state 86
+
+state 47
+
+    (6) funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 87
+
+state 48
+
+    (11) params_no_vacios -> param COMA . params_no_vacios
+    (10) params_no_vacios -> . param
+    (11) params_no_vacios -> . param COMA params_no_vacios
+    (12) param -> . tipo IDENTIFICADOR
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+
+    NUMERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+
+    param                          shift and go to state 22
+    params_no_vacios               shift and go to state 88
+    tipo                           shift and go to state 23
+
+state 49
+
+    (12) param -> tipo IDENTIFICADOR .
+
+    COMA            reduce using rule 12 (param -> tipo IDENTIFICADOR .)
+    PARENDER        reduce using rule 12 (param -> tipo IDENTIFICADOR .)
+
+
+state 50
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER . abrir_ambito_funcion bloque cerrar_ambito
+    (18) abrir_ambito_funcion -> .
+
+    LLAVEIZQ        reduce using rule 18 (abrir_ambito_funcion -> .)
+
+    abrir_ambito_funcion           shift and go to state 89
+
+state 51
+
+    (17) bloque -> LLAVEIZQ sentencias LLAVEDER .
+
+    INICIO          reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    FUNCION         reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    $end            reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    HASTA           reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    SINO            reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    IDENTIFICADOR   reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    SI              reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    MIENTRAS        reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    REPETIR         reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    PARA            reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    MOSTRAR         reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    REGRESA         reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    BREAK           reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    CONTINUE        reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    NUMERO          reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    DECIMAL         reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    BOOLEANO        reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    CADENA          reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    PARENIZQ        reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    VERDADERO       reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    FALSO           reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+    LLAVEDER        reduce using rule 17 (bloque -> LLAVEIZQ sentencias LLAVEDER .)
+
+
+state 52
+
+    (22) sentencias -> sentencia sentencias .
+
+    LLAVEDER        reduce using rule 22 (sentencias -> sentencia sentencias .)
+
+
+state 53
+
+    (23) sentencia -> tipo IDENTIFICADOR . IGUAL expresion PUNTOYCOMA
+    (24) sentencia -> tipo IDENTIFICADOR . PUNTOYCOMA
+
+    IGUAL           shift and go to state 90
+    PUNTOYCOMA      shift and go to state 91
+
+
+state 54
+
+    (25) sentencia -> IDENTIFICADOR OP_ASIG . expresion PUNTOYCOMA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 92
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 55
+
+    (31) sentencia -> IDENTIFICADOR PARENIZQ . args PARENDER PUNTOYCOMA
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ . args PARENDER
+    (32) args -> .
+    (33) args -> . lista_args
+    (34) lista_args -> . expresion
+    (35) lista_args -> . expresion COMA lista_args
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENDER        reduce using rule 32 (args -> .)
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    args                           shift and go to state 93
+    lista_args                     shift and go to state 94
+    expresion                      shift and go to state 95
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 56
+
+    (26) OP_ASIG -> IGUAL .
+
+    PARENIZQ        reduce using rule 26 (OP_ASIG -> IGUAL .)
+    IDENTIFICADOR   reduce using rule 26 (OP_ASIG -> IGUAL .)
+    NUMERO          reduce using rule 26 (OP_ASIG -> IGUAL .)
+    DECIMAL         reduce using rule 26 (OP_ASIG -> IGUAL .)
+    CADENA          reduce using rule 26 (OP_ASIG -> IGUAL .)
+    VERDADERO       reduce using rule 26 (OP_ASIG -> IGUAL .)
+    FALSO           reduce using rule 26 (OP_ASIG -> IGUAL .)
+
+
+state 57
+
+    (27) OP_ASIG -> SUMA_IGUAL .
+
+    PARENIZQ        reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    IDENTIFICADOR   reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    NUMERO          reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    DECIMAL         reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    CADENA          reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    VERDADERO       reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+    FALSO           reduce using rule 27 (OP_ASIG -> SUMA_IGUAL .)
+
+
+state 58
+
+    (28) OP_ASIG -> RESTA_IGUAL .
+
+    PARENIZQ        reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    IDENTIFICADOR   reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    NUMERO          reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    DECIMAL         reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    CADENA          reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    VERDADERO       reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+    FALSO           reduce using rule 28 (OP_ASIG -> RESTA_IGUAL .)
+
+
+state 59
+
+    (29) OP_ASIG -> MULT_IGUAL .
+
+    PARENIZQ        reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    IDENTIFICADOR   reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    NUMERO          reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    DECIMAL         reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    CADENA          reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    VERDADERO       reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+    FALSO           reduce using rule 29 (OP_ASIG -> MULT_IGUAL .)
+
+
+state 60
+
+    (30) OP_ASIG -> DIV_IGUAL .
+
+    PARENIZQ        reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    IDENTIFICADOR   reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    NUMERO          reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    DECIMAL         reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    CADENA          reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    VERDADERO       reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+    FALSO           reduce using rule 30 (OP_ASIG -> DIV_IGUAL .)
+
+
+state 61
+
+    (70) sentencia -> expresion PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    SI              reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    REPETIR         reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    PARA            reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    BREAK           reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    CONTINUE        reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    NUMERO          reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    VERDADERO       reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    FALSO           reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 70 (sentencia -> expresion PUNTOYCOMA .)
+
+
+state 62
+
+    (36) expresion -> expresion SUMA . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 96
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 63
+
+    (37) expresion -> expresion RESTA . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 97
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 64
+
+    (38) expresion -> expresion MULT . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 98
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 65
+
+    (39) expresion -> expresion DIV . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 99
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 66
+
+    (40) expresion -> expresion MOD . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 100
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 67
+
+    (41) expresion -> expresion IGUAL_IGUAL . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 101
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 68
+
+    (42) expresion -> expresion DIFERENTE . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 102
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 69
+
+    (43) expresion -> expresion MAYOR . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 103
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 70
+
+    (44) expresion -> expresion MENOR . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 104
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 71
+
+    (45) expresion -> expresion MAYOR_IGUAL . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 105
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 72
+
+    (46) expresion -> expresion MENOR_IGUAL . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 106
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 73
+
+    (47) expresion -> PARENIZQ expresion . PARENDER
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        shift and go to state 107
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 74
+
+    (49) expresion -> IDENTIFICADOR .
+    (56) llamada_funcion_expr -> IDENTIFICADOR . PARENIZQ args PARENDER
+
+    PARENDER        reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    SUMA            reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    RESTA           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MULT            reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    DIV             reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MOD             reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    IGUAL_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    DIFERENTE       reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MAYOR           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MENOR           reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MAYOR_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    MENOR_IGUAL     reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    PUNTOYCOMA      reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    COMA            reduce using rule 49 (expresion -> IDENTIFICADOR .)
+    PARENIZQ        shift and go to state 108
+
+
+state 75
+
+    (51) literal -> NUMERO .
+
+    PARENDER        reduce using rule 51 (literal -> NUMERO .)
+    SUMA            reduce using rule 51 (literal -> NUMERO .)
+    RESTA           reduce using rule 51 (literal -> NUMERO .)
+    MULT            reduce using rule 51 (literal -> NUMERO .)
+    DIV             reduce using rule 51 (literal -> NUMERO .)
+    MOD             reduce using rule 51 (literal -> NUMERO .)
+    IGUAL_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+    DIFERENTE       reduce using rule 51 (literal -> NUMERO .)
+    MAYOR           reduce using rule 51 (literal -> NUMERO .)
+    MENOR           reduce using rule 51 (literal -> NUMERO .)
+    MAYOR_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+    MENOR_IGUAL     reduce using rule 51 (literal -> NUMERO .)
+    PUNTOYCOMA      reduce using rule 51 (literal -> NUMERO .)
+    COMA            reduce using rule 51 (literal -> NUMERO .)
+
+
+state 76
+
+    (52) literal -> DECIMAL .
+
+    PARENDER        reduce using rule 52 (literal -> DECIMAL .)
+    SUMA            reduce using rule 52 (literal -> DECIMAL .)
+    RESTA           reduce using rule 52 (literal -> DECIMAL .)
+    MULT            reduce using rule 52 (literal -> DECIMAL .)
+    DIV             reduce using rule 52 (literal -> DECIMAL .)
+    MOD             reduce using rule 52 (literal -> DECIMAL .)
+    IGUAL_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+    DIFERENTE       reduce using rule 52 (literal -> DECIMAL .)
+    MAYOR           reduce using rule 52 (literal -> DECIMAL .)
+    MENOR           reduce using rule 52 (literal -> DECIMAL .)
+    MAYOR_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+    MENOR_IGUAL     reduce using rule 52 (literal -> DECIMAL .)
+    PUNTOYCOMA      reduce using rule 52 (literal -> DECIMAL .)
+    COMA            reduce using rule 52 (literal -> DECIMAL .)
+
+
+state 77
+
+    (53) literal -> CADENA .
+
+    PARENDER        reduce using rule 53 (literal -> CADENA .)
+    SUMA            reduce using rule 53 (literal -> CADENA .)
+    RESTA           reduce using rule 53 (literal -> CADENA .)
+    MULT            reduce using rule 53 (literal -> CADENA .)
+    DIV             reduce using rule 53 (literal -> CADENA .)
+    MOD             reduce using rule 53 (literal -> CADENA .)
+    IGUAL_IGUAL     reduce using rule 53 (literal -> CADENA .)
+    DIFERENTE       reduce using rule 53 (literal -> CADENA .)
+    MAYOR           reduce using rule 53 (literal -> CADENA .)
+    MENOR           reduce using rule 53 (literal -> CADENA .)
+    MAYOR_IGUAL     reduce using rule 53 (literal -> CADENA .)
+    MENOR_IGUAL     reduce using rule 53 (literal -> CADENA .)
+    PUNTOYCOMA      reduce using rule 53 (literal -> CADENA .)
+    COMA            reduce using rule 53 (literal -> CADENA .)
+
+
+state 78
+
+    (57) sentencia -> SI PARENIZQ . expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> SI PARENIZQ . expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 109
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 79
+
+    (59) sentencia -> MIENTRAS PARENIZQ . expresion PARENDER abrir_ambito bloque cerrar_ambito
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 110
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 80
+
+    (60) sentencia -> REPETIR abrir_ambito . bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 111
+
+state 81
+
+    (61) sentencia -> PARA PARENIZQ . for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (62) for_init -> . tipo IDENTIFICADOR IGUAL expresion
+    (63) for_init -> . IDENTIFICADOR OP_ASIG expresion
+    (64) for_init -> . empty
+    (13) tipo -> . NUMERO
+    (14) tipo -> . DECIMAL
+    (15) tipo -> . BOOLEANO
+    (16) tipo -> . CADENA
+    (67) empty -> .
+
+    IDENTIFICADOR   shift and go to state 114
+    NUMERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    BOOLEANO        shift and go to state 12
+    CADENA          shift and go to state 13
+    PUNTOYCOMA      reduce using rule 67 (empty -> .)
+
+    for_init                       shift and go to state 112
+    tipo                           shift and go to state 113
+    empty                          shift and go to state 115
+
+state 82
+
+    (68) sentencia -> MOSTRAR PARENIZQ . expresion PARENDER PUNTOYCOMA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 116
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 83
+
+    (69) sentencia -> REGRESA expresion . PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      shift and go to state 117
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 84
+
+    (71) sentencia -> BREAK PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    SI              reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    REPETIR         reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    PARA            reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    REGRESA         reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    BREAK           reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    CONTINUE        reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    NUMERO          reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    DECIMAL         reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    CADENA          reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    VERDADERO       reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    FALSO           reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 71 (sentencia -> BREAK PUNTOYCOMA .)
+
+
+state 85
+
+    (72) sentencia -> CONTINUE PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    SI              reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    REPETIR         reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    PARA            reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    REGRESA         reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    BREAK           reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    CONTINUE        reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    NUMERO          reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    DECIMAL         reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    CADENA          reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    VERDADERO       reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    FALSO           reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 72 (sentencia -> CONTINUE PUNTOYCOMA .)
+
+
+state 86
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 118
+
+state 87
+
+    (6) funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    INICIO          reduce using rule 20 (cerrar_ambito -> .)
+    FUNCION         reduce using rule 20 (cerrar_ambito -> .)
+    $end            reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 119
+
+state 88
+
+    (11) params_no_vacios -> param COMA params_no_vacios .
+
+    PARENDER        reduce using rule 11 (params_no_vacios -> param COMA params_no_vacios .)
+
+
+state 89
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 120
+
+state 90
+
+    (23) sentencia -> tipo IDENTIFICADOR IGUAL . expresion PUNTOYCOMA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 121
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 91
+
+    (24) sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    SI              reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    REPETIR         reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    PARA            reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    REGRESA         reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    BREAK           reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    CONTINUE        reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    NUMERO          reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    DECIMAL         reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    CADENA          reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    VERDADERO       reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    FALSO           reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 24 (sentencia -> tipo IDENTIFICADOR PUNTOYCOMA .)
+
+
+state 92
+
+    (25) sentencia -> IDENTIFICADOR OP_ASIG expresion . PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      shift and go to state 122
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 93
+
+    (31) sentencia -> IDENTIFICADOR PARENIZQ args . PARENDER PUNTOYCOMA
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args . PARENDER
+
+    PARENDER        shift and go to state 123
+
+
+state 94
+
+    (33) args -> lista_args .
+
+    PARENDER        reduce using rule 33 (args -> lista_args .)
+
+
+state 95
+
+    (34) lista_args -> expresion .
+    (35) lista_args -> expresion . COMA lista_args
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        reduce using rule 34 (lista_args -> expresion .)
+    COMA            shift and go to state 124
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 96
+
+    (36) expresion -> expresion SUMA expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    SUMA            reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    RESTA           reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    IGUAL_IGUAL     reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    DIFERENTE       reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    MAYOR           reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    MENOR           reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    MAYOR_IGUAL     reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    MENOR_IGUAL     reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    PARENDER        reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    COMA            reduce using rule 36 (expresion -> expresion SUMA expresion .)
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! MULT            [ reduce using rule 36 (expresion -> expresion SUMA expresion .) ]
+  ! DIV             [ reduce using rule 36 (expresion -> expresion SUMA expresion .) ]
+  ! MOD             [ reduce using rule 36 (expresion -> expresion SUMA expresion .) ]
+  ! SUMA            [ shift and go to state 62 ]
+  ! RESTA           [ shift and go to state 63 ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 97
+
+    (37) expresion -> expresion RESTA expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    SUMA            reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    RESTA           reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    IGUAL_IGUAL     reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    DIFERENTE       reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    MAYOR           reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    MENOR           reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    MAYOR_IGUAL     reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    MENOR_IGUAL     reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    PARENDER        reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    COMA            reduce using rule 37 (expresion -> expresion RESTA expresion .)
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! MULT            [ reduce using rule 37 (expresion -> expresion RESTA expresion .) ]
+  ! DIV             [ reduce using rule 37 (expresion -> expresion RESTA expresion .) ]
+  ! MOD             [ reduce using rule 37 (expresion -> expresion RESTA expresion .) ]
+  ! SUMA            [ shift and go to state 62 ]
+  ! RESTA           [ shift and go to state 63 ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 98
+
+    (38) expresion -> expresion MULT expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 38 (expresion -> expresion MULT expresion .)
+    SUMA            reduce using rule 38 (expresion -> expresion MULT expresion .)
+    RESTA           reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MULT            reduce using rule 38 (expresion -> expresion MULT expresion .)
+    DIV             reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MOD             reduce using rule 38 (expresion -> expresion MULT expresion .)
+    IGUAL_IGUAL     reduce using rule 38 (expresion -> expresion MULT expresion .)
+    DIFERENTE       reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MAYOR           reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MENOR           reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MAYOR_IGUAL     reduce using rule 38 (expresion -> expresion MULT expresion .)
+    MENOR_IGUAL     reduce using rule 38 (expresion -> expresion MULT expresion .)
+    PARENDER        reduce using rule 38 (expresion -> expresion MULT expresion .)
+    COMA            reduce using rule 38 (expresion -> expresion MULT expresion .)
+
+  ! SUMA            [ shift and go to state 62 ]
+  ! RESTA           [ shift and go to state 63 ]
+  ! MULT            [ shift and go to state 64 ]
+  ! DIV             [ shift and go to state 65 ]
+  ! MOD             [ shift and go to state 66 ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 99
+
+    (39) expresion -> expresion DIV expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 39 (expresion -> expresion DIV expresion .)
+    SUMA            reduce using rule 39 (expresion -> expresion DIV expresion .)
+    RESTA           reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MULT            reduce using rule 39 (expresion -> expresion DIV expresion .)
+    DIV             reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MOD             reduce using rule 39 (expresion -> expresion DIV expresion .)
+    IGUAL_IGUAL     reduce using rule 39 (expresion -> expresion DIV expresion .)
+    DIFERENTE       reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MAYOR           reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MENOR           reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MAYOR_IGUAL     reduce using rule 39 (expresion -> expresion DIV expresion .)
+    MENOR_IGUAL     reduce using rule 39 (expresion -> expresion DIV expresion .)
+    PARENDER        reduce using rule 39 (expresion -> expresion DIV expresion .)
+    COMA            reduce using rule 39 (expresion -> expresion DIV expresion .)
+
+  ! SUMA            [ shift and go to state 62 ]
+  ! RESTA           [ shift and go to state 63 ]
+  ! MULT            [ shift and go to state 64 ]
+  ! DIV             [ shift and go to state 65 ]
+  ! MOD             [ shift and go to state 66 ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 100
+
+    (40) expresion -> expresion MOD expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 40 (expresion -> expresion MOD expresion .)
+    SUMA            reduce using rule 40 (expresion -> expresion MOD expresion .)
+    RESTA           reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MULT            reduce using rule 40 (expresion -> expresion MOD expresion .)
+    DIV             reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MOD             reduce using rule 40 (expresion -> expresion MOD expresion .)
+    IGUAL_IGUAL     reduce using rule 40 (expresion -> expresion MOD expresion .)
+    DIFERENTE       reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MAYOR           reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MENOR           reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MAYOR_IGUAL     reduce using rule 40 (expresion -> expresion MOD expresion .)
+    MENOR_IGUAL     reduce using rule 40 (expresion -> expresion MOD expresion .)
+    PARENDER        reduce using rule 40 (expresion -> expresion MOD expresion .)
+    COMA            reduce using rule 40 (expresion -> expresion MOD expresion .)
+
+  ! SUMA            [ shift and go to state 62 ]
+  ! RESTA           [ shift and go to state 63 ]
+  ! MULT            [ shift and go to state 64 ]
+  ! DIV             [ shift and go to state 65 ]
+  ! MOD             [ shift and go to state 66 ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 101
+
+    (41) expresion -> expresion IGUAL_IGUAL expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .)
+    DIFERENTE       reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .)
+    PARENDER        reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .)
+    COMA            reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+  ! SUMA            [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! RESTA           [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MULT            [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MAYOR           [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MENOR           [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MAYOR_IGUAL     [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! MENOR_IGUAL     [ reduce using rule 41 (expresion -> expresion IGUAL_IGUAL expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+
+
+state 102
+
+    (42) expresion -> expresion DIFERENTE expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 42 (expresion -> expresion DIFERENTE expresion .)
+    IGUAL_IGUAL     reduce using rule 42 (expresion -> expresion DIFERENTE expresion .)
+    DIFERENTE       reduce using rule 42 (expresion -> expresion DIFERENTE expresion .)
+    PARENDER        reduce using rule 42 (expresion -> expresion DIFERENTE expresion .)
+    COMA            reduce using rule 42 (expresion -> expresion DIFERENTE expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+  ! SUMA            [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! RESTA           [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MULT            [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! DIV             [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MOD             [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MAYOR           [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MENOR           [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MAYOR_IGUAL     [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! MENOR_IGUAL     [ reduce using rule 42 (expresion -> expresion DIFERENTE expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+
+
+state 103
+
+    (43) expresion -> expresion MAYOR expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    IGUAL_IGUAL     reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    DIFERENTE       reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    MAYOR           reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    MENOR           reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    MAYOR_IGUAL     reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    MENOR_IGUAL     reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    PARENDER        reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    COMA            reduce using rule 43 (expresion -> expresion MAYOR expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! SUMA            [ reduce using rule 43 (expresion -> expresion MAYOR expresion .) ]
+  ! RESTA           [ reduce using rule 43 (expresion -> expresion MAYOR expresion .) ]
+  ! MULT            [ reduce using rule 43 (expresion -> expresion MAYOR expresion .) ]
+  ! DIV             [ reduce using rule 43 (expresion -> expresion MAYOR expresion .) ]
+  ! MOD             [ reduce using rule 43 (expresion -> expresion MAYOR expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 104
+
+    (44) expresion -> expresion MENOR expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    IGUAL_IGUAL     reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    DIFERENTE       reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    MAYOR           reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    MENOR           reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    MAYOR_IGUAL     reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    MENOR_IGUAL     reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    PARENDER        reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    COMA            reduce using rule 44 (expresion -> expresion MENOR expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! SUMA            [ reduce using rule 44 (expresion -> expresion MENOR expresion .) ]
+  ! RESTA           [ reduce using rule 44 (expresion -> expresion MENOR expresion .) ]
+  ! MULT            [ reduce using rule 44 (expresion -> expresion MENOR expresion .) ]
+  ! DIV             [ reduce using rule 44 (expresion -> expresion MENOR expresion .) ]
+  ! MOD             [ reduce using rule 44 (expresion -> expresion MENOR expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 105
+
+    (45) expresion -> expresion MAYOR_IGUAL expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    DIFERENTE       reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MAYOR           reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MENOR           reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MAYOR_IGUAL     reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    MENOR_IGUAL     reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    PARENDER        reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    COMA            reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! SUMA            [ reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! RESTA           [ reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! MULT            [ reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 45 (expresion -> expresion MAYOR_IGUAL expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 106
+
+    (46) expresion -> expresion MENOR_IGUAL expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    IGUAL_IGUAL     reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    DIFERENTE       reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    MAYOR           reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    MENOR           reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    MAYOR_IGUAL     reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    MENOR_IGUAL     reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    PARENDER        reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    COMA            reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+
+  ! SUMA            [ reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! RESTA           [ reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! MULT            [ reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! DIV             [ reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! MOD             [ reduce using rule 46 (expresion -> expresion MENOR_IGUAL expresion .) ]
+  ! IGUAL_IGUAL     [ shift and go to state 67 ]
+  ! DIFERENTE       [ shift and go to state 68 ]
+  ! MAYOR           [ shift and go to state 69 ]
+  ! MENOR           [ shift and go to state 70 ]
+  ! MAYOR_IGUAL     [ shift and go to state 71 ]
+  ! MENOR_IGUAL     [ shift and go to state 72 ]
+
+
+state 107
+
+    (47) expresion -> PARENIZQ expresion PARENDER .
+
+    PUNTOYCOMA      reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    SUMA            reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    RESTA           reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MULT            reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    DIV             reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MOD             reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    IGUAL_IGUAL     reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    DIFERENTE       reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MAYOR           reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MENOR           reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MAYOR_IGUAL     reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    MENOR_IGUAL     reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    PARENDER        reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+    COMA            reduce using rule 47 (expresion -> PARENIZQ expresion PARENDER .)
+
+
+state 108
+
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ . args PARENDER
+    (32) args -> .
+    (33) args -> . lista_args
+    (34) lista_args -> . expresion
+    (35) lista_args -> . expresion COMA lista_args
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENDER        reduce using rule 32 (args -> .)
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    args                           shift and go to state 125
+    lista_args                     shift and go to state 94
+    expresion                      shift and go to state 95
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 109
+
+    (57) sentencia -> SI PARENIZQ expresion . PARENDER abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> SI PARENIZQ expresion . PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        shift and go to state 126
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 110
+
+    (59) sentencia -> MIENTRAS PARENIZQ expresion . PARENDER abrir_ambito bloque cerrar_ambito
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        shift and go to state 127
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 111
+
+    (60) sentencia -> REPETIR abrir_ambito bloque . cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+    (20) cerrar_ambito -> .
+
+    HASTA           reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 128
+
+state 112
+
+    (61) sentencia -> PARA PARENIZQ for_init . PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+
+    PUNTOYCOMA      shift and go to state 129
+
+
+state 113
+
+    (62) for_init -> tipo . IDENTIFICADOR IGUAL expresion
+
+    IDENTIFICADOR   shift and go to state 130
+
+
+state 114
+
+    (63) for_init -> IDENTIFICADOR . OP_ASIG expresion
+    (26) OP_ASIG -> . IGUAL
+    (27) OP_ASIG -> . SUMA_IGUAL
+    (28) OP_ASIG -> . RESTA_IGUAL
+    (29) OP_ASIG -> . MULT_IGUAL
+    (30) OP_ASIG -> . DIV_IGUAL
+
+    IGUAL           shift and go to state 56
+    SUMA_IGUAL      shift and go to state 57
+    RESTA_IGUAL     shift and go to state 58
+    MULT_IGUAL      shift and go to state 59
+    DIV_IGUAL       shift and go to state 60
+
+    OP_ASIG                        shift and go to state 131
+
+state 115
+
+    (64) for_init -> empty .
+
+    PUNTOYCOMA      reduce using rule 64 (for_init -> empty .)
+
+
+state 116
+
+    (68) sentencia -> MOSTRAR PARENIZQ expresion . PARENDER PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        shift and go to state 132
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 117
+
+    (69) sentencia -> REGRESA expresion PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    SI              reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    REPETIR         reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    PARA            reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    BREAK           reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    CONTINUE        reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    NUMERO          reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    VERDADERO       reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    FALSO           reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 69 (sentencia -> REGRESA expresion PUNTOYCOMA .)
+
+
+state 118
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    INICIO          reduce using rule 20 (cerrar_ambito -> .)
+    FUNCION         reduce using rule 20 (cerrar_ambito -> .)
+    $end            reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 133
+
+state 119
+
+    (6) funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .
+
+    INICIO          reduce using rule 6 (funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    FUNCION         reduce using rule 6 (funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    $end            reduce using rule 6 (funcion -> FUNCION IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+
+
+state 120
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    INICIO          reduce using rule 20 (cerrar_ambito -> .)
+    FUNCION         reduce using rule 20 (cerrar_ambito -> .)
+    $end            reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 134
+
+state 121
+
+    (23) sentencia -> tipo IDENTIFICADOR IGUAL expresion . PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      shift and go to state 135
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 122
+
+    (25) sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    SI              reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    REPETIR         reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    PARA            reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    BREAK           reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    CONTINUE        reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    NUMERO          reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    VERDADERO       reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    FALSO           reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 25 (sentencia -> IDENTIFICADOR OP_ASIG expresion PUNTOYCOMA .)
+
+
+state 123
+
+    (31) sentencia -> IDENTIFICADOR PARENIZQ args PARENDER . PUNTOYCOMA
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .
+
+  ! shift/reduce conflict for PUNTOYCOMA resolved as shift
+    PUNTOYCOMA      shift and go to state 136
+    SUMA            reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    RESTA           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MULT            reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    DIV             reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MOD             reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    IGUAL_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    DIFERENTE       reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MAYOR           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MENOR           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MAYOR_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MENOR_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+
+  ! PUNTOYCOMA      [ reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .) ]
+
+
+state 124
+
+    (35) lista_args -> expresion COMA . lista_args
+    (34) lista_args -> . expresion
+    (35) lista_args -> . expresion COMA lista_args
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 95
+    lista_args                     shift and go to state 137
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 125
+
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args . PARENDER
+
+    PARENDER        shift and go to state 138
+
+
+state 126
+
+    (57) sentencia -> SI PARENIZQ expresion PARENDER . abrir_ambito bloque cerrar_ambito
+    (58) sentencia -> SI PARENIZQ expresion PARENDER . abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (19) abrir_ambito -> .
+
+    LLAVEIZQ        reduce using rule 19 (abrir_ambito -> .)
+
+    abrir_ambito                   shift and go to state 139
+
+state 127
+
+    (59) sentencia -> MIENTRAS PARENIZQ expresion PARENDER . abrir_ambito bloque cerrar_ambito
+    (19) abrir_ambito -> .
+
+    LLAVEIZQ        reduce using rule 19 (abrir_ambito -> .)
+
+    abrir_ambito                   shift and go to state 140
+
+state 128
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito . HASTA PARENIZQ expresion PARENDER PUNTOYCOMA
+
+    HASTA           shift and go to state 141
+
+
+state 129
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA . expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 142
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 130
+
+    (62) for_init -> tipo IDENTIFICADOR . IGUAL expresion
+
+    IGUAL           shift and go to state 143
+
+
+state 131
+
+    (63) for_init -> IDENTIFICADOR OP_ASIG . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 144
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 132
+
+    (68) sentencia -> MOSTRAR PARENIZQ expresion PARENDER . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 145
+
+
+state 133
+
+    (5) funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito .
+
+    INICIO          reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    FUNCION         reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    $end            reduce using rule 5 (funcion -> FUNCION IDENTIFICADOR PARENIZQ lista_params PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+
+
+state 134
+
+    (7) funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .
+
+    INICIO          reduce using rule 7 (funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    FUNCION         reduce using rule 7 (funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+    $end            reduce using rule 7 (funcion -> FUNCION tipo IDENTIFICADOR PARENIZQ PARENDER abrir_ambito_funcion bloque cerrar_ambito .)
+
+
+state 135
+
+    (23) sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    SI              reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REPETIR         reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    PARA            reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    REGRESA         reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BREAK           reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CONTINUE        reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    NUMERO          reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    DECIMAL         reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    CADENA          reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    VERDADERO       reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    FALSO           reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 23 (sentencia -> tipo IDENTIFICADOR IGUAL expresion PUNTOYCOMA .)
+
+
+state 136
+
+    (31) sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    SI              reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    REPETIR         reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    PARA            reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    REGRESA         reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    BREAK           reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    CONTINUE        reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    NUMERO          reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    DECIMAL         reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    CADENA          reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    VERDADERO       reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    FALSO           reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 31 (sentencia -> IDENTIFICADOR PARENIZQ args PARENDER PUNTOYCOMA .)
+
+
+state 137
+
+    (35) lista_args -> expresion COMA lista_args .
+
+    PARENDER        reduce using rule 35 (lista_args -> expresion COMA lista_args .)
+
+
+state 138
+
+    (56) llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .
+
+    PARENDER        reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    SUMA            reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    RESTA           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MULT            reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    DIV             reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MOD             reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    IGUAL_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    DIFERENTE       reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MAYOR           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MENOR           reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MAYOR_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    MENOR_IGUAL     reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    PUNTOYCOMA      reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+    COMA            reduce using rule 56 (llamada_funcion_expr -> IDENTIFICADOR PARENIZQ args PARENDER .)
+
+
+state 139
+
+    (57) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito . bloque cerrar_ambito
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito . bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 146
+
+state 140
+
+    (59) sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 147
+
+state 141
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA . PARENIZQ expresion PARENDER PUNTOYCOMA
+
+    PARENIZQ        shift and go to state 148
+
+
+state 142
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion . PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      shift and go to state 149
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 143
+
+    (62) for_init -> tipo IDENTIFICADOR IGUAL . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 150
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 144
+
+    (63) for_init -> IDENTIFICADOR OP_ASIG expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 63 (for_init -> IDENTIFICADOR OP_ASIG expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 145
+
+    (68) sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    SI              reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    REPETIR         reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    PARA            reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    REGRESA         reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    BREAK           reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    CONTINUE        reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    NUMERO          reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    DECIMAL         reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    CADENA          reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    VERDADERO       reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    FALSO           reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 68 (sentencia -> MOSTRAR PARENIZQ expresion PARENDER PUNTOYCOMA .)
+
+
+state 146
+
+    (57) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque . cerrar_ambito
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque . cerrar_ambito SINO abrir_ambito bloque cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    SINO            reduce using rule 20 (cerrar_ambito -> .)
+    IDENTIFICADOR   reduce using rule 20 (cerrar_ambito -> .)
+    SI              reduce using rule 20 (cerrar_ambito -> .)
+    MIENTRAS        reduce using rule 20 (cerrar_ambito -> .)
+    REPETIR         reduce using rule 20 (cerrar_ambito -> .)
+    PARA            reduce using rule 20 (cerrar_ambito -> .)
+    MOSTRAR         reduce using rule 20 (cerrar_ambito -> .)
+    REGRESA         reduce using rule 20 (cerrar_ambito -> .)
+    BREAK           reduce using rule 20 (cerrar_ambito -> .)
+    CONTINUE        reduce using rule 20 (cerrar_ambito -> .)
+    NUMERO          reduce using rule 20 (cerrar_ambito -> .)
+    DECIMAL         reduce using rule 20 (cerrar_ambito -> .)
+    BOOLEANO        reduce using rule 20 (cerrar_ambito -> .)
+    CADENA          reduce using rule 20 (cerrar_ambito -> .)
+    PARENIZQ        reduce using rule 20 (cerrar_ambito -> .)
+    VERDADERO       reduce using rule 20 (cerrar_ambito -> .)
+    FALSO           reduce using rule 20 (cerrar_ambito -> .)
+    LLAVEDER        reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 151
+
+state 147
+
+    (59) sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    IDENTIFICADOR   reduce using rule 20 (cerrar_ambito -> .)
+    SI              reduce using rule 20 (cerrar_ambito -> .)
+    MIENTRAS        reduce using rule 20 (cerrar_ambito -> .)
+    REPETIR         reduce using rule 20 (cerrar_ambito -> .)
+    PARA            reduce using rule 20 (cerrar_ambito -> .)
+    MOSTRAR         reduce using rule 20 (cerrar_ambito -> .)
+    REGRESA         reduce using rule 20 (cerrar_ambito -> .)
+    BREAK           reduce using rule 20 (cerrar_ambito -> .)
+    CONTINUE        reduce using rule 20 (cerrar_ambito -> .)
+    NUMERO          reduce using rule 20 (cerrar_ambito -> .)
+    DECIMAL         reduce using rule 20 (cerrar_ambito -> .)
+    BOOLEANO        reduce using rule 20 (cerrar_ambito -> .)
+    CADENA          reduce using rule 20 (cerrar_ambito -> .)
+    PARENIZQ        reduce using rule 20 (cerrar_ambito -> .)
+    VERDADERO       reduce using rule 20 (cerrar_ambito -> .)
+    FALSO           reduce using rule 20 (cerrar_ambito -> .)
+    LLAVEDER        reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 152
+
+state 148
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ . expresion PARENDER PUNTOYCOMA
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 153
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 149
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA . for_update PARENDER abrir_ambito bloque cerrar_ambito
+    (65) for_update -> . IDENTIFICADOR OP_ASIG expresion
+    (66) for_update -> . empty
+    (67) empty -> .
+
+    IDENTIFICADOR   shift and go to state 155
+    PARENDER        reduce using rule 67 (empty -> .)
+
+    for_update                     shift and go to state 154
+    empty                          shift and go to state 156
+
+state 150
+
+    (62) for_init -> tipo IDENTIFICADOR IGUAL expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PUNTOYCOMA      reduce using rule 62 (for_init -> tipo IDENTIFICADOR IGUAL expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 151
+
+    (57) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito . SINO abrir_ambito bloque cerrar_ambito
+
+    IDENTIFICADOR   reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    SI              reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    MIENTRAS        reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    REPETIR         reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARA            reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    MOSTRAR         reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    REGRESA         reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    BREAK           reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    CONTINUE        reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    NUMERO          reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    DECIMAL         reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    BOOLEANO        reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    CADENA          reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARENIZQ        reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    VERDADERO       reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    FALSO           reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    LLAVEDER        reduce using rule 57 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    SINO            shift and go to state 157
+
+
+state 152
+
+    (59) sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .
+
+    IDENTIFICADOR   reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    SI              reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    MIENTRAS        reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    REPETIR         reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARA            reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    MOSTRAR         reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    REGRESA         reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    BREAK           reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    CONTINUE        reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    NUMERO          reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    DECIMAL         reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    BOOLEANO        reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    CADENA          reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARENIZQ        reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    VERDADERO       reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    FALSO           reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+    LLAVEDER        reduce using rule 59 (sentencia -> MIENTRAS PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito .)
+
+
+state 153
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion . PARENDER PUNTOYCOMA
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        shift and go to state 158
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 154
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update . PARENDER abrir_ambito bloque cerrar_ambito
+
+    PARENDER        shift and go to state 159
+
+
+state 155
+
+    (65) for_update -> IDENTIFICADOR . OP_ASIG expresion
+    (26) OP_ASIG -> . IGUAL
+    (27) OP_ASIG -> . SUMA_IGUAL
+    (28) OP_ASIG -> . RESTA_IGUAL
+    (29) OP_ASIG -> . MULT_IGUAL
+    (30) OP_ASIG -> . DIV_IGUAL
+
+    IGUAL           shift and go to state 56
+    SUMA_IGUAL      shift and go to state 57
+    RESTA_IGUAL     shift and go to state 58
+    MULT_IGUAL      shift and go to state 59
+    DIV_IGUAL       shift and go to state 60
+
+    OP_ASIG                        shift and go to state 160
+
+state 156
+
+    (66) for_update -> empty .
+
+    PARENDER        reduce using rule 66 (for_update -> empty .)
+
+
+state 157
+
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO . abrir_ambito bloque cerrar_ambito
+    (19) abrir_ambito -> .
+
+    LLAVEIZQ        reduce using rule 19 (abrir_ambito -> .)
+
+    abrir_ambito                   shift and go to state 161
+
+state 158
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 162
+
+
+state 159
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER . abrir_ambito bloque cerrar_ambito
+    (19) abrir_ambito -> .
+
+    LLAVEIZQ        reduce using rule 19 (abrir_ambito -> .)
+
+    abrir_ambito                   shift and go to state 163
+
+state 160
+
+    (65) for_update -> IDENTIFICADOR OP_ASIG . expresion
+    (36) expresion -> . expresion SUMA expresion
+    (37) expresion -> . expresion RESTA expresion
+    (38) expresion -> . expresion MULT expresion
+    (39) expresion -> . expresion DIV expresion
+    (40) expresion -> . expresion MOD expresion
+    (41) expresion -> . expresion IGUAL_IGUAL expresion
+    (42) expresion -> . expresion DIFERENTE expresion
+    (43) expresion -> . expresion MAYOR expresion
+    (44) expresion -> . expresion MENOR expresion
+    (45) expresion -> . expresion MAYOR_IGUAL expresion
+    (46) expresion -> . expresion MENOR_IGUAL expresion
+    (47) expresion -> . PARENIZQ expresion PARENDER
+    (48) expresion -> . literal
+    (49) expresion -> . IDENTIFICADOR
+    (50) expresion -> . llamada_funcion_expr
+    (51) literal -> . NUMERO
+    (52) literal -> . DECIMAL
+    (53) literal -> . CADENA
+    (54) literal -> . VERDADERO
+    (55) literal -> . FALSO
+    (56) llamada_funcion_expr -> . IDENTIFICADOR PARENIZQ args PARENDER
+
+    PARENIZQ        shift and go to state 30
+    IDENTIFICADOR   shift and go to state 74
+    NUMERO          shift and go to state 75
+    DECIMAL         shift and go to state 76
+    CADENA          shift and go to state 77
+    VERDADERO       shift and go to state 44
+    FALSO           shift and go to state 45
+
+    expresion                      shift and go to state 164
+    literal                        shift and go to state 42
+    llamada_funcion_expr           shift and go to state 43
+
+state 161
+
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 165
+
+state 162
+
+    (60) sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .
+
+    IDENTIFICADOR   reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    SI              reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    MIENTRAS        reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    REPETIR         reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    PARA            reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    MOSTRAR         reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    REGRESA         reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    BREAK           reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    CONTINUE        reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    NUMERO          reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    DECIMAL         reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    BOOLEANO        reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    CADENA          reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    PARENIZQ        reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    VERDADERO       reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    FALSO           reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+    LLAVEDER        reduce using rule 60 (sentencia -> REPETIR abrir_ambito bloque cerrar_ambito HASTA PARENIZQ expresion PARENDER PUNTOYCOMA .)
+
+
+state 163
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito . bloque cerrar_ambito
+    (17) bloque -> . LLAVEIZQ sentencias LLAVEDER
+
+    LLAVEIZQ        shift and go to state 18
+
+    bloque                         shift and go to state 166
+
+state 164
+
+    (65) for_update -> IDENTIFICADOR OP_ASIG expresion .
+    (36) expresion -> expresion . SUMA expresion
+    (37) expresion -> expresion . RESTA expresion
+    (38) expresion -> expresion . MULT expresion
+    (39) expresion -> expresion . DIV expresion
+    (40) expresion -> expresion . MOD expresion
+    (41) expresion -> expresion . IGUAL_IGUAL expresion
+    (42) expresion -> expresion . DIFERENTE expresion
+    (43) expresion -> expresion . MAYOR expresion
+    (44) expresion -> expresion . MENOR expresion
+    (45) expresion -> expresion . MAYOR_IGUAL expresion
+    (46) expresion -> expresion . MENOR_IGUAL expresion
+
+    PARENDER        reduce using rule 65 (for_update -> IDENTIFICADOR OP_ASIG expresion .)
+    SUMA            shift and go to state 62
+    RESTA           shift and go to state 63
+    MULT            shift and go to state 64
+    DIV             shift and go to state 65
+    MOD             shift and go to state 66
+    IGUAL_IGUAL     shift and go to state 67
+    DIFERENTE       shift and go to state 68
+    MAYOR           shift and go to state 69
+    MENOR           shift and go to state 70
+    MAYOR_IGUAL     shift and go to state 71
+    MENOR_IGUAL     shift and go to state 72
+
+
+state 165
+
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    IDENTIFICADOR   reduce using rule 20 (cerrar_ambito -> .)
+    SI              reduce using rule 20 (cerrar_ambito -> .)
+    MIENTRAS        reduce using rule 20 (cerrar_ambito -> .)
+    REPETIR         reduce using rule 20 (cerrar_ambito -> .)
+    PARA            reduce using rule 20 (cerrar_ambito -> .)
+    MOSTRAR         reduce using rule 20 (cerrar_ambito -> .)
+    REGRESA         reduce using rule 20 (cerrar_ambito -> .)
+    BREAK           reduce using rule 20 (cerrar_ambito -> .)
+    CONTINUE        reduce using rule 20 (cerrar_ambito -> .)
+    NUMERO          reduce using rule 20 (cerrar_ambito -> .)
+    DECIMAL         reduce using rule 20 (cerrar_ambito -> .)
+    BOOLEANO        reduce using rule 20 (cerrar_ambito -> .)
+    CADENA          reduce using rule 20 (cerrar_ambito -> .)
+    PARENIZQ        reduce using rule 20 (cerrar_ambito -> .)
+    VERDADERO       reduce using rule 20 (cerrar_ambito -> .)
+    FALSO           reduce using rule 20 (cerrar_ambito -> .)
+    LLAVEDER        reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 167
+
+state 166
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque . cerrar_ambito
+    (20) cerrar_ambito -> .
+
+    IDENTIFICADOR   reduce using rule 20 (cerrar_ambito -> .)
+    SI              reduce using rule 20 (cerrar_ambito -> .)
+    MIENTRAS        reduce using rule 20 (cerrar_ambito -> .)
+    REPETIR         reduce using rule 20 (cerrar_ambito -> .)
+    PARA            reduce using rule 20 (cerrar_ambito -> .)
+    MOSTRAR         reduce using rule 20 (cerrar_ambito -> .)
+    REGRESA         reduce using rule 20 (cerrar_ambito -> .)
+    BREAK           reduce using rule 20 (cerrar_ambito -> .)
+    CONTINUE        reduce using rule 20 (cerrar_ambito -> .)
+    NUMERO          reduce using rule 20 (cerrar_ambito -> .)
+    DECIMAL         reduce using rule 20 (cerrar_ambito -> .)
+    BOOLEANO        reduce using rule 20 (cerrar_ambito -> .)
+    CADENA          reduce using rule 20 (cerrar_ambito -> .)
+    PARENIZQ        reduce using rule 20 (cerrar_ambito -> .)
+    VERDADERO       reduce using rule 20 (cerrar_ambito -> .)
+    FALSO           reduce using rule 20 (cerrar_ambito -> .)
+    LLAVEDER        reduce using rule 20 (cerrar_ambito -> .)
+
+    cerrar_ambito                  shift and go to state 168
+
+state 167
+
+    (58) sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .
+
+    IDENTIFICADOR   reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    SI              reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    MIENTRAS        reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    REPETIR         reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    PARA            reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    MOSTRAR         reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    REGRESA         reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    BREAK           reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    CONTINUE        reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    NUMERO          reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    DECIMAL         reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    BOOLEANO        reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    CADENA          reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    PARENIZQ        reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    VERDADERO       reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    FALSO           reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+    LLAVEDER        reduce using rule 58 (sentencia -> SI PARENIZQ expresion PARENDER abrir_ambito bloque cerrar_ambito SINO abrir_ambito bloque cerrar_ambito .)
+
+
+state 168
+
+    (61) sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .
+
+    IDENTIFICADOR   reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    SI              reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    MIENTRAS        reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    REPETIR         reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARA            reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    MOSTRAR         reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    REGRESA         reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    BREAK           reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    CONTINUE        reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    NUMERO          reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    DECIMAL         reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    BOOLEANO        reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    CADENA          reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    PARENIZQ        reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    VERDADERO       reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    FALSO           reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+    LLAVEDER        reduce using rule 61 (sentencia -> PARA PARENIZQ for_init PUNTOYCOMA expresion PUNTOYCOMA for_update PARENDER abrir_ambito bloque cerrar_ambito .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for PARENDER in state 15 resolved as shift
+WARNING: shift/reduce conflict for PUNTOYCOMA in state 123 resolved as shift

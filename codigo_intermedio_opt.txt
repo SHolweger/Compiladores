@@ -1,0 +1,32 @@
+func_inicio:
+a = 10
+b = 5
+t0 = b * 2
+t1 = a + t0
+c = t1
+print c
+t2 = a > 5
+if_false t2 goto L0
+print a
+L0:
+t3 = a < 5
+if_false t3 goto L1
+print 100
+goto L2
+L1:
+print 200
+L2:
+i = 0
+L3:
+t4 = i < 3
+if_false t4 goto L4
+z = 10
+print i
+t5 = i + 1
+i = t5
+goto L3
+L4:
+x = 42
+print z
+g = hola
+return
