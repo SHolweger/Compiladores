@@ -1,6 +1,0 @@
-inicio() {
-    numero x = 10;
-    numero y = 20;
-    numero suma = x + y;
-    mostrar(suma);
-}
